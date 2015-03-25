@@ -1,0 +1,11 @@
+{
+  "project": "_PROJECTKEY",
+  "etcd": "http://docker1.rni.org:4001/v2/keys",
+  "coreos": {
+    "ssh": "ssh _CLUSTER"
+  },
+  "public": {
+    "projectName": "_PROJECTNAME",
+    "admin": _ADMIN
+  }
+}

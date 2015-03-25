@@ -1,0 +1,168 @@
+<template name="base-layout">
+  <div class="fixed-top">
+    <div id="header" class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="/">
+            <img id="ictulogo" src="/img/logo-ictu.png" alt="ICTU Project Dashboard" />
+          </a>
+          <div id="top_menu" class="nav notify-row">
+            <!-- BEGIN NOTIFICATION -->
+            <!--ul class="nav top-menu">
+              <li class="dropdown" id="header_inbox_bar">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="icon-envelope-alt"></i>
+                  <span class="badge badge-important">5</span>
+                </a>
+                <ul class="dropdown-menu extended inbox">
+                  <li>
+                    <p>You have 5 new messages</p>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <span class="photo"><img src="./img/avatar-mini.png" alt="avatar" /></span>
+                      <span class="subject">
+
+                  <span class="from">Dulal Khan</span>
+                      <span class="time">Just now</span>
+                      </span>
+                      <span class="message">
+
+                      Hello, this is an example messages please check
+
+                  </span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#">See all messages</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="dropdown" id="header_notification_bar">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+
+                  <i class="icon-bell-alt"></i>
+                  <span class="badge badge-warning">7</span>
+                </a>
+                <ul class="dropdown-menu extended notification">
+                  <li>
+                    <p>You have 7 new notifications</p>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <span class="label label-important"><i class="icon-bolt"></i></span> Server #3 overloaded.
+                      <span class="small italic">34 mins</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <span class="label label-warning"><i class="icon-bell"></i></span> Server #10 not respoding.
+                      <span class="small italic">1 Hours</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <span class="label label-important"><i class="icon-bolt"></i></span> Database overloaded 24%.
+                      <span class="small italic">4 hrs</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <span class="label label-success"><i class="icon-plus"></i></span> New user registered.
+                      <span class="small italic">Just now</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <span class="label label-info"><i class="icon-bullhorn"></i></span> Application error.
+                      <span class="small italic">10 mins</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">See all notifications</a>
+                  </li>
+                </ul>
+              </li>
+            </ul -->
+          </div>
+
+          <div class="top-nav">
+            <h3 class="page-title pull-right" style="color:whitesmoke;">
+              {{pageName}}
+              <small> {{projectName}}</small>
+            </h3>
+            <!-- <ul class="nav pull-right top-menu">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img class="avatar" src="http://www.gravatar.com/avatar/1c8cd817725f031bad4e398b2df6c8c4.png">
+                  <span class="username">Jeroen Peeters</span>
+                  <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="#"><i class="icon-user"></i> My Profile</a>
+                  </li>
+                  <li><a href="#"><i class="icon-tasks"></i> My Tasks</a>
+                  </li>
+                  <li><a href="#"><i class="icon-calendar"></i> Calendar</a>
+                  </li>
+                  <li class="divider"></li>
+                  <li><a href="login.html"><i class="icon-key"></i> Log Out</a>
+                  </li>
+                </ul>
+              </li>
+            </ul> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="container" class="row-fluid">
+      <div id="sidebar" class="nav-collapse collapse">
+        <!-- div class="sidebar-toggler hidden-phone"></div -->
+        <ul class="sidebar-menu">
+          {{#if isAdminBoard}}
+          <li>
+            <div class="form-group">
+              <label for="projectName">{{projectName}}</label>
+              <input id="projectName" class="form-control">
+            </div>
+          </li>
+          {{/if}}
+          <li class="{{isActiveRoute regex='index'}}">
+            <a href="{{pathFor 'index'}}" class="">
+              <span class="icon-box"> <i class="icon-dashboard"></i></span> Dashboard
+              <span class="arrow"></span>
+            </a>
+          </li>
+          <li class="{{isActiveRoute regex='.*[Aa]pplication.*'}}">
+            <a href="{{pathFor 'applications'}}" class="">
+              <span class="icon-box"> <i class="icon-cloud"></i></span> Applications
+              <span class="arrow"></span>
+            </a>
+            <ul class="sub">
+              <li class="{{isActiveRoute regex='createApplication'}}">
+                <a href="{{pathFor 'createApplication'}}">Create</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div id="main-content">
+        <div class="container-fluid" style="padding-top: 1em;">
+          <div class="row-fluid dasboard">
+            <div id="page" class="span12">
+              {{> yield}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="footer">
+      2015 &copy; ICTU Software Delivery.
+    </div>
+  </div>
+</template>

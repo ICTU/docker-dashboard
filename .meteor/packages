@@ -1,0 +1,16 @@
+# Meteor packages used by this project, one per line.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+meteor-platform
+coffeescript
+http
+bootstrap
+iron:router
+zimme:iron-router-active
+
+velocity:html-reporter
+xolvio:webdriver
+sanjo:jasmine
+msavin:mongol

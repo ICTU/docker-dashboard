@@ -1,0 +1,10 @@
+{
+  "project": "kiesraad",
+  "etcd": "http://docker1.rni.org:4001/v2/keys",
+  "coreos": {
+    "ssh": "ssh core@cluster.ictu"
+  },
+  "public": {
+    "projectName": "Project Kies Raad"
+  }
+}

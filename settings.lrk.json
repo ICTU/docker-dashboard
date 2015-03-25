@@ -1,0 +1,10 @@
+{
+  "project": "lrk",
+  "etcd": "http://docker1.rni.org:4001/v2/keys",
+  "coreos": {
+    "ssh": "ssh core@newcluster.ictu"
+  },
+  "public": {
+    "projectName": "Project LRK"
+  }
+}

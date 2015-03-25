@@ -1,0 +1,96 @@
+<template name="editApplication">
+  <div class="row-fluid">
+    <div class="span7">
+
+      <div class="widget">
+        <div class="widget-title">
+          <h4><i class="icon-cogs"></i> Application</h4>
+        </div>
+        <div class="widget-body">
+          <form class="form-horizontal">
+            <div class="control-group">
+              <label class="control-label">Name</label>
+              <div class="controls">
+                <input type="text" id="appName" placeholder="Enter the application name" value="{{appName}}" class="input-xxlarge" disabled>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Version</label>
+              <div class="controls">
+                <input type="text" id="appVersion" placeholder="Enter the application version" value="{{appVersion}}" class="input-xxlarge" disabled>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Definition</label>
+              <div class="controls">
+                <textarea id="appDef" class="input-xxlarge" rows="10" value="{{appDef}}"></textarea>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Tags</label>
+              <div class="controls">
+                {{#each tags}}
+                <span class="label label-info">{{this}}</span>
+                {{/each}}
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn"><i class="icon-ok"></i> Save</button>
+              <button type="button" id="delete" class="btn"><i class="icon-remove"></i> Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div id="alertSuccess" class="alert alert-success fade">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <strong>Definition saved successfully!</strong>
+      </div>
+      <div id="alertWrongNameVersion" class="alert alert-error fade">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <strong>Please specify both application name and version!</strong>
+      </div>
+    </div>
+    <div class="span5">
+      <p>
+        The application definition uses simple yaml-like format.
+      </p>
+      <p>
+        It should start with the application name and version on the first line. The format is <code>appName:appVersion</code>.
+      </p>
+      <p>
+        Create a section for each of the services that comprise the application.<br>
+        By convention the Web UI service should be called <strong>www</strong>.
+        In each service section you need to provide several attributes, that describe how to start the docker container implementing this service.
+      </p>
+      <p>
+        The first (top-most) service in the definition will get the default URL,
+        i.e. if your first service is <strong>www</strong> both <strong>http://www.app-instance-name.project.ictu</strong>
+        and <strong>http://app-instance-name.project.ictu</strong> will resolve to that same service.
+      </p>
+      <p>
+        <strong>image</strong><br>
+        The docker image implementing this service.
+      </p>
+      <p>
+        <strong>opts</strong><br>
+        The docker run options with which the container is started.
+      </p>
+      <p>
+        <strong>args</strong><br>
+        The entrypoint arguments of the docker container. Useful for starting your service with different parameters.
+      </p>
+      <p>
+        <strong>volumes</strong><br>
+        The in-container volumes that you want mapped and persisted. Useful for persisting container state.
+      </p>
+      <p>
+        <strong>links</strong><br>
+        Links to other services in the application.
+      </p>
+    </div>
+  </div>
+</template>

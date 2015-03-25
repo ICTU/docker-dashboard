@@ -1,0 +1,19 @@
+body {
+  background: #4d4d4d url(../img/bg-grey.jpg) !important;
+}
+#ictulogo {
+  width: 60pt;
+}
+#header a.brand {
+  opacity: 1;
+  padding: 0;
+  width: 215px;
+  padding: 18px 0;
+  text-align: center;
+}
+img.avatar {
+  height: 20pt;
+}
+#sidebar > ul > li > ul.sub > li {
+  border-bottom: 1px solid #363636;
+}
