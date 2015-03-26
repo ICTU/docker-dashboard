@@ -12,7 +12,7 @@ Template.appRow.events
     name = tpl.$('.instance-name').val();
     parameters = {}
     parameters[$(p).data('parameter')] = p.value for p in tpl.$('.parameter')
-    #console.log 'hallo', @
+    parameters._tags = @tags
     Meteor.call 'startApp', @key, @project, name, EJSON.stringify(parameters)
   'click .dropdown-menu': (e) -> e.stopPropagation() unless e.target.tagName.toUpperCase() == 'BUTTON'
 

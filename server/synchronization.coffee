@@ -42,7 +42,10 @@ toApp = (node) ->
       key = [project, appName, instanceName].join '/'
       objects[key] = {services:{}, meta:{}} unless objects[key]
       if serviceName == 'meta_'
-        objects[key].meta[propertyName] = n.value
+        if propertyName == 'parameters'
+          objects[key].parameters = EJSON.parse n.value
+        else
+          objects[key].meta[propertyName] = n.value
       else
         objects[key].services[serviceName] = {} unless objects[key].services[serviceName]
         objects[key].services[serviceName][propertyName] = n.value

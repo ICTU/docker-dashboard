@@ -6,7 +6,7 @@ Template.instancesTable.helpers
     port = findWebPort @services?.www
     protocol = determineProtocol port
     "#{protocol}://#{@services?.www?.hostname}:#{port}"
-  params: -> key: k, value: v for k, v of EJSON.parse(@meta.parameters) if @meta.parameters
+  params: -> key: k, value: v for k, v of @parameters if @parameters
 
 Template.instancesTable.created = -> Meteor.subscribe('instances')
 

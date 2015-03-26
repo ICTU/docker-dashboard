@@ -14,7 +14,7 @@ Template.index.helpers
 
 Template.index.events
   'click .restart-tag': (e, tpl) ->
-    console.log 'restartTag', @tag
+    Meteor.call 'restartTag', @tag
 
 Template.index.created = ->
   Meteor.subscribe 'apps'

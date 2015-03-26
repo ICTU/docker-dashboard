@@ -9,3 +9,6 @@ Meteor.methods
       Meteor.settings[name] = value
     else
       Meteor.settings[name]
+
+  restartTag: (tag) ->
+    console.log 'restartTagServer', tag
