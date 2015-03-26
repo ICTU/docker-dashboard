@@ -6,31 +6,50 @@ Meteor.startup ->
 clean = ->
   ApplicationDefs.remove {}
 
+toApp = (node) ->
+  [ignore..., keyBase, project, appName, version] = node.key?.split('/')
+  {project: project, name: appName, key: node.key?.split('/')[0..-2].join '/'}
+
 @sync = ->
-  ApplicationDefs.etcdSync "apps/#{Meteor.settings.project}", (objects, n) ->
-    [ignore..., keyBase, project, appName, version] = n.key.split('/')
-    key = [keyBase, project, appName].join '/'
-    objects[key] = {} unless objects[key]
-    objects[key].versions = [] unless objects[key].versions
-    objects[key].versions.push
-      version: version
-      appDef: n.value
-      tags: Helper.extractTags n.value
-    objects[key].project = project
-    objects[key].name = appName
-    objects[key].key = key
+  try
+    Etcd.discover "apps/#{Meteor.settings.project}", (err, nodes) ->
+      apps = (toApp node for node in nodes)
+      #console.log '@@@@@@@@@@', apps, '@@@@@@@@@@@@@@@@@'
+      Apps.updateCollection apps
 
-  Instances.etcdSync "instances/#{Meteor.settings.project}", (objects, n) ->
-    [ignore..., project, appName, instanceName, serviceName, propertyName] = n.key.split('/')
-    key = [project, appName, instanceName].join '/'
-    objects[key] = {services:{}, meta:{}} unless objects[key]
-    if serviceName == 'meta_'
-      objects[key].meta[propertyName] = n.value
-    else
-      objects[key].services[serviceName] = {} unless objects[key].services[serviceName]
-      objects[key].services[serviceName][propertyName] = n.value
+      Etcd.discover "apps/#{Meteor.settings.project}", (err, nodes) ->
+        objects = []
+        for n in nodes
+          [ignore..., keyBase, project, appName, version] = n.key.split('/')
 
-    objects[key].project = project
-    objects[key].application = appName
-    objects[key].name = instanceName
-    objects[key].key = key
+          objects.push
+            key: n.key
+            project: project
+            name: appName
+            version: version
+            appDef: n.value
+            tags: Helper.extractTags n.value
+
+        ApplicationDefs.updateCollection objects
+
+  catch
+    console.log "Error while trying to read #{baseKey}!"
+
+  Etcd.discover "instances/#{Meteor.settings.project}", (err, nodes) ->
+    objects = {}
+    for n in nodes
+      [ignore..., project, appName, instanceName, serviceName, propertyName] = n.key.split('/')
+      key = [project, appName, instanceName].join '/'
+      objects[key] = {services:{}, meta:{}} unless objects[key]
+      if serviceName == 'meta_'
+        objects[key].meta[propertyName] = n.value
+      else
+        objects[key].services[serviceName] = {} unless objects[key].services[serviceName]
+        objects[key].services[serviceName][propertyName] = n.value
+
+      objects[key].project = project
+      objects[key].application = appName
+      objects[key].name = instanceName
+      objects[key].key = key
+
+    Instances.updateCollection (value for key, value of objects)

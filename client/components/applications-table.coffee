@@ -9,7 +9,9 @@ Template.applicationsTable.helpers
       def: v.appDef
       tags: v.tags
 
-Template.applicationsTable.created = -> Meteor.subscribe('applicationDefs')
+Template.applicationsTable.created = ->
+  Meteor.subscribe('applicationDefs')
+  Meteor.subscribe('apps')
 
 Template.appRow.events
   'click .start-app': (e, tpl) ->
