@@ -10,13 +10,13 @@
         </tr>
       </thead>
       <tbody>
-        {{#each applicationDefs}}
+        {{#each apps}}
         <tr>
           <td><strong>{{name}}</strong></td>
           <td></td>
           <td></td>
         </tr>
-          {{#each versions}}
+          {{#each appDefs}}
             {{> appRow}}
           {{/each}}
         {{/each}}

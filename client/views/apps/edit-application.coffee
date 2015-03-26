@@ -1,4 +1,4 @@
-nameTemplate.editApplication.events
+Template.editApplication.events
   'submit form': (event, tpl) ->
     event.preventDefault()
     if val(tpl, 'appName') && val(tpl, 'appVersion')
@@ -22,7 +22,7 @@ extractAppNameAndVersion = (appDef) -> appDef.trim().split('\n')[0].split(':')
 Template.editApplication.helpers
   appName: -> @appName
   appVersion: -> @appVersion
-  tags: -> ApplicationDefs.findOne(name: @appName)?.versions[@appVersion]?.tags
-  appDef: -> ApplicationDefs.findOne(name: @appName)?.versions[@appVersion]?.appDef
+  tags: -> ApplicationDefs.findOne(name: @appName, version: @appVersion)?.tags
+  appDef: -> ApplicationDefs.findOne(name: @appName, version: @appVersion)?.def
 
 Template.editApplication.created = -> Meteor.subscribe('applicationDefs')

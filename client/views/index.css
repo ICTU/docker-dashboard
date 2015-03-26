@@ -17,3 +17,13 @@ img.avatar {
 #sidebar > ul > li > ul.sub > li {
   border-bottom: 1px solid #363636;
 }
+.big-icon {
+  font-size:80px;
+}
+.display {
+  padding-top:5px;
+}
+
+.metro-overview {
+  height:100px;
+}

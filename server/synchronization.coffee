@@ -27,7 +27,7 @@ toApp = (node) ->
             project: project
             name: appName
             version: version
-            appDef: n.value
+            def: n.value
             tags: Helper.extractTags n.value
 
         ApplicationDefs.updateCollection objects

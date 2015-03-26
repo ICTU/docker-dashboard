@@ -11,20 +11,20 @@
             <div class="control-group">
               <label class="control-label">Name</label>
               <div class="controls">
-                <input type="text" id="appName" placeholder="Enter the application name" value="{{appName}}" class="input-xxlarge" disabled>
+                <input type="text" style="width:99%" id="appName" placeholder="Enter the application name" value="{{appName}}" class="input-xxlarge" disabled>
               </div>
             </div>
             <div class="control-group">
               <label class="control-label">Version</label>
               <div class="controls">
-                <input type="text" id="appVersion" placeholder="Enter the application version" value="{{appVersion}}" class="input-xxlarge" disabled>
+                <input type="text" style="width:99%" id="appVersion" placeholder="Enter the application version" value="{{appVersion}}" class="input-xxlarge" disabled>
               </div>
             </div>
 
             <div class="control-group">
               <label class="control-label">Definition</label>
               <div class="controls">
-                <textarea id="appDef" class="input-xxlarge" rows="10" value="{{appDef}}"></textarea>
+                <textarea id="appDef" style="width:99%" rows="10" value="{{appDef}}"></textarea>
               </div>
             </div>
 
@@ -67,9 +67,8 @@
         In each service section you need to provide several attributes, that describe how to start the docker container implementing this service.
       </p>
       <p>
-        The first (top-most) service in the definition will get the default URL,
-        i.e. if your first service is <strong>www</strong> both <strong>http://www.app-instance-name.project.ictu</strong>
-        and <strong>http://app-instance-name.project.ictu</strong> will resolve to that same service.
+        <strong>tags</strong><br>
+        Syntax: <code>#tags: tag1 tag2</code>
       </p>
       <p>
         <strong>image</strong><br>
