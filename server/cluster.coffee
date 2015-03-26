@@ -7,14 +7,12 @@ ssh = (cmd, callback) -> exec "#{Meteor.settings.coreos.ssh} \"#{cmd}\"", callba
     startScript = if Meteor.settings.fleet then "/opt/bin/start-app.sh" else "/opt/bin/start-app-nofleet.sh"
     if key[0...1] == '/' then key = key[1..]
     ssh "curl -s #{Meteor.settings.etcd}/#{key} | /opt/bin/jq -r '.node.value' | #{startScript} #{project} #{instance} '#{EJSON.stringify(parameters)}'", Meteor.bindEnvironment (error, stdout, stderr) ->
+      console.log(error) if error
       sync()
     ""
 
-  ###
   stopInstance: (project, instance) ->
     console.log "Cluster.stopInstance #{project}, #{instance}"
-    HTTP.get "http://10.19.88.14/stop-app/#{project}/#{instance}"
-    # ssh "fleetctl stop main@#{project}-#{instance}.service && fleetctl destroy main@#{project}-#{instance}.service", Meteor.bindEnvironment (error, stdout, stderr) ->
     inst = Instances.findOne {project: project, name: instance}
     firstService = Object.keys(inst.services)[0]
     hostIp = inst.services[firstService].hostIp # we assume all services live on the same host for now
@@ -22,28 +20,16 @@ ssh = (cmd, callback) -> exec "#{Meteor.settings.coreos.ssh} \"#{cmd}\"", callba
     cmd = "ssh core@#{hostIp} \"sudo #{ctl} stop main@#{project}-#{instance}.service\""
     console.log "Cluster.stopInstance -> #{cmd}"
     exec cmd, Meteor.bindEnvironment (error, stdout, stderr) ->
-      console.log "Cluster.stopInstance completed -> #{cmd}"
-      sync()
-    ""
-  ###
-
-  stopInstance: (project, instance) ->
-    console.log "Cluster.stopInstance #{project}, #{instance}"
-    # ssh "fleetctl stop main@#{project}-#{instance}.service && fleetctl destroy main@#{project}-#{instance}.service", Meteor.bindEnvironment (error, stdout, stderr) ->
-    inst = Instances.findOne {project: project, name: instance}
-    firstService = Object.keys(inst.services)[0]
-    hostIp = inst.services[firstService].hostIp # we assume all services live on the same host for now
-    ctl = if Meteor.settings.fleet then "fleetctl" else "systemctl"
-    cmd = "ssh core@#{hostIp} \"sudo #{ctl} stop main@#{project}-#{instance}.service\""
-    console.log "Cluster.stopInstance -> #{cmd}"
-    exec cmd, Meteor.bindEnvironment (error, stdout, stderr) ->
+      console.log(error) if error
       console.log "Cluster.stopInstance completed -> #{cmd}"
       sync()
     ""
 
   clearInstance: (project, instance) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
-    HTTP.del "#{Meteor.settings.etcd}/instances/#{project}/#{instance}?recursive=true", {}, ->
+    inst = Instances.findOne project: project, name: instance
+    HTTP.del "#{Meteor.settings.etcd}/instances/#{project}/#{inst.application}/#{instance}?recursive=true", {}, (error, result) ->
+      console.log(error) if error
       console.log "Cluster.clearInstance completed -> #{project}, #{instance}"
       sync()
     ""
