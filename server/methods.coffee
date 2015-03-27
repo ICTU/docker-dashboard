@@ -11,4 +11,7 @@ Meteor.methods
       Meteor.settings[name]
 
   restartTag: (tag) ->
-    console.log 'restartTagServer', tag
+    for instance in Instances.find('parameters.tags': tag).fetch()
+      Cluster.stopInstance instance.project, instance.name
+    for def in ApplicationDefs.find('tags': tag).fetch()
+      Cluster.startApp def.key, def.project, def.name, {tags: def.tags}

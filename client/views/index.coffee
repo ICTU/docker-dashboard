@@ -13,8 +13,7 @@ Template.index.helpers
     tag: k, count: v for k,v of tagsAndCount
 
 Template.index.events
-  'click .restart-tag': (e, tpl) ->
-    Meteor.call 'restartTag', @tag
+  'click .restart-tag': (e, tpl) -> Meteor.call 'restartTag', @tag
 
 Template.index.created = ->
   Meteor.subscribe 'apps'

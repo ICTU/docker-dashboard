@@ -6,6 +6,7 @@ ssh = (cmd, callback) -> exec "#{Meteor.settings.coreos.ssh} \"#{cmd}\"", callba
     console.log "Cluster.startApp #{key}, #{project}, #{instance}, #{parameters}"
     startScript = if Meteor.settings.fleet then "/opt/bin/start-app.sh" else "/opt/bin/start-app-nofleet.sh"
     if key[0...1] == '/' then key = key[1..]
+    console.log "curl -s #{Meteor.settings.etcd}/#{key} | /opt/bin/jq -r '.node.value' | #{startScript} #{project} #{instance} '#{EJSON.stringify(parameters)}'"
     ssh "curl -s #{Meteor.settings.etcd}/#{key} | /opt/bin/jq -r '.node.value' | #{startScript} #{project} #{instance} '#{EJSON.stringify(parameters)}'", Meteor.bindEnvironment (error, stdout, stderr) ->
       console.log(error) if error
       sync()
