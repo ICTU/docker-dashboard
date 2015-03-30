@@ -9,6 +9,7 @@ ssh = (cmd, callback) -> exec "#{Meteor.settings.coreos.ssh} \"#{cmd}\"", callba
     console.log "curl -s #{Meteor.settings.etcd}/#{key} | /opt/bin/jq -r '.node.value' | #{startScript} #{project} #{instance} '#{EJSON.stringify(parameters)}'"
     ssh "curl -s #{Meteor.settings.etcd}/#{key} | /opt/bin/jq -r '.node.value' | #{startScript} #{project} #{instance} '#{EJSON.stringify(parameters)}'", Meteor.bindEnvironment (error, stdout, stderr) ->
       console.log(error) if error
+      console.log stdout, stderr
       sync()
     ""
 
