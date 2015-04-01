@@ -4,6 +4,7 @@ CFG_FILE="/app/settings.json"
 
 echo "Starting dashboard $PROJECT_KEY - $PROJECT_NAME: $@"
 
+cp $CFG_FILE.orig $CFG_FILE
 sed -i "s/_PROJECTKEY/$PROJECT_KEY/g" $CFG_FILE
 sed -i "s/_PROJECTNAME/$PROJECT_NAME/g" $CFG_FILE
 sed -i "s/_ADMIN/$ADMIN_BOARD/g" $CFG_FILE
