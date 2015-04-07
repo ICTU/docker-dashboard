@@ -34,10 +34,10 @@ Meteor.startup ->
       path: '/api/v1/start-app/:app/:version/:name'
       action: ->
         check([@params.app, @params.version, @params.name], [String])
-        def = ApplicationDefs.findOne name: @params.app
-        if def && def.versions[@params.version]
-          console.log "#{def.key}/#{@params.version}", Meteor.settings.project, @params.name, EJSON.stringify(@request.query)
-          Cluster.startApp "#{def.key}/#{@params.version}", Meteor.settings.project, @params.name, EJSON.stringify(@request.query, indent:'').trim()
+        def = ApplicationDefs.findOne project: Meteor.settings.project, name: @params.app, version: @params.version
+        if def
+          console.log def.key, Meteor.settings.project, @params.name, EJSON.stringify(@request.query)
+          Cluster.startApp def.key, Meteor.settings.project, @params.name, EJSON.stringify(@request.query, indent:'').trim()
           @response.writeHead 200, 'Content-Type': 'application/json'
           @response.end "Application #{@params.name} (#{@params.app}:#{@params.version}) is scheduled for execution."
         else
