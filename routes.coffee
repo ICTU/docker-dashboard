@@ -57,6 +57,9 @@ Meteor.startup ->
       action: ->
         check(@params.name, String)
         instance = Instances.findOne project: Meteor.settings.project, name: @params.name
-        @response.writeHead 200, 'Content-Type': 'application/json'
-        state = instance?.meta?.state || 'missing'
-        @response.end state
+        if instance
+          @response.writeHead 200, 'Content-Type': 'application/json'
+          @response.end instance.meta.state
+        else
+          @response.writeHead 404, 'Content-Type': 'application/json'
+          @response.end '{"message": "Instance not found"}' 
