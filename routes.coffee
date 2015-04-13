@@ -51,6 +51,15 @@ Meteor.startup ->
         Cluster.stopInstance Meteor.settings.project, @params.name
         @response.writeHead 200, 'Content-Type': 'application/json'
         @response.end "#{@params.name} instance is scheduled for destruction."
+    @route 'apiListInstances',
+      where: 'server'
+      path: '/api/v1/:app/:version/instances'
+      action: ->
+        check(@params.app, String)
+        check(@params.version, String)
+        instNames = Instances.find(project: Meteor.settings.project, "meta.appName": @params.app, "meta.appVersion": @params.version).map (inst) -> inst.name
+        @response.writeHead 200, 'Content-Type': 'application/json'
+        @response.end EJSON.stringify(instNames)
     @route 'apiGetStatus',
       where: 'server'
       path: '/api/v1/state/:name'
@@ -62,4 +71,4 @@ Meteor.startup ->
           @response.end instance.meta.state
         else
           @response.writeHead 404, 'Content-Type': 'application/json'
-          @response.end '{"message": "Instance not found"}' 
+          @response.end '{"message": "Instance not found"}'
