@@ -53,7 +53,7 @@ Meteor.startup ->
         @response.end "#{@params.name} instance is scheduled for destruction."
     @route 'apiListInstances',
       where: 'server'
-      path: '/api/v1/:app/:version/instances'
+      path: '/api/v1/instances/:app/:version'
       action: ->
         check(@params.app, String)
         check(@params.version, String)
