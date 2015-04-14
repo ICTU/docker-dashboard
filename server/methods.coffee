@@ -4,11 +4,8 @@ Meteor.methods
   clearInstance: Cluster.clearInstance
   saveApp: Cluster.saveApp
   deleteApp: Cluster.deleteApp
-  setting: (name, value) ->
-    if value
-      Meteor.settings[name] = value
-    else
-      Meteor.settings[name]
+  set: (setting) ->
+    Meteor.settings = _.extend Meteor.settings, EJSON.parse(setting)
 
   restartTag: (tag) ->
     for instance in Instances.find('parameters.tags': tag).fetch()

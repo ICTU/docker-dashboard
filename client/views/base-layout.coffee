@@ -3,4 +3,6 @@ Template['base-layout'].helpers
 
 Template['base-layout'].events
   'change #projectName': (e, t) ->
-    Meteor.call 'setting', 'project', e.target.value
+    Meteor.call 'set', "{\"project\":\"#{e.target.value}\"}"
+  'change #targetHost': (e, t) ->
+    Meteor.call 'set', "{\"coreos\":{\"ssh\":\"ssh core@#{e.target.value}\"}}"
