@@ -7,6 +7,8 @@ Template.instancesTable.helpers
     protocol = determineProtocol port
     "#{protocol}://#{@services?.www?.hostname}:#{port}"
   params: -> key: k, value: v for k, v of @parameters if @parameters
+  isAdminBoard: -> Meteor.settings.public.admin
+  services: -> JSON.stringify @services, undefined, 2
 
 Template.instancesTable.created = -> Meteor.subscribe('instances')
 
@@ -15,6 +17,8 @@ Template.instancesTable.events
     Meteor.call 'stopInstance', @project, @name
   'click .clear-instance': ->
     Meteor.call 'clearInstance', @project, @name
+  'click .toggle-services': (e, t) ->
+    t.$(e.target).closest('td').find('pre').toggleClass 'hidden'
 
 HTTPS_PORTS = ['443', '8443']
 HTTP_PORTS = ['80', '8080', '8081', '8181', '9000']

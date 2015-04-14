@@ -17,6 +17,10 @@
             {{#if showLoading}}
               <img src="/img/loader.gif" style="width:12pt"/>
             {{/if}}
+            {{#if isAdminBoard}}
+              <a href="#" class="toggle-services"><i class="icon-info-sign"></i></a>
+              <pre class="hidden">{{services}}</pre>
+            {{/if}}
           </td>
           <td>{{meta.appName}}&nbsp;:&nbsp;{{meta.appVersion}}
             {{#each params}}
