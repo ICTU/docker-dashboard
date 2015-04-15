@@ -21,8 +21,23 @@ Template.instancesTable.events
   'click .toggle-services': (e, t) ->
     t.$(e.target).closest('td').find('div').toggleClass 'hidden'
   'click .select-service': (e, t) ->
+    evaluator = (command, term) ->
+      term.echo "you typed: #{command}"
+      return undefined
+    x = t.$('#terminal')
+    x.terminal evaluator, prompt: '$ ', greetings: "ICTU Cloud Terminal ~ Powered by RoboChick\n\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___//\n
+&nbsp;&nbsp;&nbsp;&nbsp;/.__.\\\n
+&nbsp;&nbsp;&nbsp;&nbsp;\\ \\/ /\n
+&nbsp;'__/    \\\n
+&nbsp;&nbsp;\\-      )\n
+&nbsp;&nbsp;&nbsp;\\_____/\n
+_____|_|____\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\" \""
     console.log @
     Meteor.call 'execService', @
+
+
 
 HTTPS_PORTS = ['443', '8443']
 HTTP_PORTS = ['80', '8080', '8081', '8181', '8668', '9000']
