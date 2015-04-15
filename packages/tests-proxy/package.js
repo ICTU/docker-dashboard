@@ -8,4 +8,6 @@ Package.describe({
 Package.onUse(function (api) {
 	api.use("coffeescript", ["client", "server"]);
 	api.add_files("tests/jasmine/client/integration/appDefSpec.coffee",["client"]);
+	api.add_files("tests/jasmine/client/integration/helper.coffee",["client"]);
+	api.add_files("tests/jasmine/server/integration/appDefSpec.coffee",["server"]);
 });

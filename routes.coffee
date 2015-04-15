@@ -1,3 +1,5 @@
+connections = {}
+
 Meteor.startup ->
 
   Router.configure
@@ -76,24 +78,50 @@ Meteor.startup ->
       where: 'server'
       path: '/api/v1/stream/:containerName'
       action: ->
+        #@response.setHeader 'Content-Type', 'text/event-stream'
+        #@response.setHeader 'Transfer-Encoding', 'chunked'
+        #@response.setHeader 'Cache-Control: no-cache'
+        @response.writeHead 200, 'Content-Type': 'text/event-stream'
+        connectionId = Random.id()
+        console.log 'connectionId', connectionId
         ssh2 = Meteor.npmRequire('ssh2-connect')
         check(@params.containerName, String)
-        ssh2 host: '10.19.88.24', username: 'core', (err, sess) =>
-          @response.on 'end', ->
-            console.log 'response ended'
+
+        ssh2 host: '10.19.88.24', username: 'core', privateKeyPath: '~/.ssh/docker-cluster/id_rsa', (err, sess) =>
+          finish = =>
+            delete connections[connectionId]
             sess.end()
+            @response.end()
+          @response.write "event: connectionId\n"
+          @response.write "data: #{connectionId}\n\n"
+          @response.on 'close', ->
+            console.log 'response ended'
+            finish()
           @request.on 'end', ->
             console.log 'request ended'
           @request.on 'data', (data) ->
             console.log 'data received: ', data.toString()
-          sess.shell (err, s) =>
+          sess.on 'end', =>
+            finish()
+          sess.exec "docker exec -it #{@params.containerName} bash", {pty:true}, (err, s) =>
             console.log err if err
-            s.on 'data', (data) =>
-              console.log "> #{data.toString()}"
-              @response.write data
-            s.on 'error', console.log
-            s.pipe @response
-            # @request.pipe s
+            connections[connectionId] = s
 
-            s.write "docker exec -it #{@params.containerName} bash\n"
-            s.write "pwd\n"
+            s.on 'data', (data) =>
+              @response.write "event: data\n"
+              @response.write "data: #{data}\n\n"
+            s.on 'end', =>
+              finish()
+            s.on 'error', console.log
+
+    @route 'sendSshCommandToContainer',
+      where: 'server'
+      path: '/api/v1/stream/:connectionId/send'
+      action: ->
+        check(@params.connectionId, String)
+        if connections[@params.connectionId]
+          connections[@params.connectionId].write "#{@request.body.cmd}\n"
+          @response.end()
+        else
+          @response.writeHead 404, 'Content-Type': 'application/json'
+          @response.end '{"error": "Connection does not exist"}'
