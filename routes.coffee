@@ -1,4 +1,5 @@
 Meteor.startup ->
+
   Router.configure
     layoutTemplate: 'base-layout'
 
@@ -55,8 +56,7 @@ Meteor.startup ->
       where: 'server'
       path: '/api/v1/instances/:app/:version'
       action: ->
-        check(@params.app, String)
-        check(@params.version, String)
+        check([@params.app, @params.version], [String])
         instNames = Instances.find(project: Meteor.settings.project, "meta.appName": @params.app, "meta.appVersion": @params.version).map (inst) -> inst.name
         @response.writeHead 200, 'Content-Type': 'application/json'
         @response.end EJSON.stringify(instNames)
@@ -72,3 +72,28 @@ Meteor.startup ->
         else
           @response.writeHead 404, 'Content-Type': 'application/json'
           @response.end '{"message": "Instance not found"}'
+    @route 'sshToContainer',
+      where: 'server'
+      path: '/api/v1/stream/:containerName'
+      action: ->
+        ssh2 = Meteor.npmRequire('ssh2-connect')
+        check(@params.containerName, String)
+        ssh2 host: '10.19.88.24', username: 'core', (err, sess) =>
+          @response.on 'end', ->
+            console.log 'response ended'
+            sess.end()
+          @request.on 'end', ->
+            console.log 'request ended'
+          @request.on 'data', (data) ->
+            console.log 'data received: ', data.toString()
+          sess.shell (err, s) =>
+            console.log err if err
+            s.on 'data', (data) =>
+              console.log "> #{data.toString()}"
+              @response.write data
+            s.on 'error', console.log
+            s.pipe @response
+            # @request.pipe s
+
+            s.write "docker exec -it #{@params.containerName} bash\n"
+            s.write "pwd\n"

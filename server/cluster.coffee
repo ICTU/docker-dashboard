@@ -1,6 +1,7 @@
 exec = Npm.require('child_process').exec
 ssh = (cmd, callback) -> exec "#{Meteor.settings.coreos.ssh} \"#{cmd}\"", callback
-ssht = (endpoint, cmd) -> exec "#{}"
+ssht = (endpoint, cmd, cb) -> exec "ssh -t #{endpoint} #{cmd}", cb
+ssh2 = Meteor.npmRequire('ssh2-connect')
 
 @Cluster =
   startApp: (key, project, instance, parameters) ->
@@ -47,3 +48,6 @@ ssht = (endpoint, cmd) -> exec "#{}"
 
   execService: (opts) ->
     console.log opts
+    ssh2 host: opts.data.hostIp, username: 'core', (err, session) =>
+      session.exec "docker exec -it #{opts.data.dockerContainerName} bash", (err, result) ->
+        console.log err, result

@@ -34,8 +34,6 @@ Template.instancesTable.events
 &nbsp;&nbsp;&nbsp;\\_____/\n
 _____|_|____\n
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\" \""
-    console.log @
-    Meteor.call 'execService', @
 
 
 

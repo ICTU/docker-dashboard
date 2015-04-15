@@ -14,3 +14,7 @@ velocity:html-reporter
 xolvio:webdriver
 sanjo:jasmine
 msavin:mongol
+meteorhacks:npm
+
+
+npm-container
