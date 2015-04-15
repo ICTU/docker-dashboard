@@ -1,5 +1,6 @@
 exec = Npm.require('child_process').exec
 ssh = (cmd, callback) -> exec "#{Meteor.settings.coreos.ssh} \"#{cmd}\"", callback
+ssht = (endpoint, cmd) -> exec "#{}"
 
 @Cluster =
   startApp: (key, project, instance, parameters) ->
@@ -43,3 +44,6 @@ ssh = (cmd, callback) -> exec "#{Meteor.settings.coreos.ssh} \"#{cmd}\"", callba
   deleteApp: (name, version) ->
     Etcd.delete "apps/#{Meteor.settings.project}/#{name}/#{version}"
     ""
+
+  execService: (opts) ->
+    console.log opts

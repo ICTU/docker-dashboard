@@ -19,7 +19,12 @@
             {{/if}}
             {{#if isAdminBoard}}
               <a href="#" class="toggle-services"><i class="icon-info-sign"></i></a>
-              <pre class="hidden">{{services}}</pre>
+              <div class="hidden">
+                {{#each services}}
+                <a href="#" class="select-service">{{name}}</a>
+                <pre>{{pretify data}}</pre>
+                {{/each}}
+              </div>
             {{/if}}
           </td>
           <td>{{meta.appName}}&nbsp;:&nbsp;{{meta.appVersion}}

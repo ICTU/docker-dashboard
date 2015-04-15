@@ -6,6 +6,7 @@ Meteor.methods
   deleteApp: Cluster.deleteApp
   set: (setting) ->
     Meteor.settings = _.extend Meteor.settings, EJSON.parse(setting)
+  execService: Cluster.execService
 
   restartTag: (tag) ->
     for instance in Instances.find('parameters.tags': tag).fetch()

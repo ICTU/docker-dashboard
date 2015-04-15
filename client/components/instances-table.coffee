@@ -8,7 +8,8 @@ Template.instancesTable.helpers
     "#{protocol}://#{@services?.www?.hostname}:#{port}"
   params: -> key: k, value: v for k, v of @parameters if @parameters
   isAdminBoard: -> Meteor.settings.public.admin
-  services: -> JSON.stringify @services, undefined, 2
+  services: -> {name: k, data: v} for k, v of @services
+  pretify: (json) -> JSON.stringify json, undefined, 2
 
 Template.instancesTable.created = -> Meteor.subscribe('instances')
 
@@ -18,7 +19,10 @@ Template.instancesTable.events
   'click .clear-instance': ->
     Meteor.call 'clearInstance', @project, @name
   'click .toggle-services': (e, t) ->
-    t.$(e.target).closest('td').find('pre').toggleClass 'hidden'
+    t.$(e.target).closest('td').find('div').toggleClass 'hidden'
+  'click .select-service': (e, t) ->
+    console.log @
+    Meteor.call 'execService', @
 
 HTTPS_PORTS = ['443', '8443']
 HTTP_PORTS = ['80', '8080', '8081', '8181', '8668', '9000']
