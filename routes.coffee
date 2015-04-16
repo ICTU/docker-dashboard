@@ -87,7 +87,7 @@ Meteor.startup ->
         ssh2 = Meteor.npmRequire('ssh2-connect')
         check(@params.containerName, String)
 
-        ssh2 host: '10.19.88.24', username: 'core', privateKeyPath: '~/.ssh/docker-cluster/id_rsa', (err, sess) =>
+        ssh2 host: '10.19.88.24', username: 'core', (err, sess) =>
           finish = =>
             delete connections[connectionId]
             sess.end()
