@@ -1,6 +1,6 @@
 body {
     color: #868686;
-    background:#4d4d4d url(../img/bg-grey.jpg) !important;
+    background:#4d4d4d url(../img/bg-grey.jpg);
 }
 #main-content {
     box-shadow: 0 0 10px #292828;
@@ -172,4 +172,3 @@ ul.social-link li a:hover, .blog .date .month {
 .about-us h4, .team-member h3, .team-member ul li a:hover, .contact-us h4 {
     color: #363636;
 }
-

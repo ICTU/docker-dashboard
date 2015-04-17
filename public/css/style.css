@@ -3113,7 +3113,7 @@ ul.faq-list li a:hover, ul.faq-list li a.active{
 /*lock*/
 
 #lock-body {
-    background: url("../img/bg-grey.jpg") !important;
+    background: url("../img/bg-grey.jpg");
 }
 
 .lock-header {
@@ -3488,4 +3488,3 @@ ul.amounts li {
 .feedback .control-group  {
     margin-bottom: 15px;
 }
-
