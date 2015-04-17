@@ -104,13 +104,17 @@ Meteor.startup ->
           sess.on 'end', =>
             finish()
           sess.exec "docker exec -it #{@params.containerName} bash", {pty:true}, (err, s) =>
+            s.write 'IGNORE_THIS_LINE=1;export PS1="\\w $ "\n'
             console.log err if err
             connections[connectionId] = s
 
             s.on 'data', (data) =>
-              @response.write "event: data\n"
-              @response.write "data: #{EJSON.stringify data: data.toString()}\n\n"
+              output = data.toString()
+              if output.indexOf('IGNORE_THIS_LINE=1') == -1
+                @response.write "event: data\n"
+                @response.write "data: #{EJSON.stringify data: data.toString()}\n\n"
             s.on 'end', =>
+              console.log 's onEnd'
               finish()
             s.on 'error', console.log
 
@@ -120,6 +124,7 @@ Meteor.startup ->
       action: ->
         check(@params.connectionId, String)
         if connections[@params.connectionId]
+          console.log "writing to connection #{@params.connectionId}: #{@request.body.cmd}"
           connections[@params.connectionId].write "#{@request.body.cmd}\n"
           @response.end()
         else

@@ -33,19 +33,18 @@ Template.instancesTable.events
     t.$(e.target).closest('td').find('div').toggleClass 'hidden'
   'click .select-service': (e, t) ->
     connectionId = null
-    evt = new EventSource '/api/v1/stream/ssh-innovation-ubuntu'
-    evt.addEventListener 'connectionId', (event) ->
+    evt = new EventSource "/api/v1/stream/#{@data.dockerContainerName}"
+    evt.addEventListener 'connectionId', (event) =>
       connectionId = event.data
-      t.$('#terminal').terminal().echo "ConnectionId: #{connectionId}"
+      t.$('#terminal').terminal().echo "Connection established to #{@name}"
     evt.addEventListener 'data', (event) ->
       t.$('#terminal').terminal().echo EJSON.parse(event.data).data
     evaluator = (command, term) ->
       console.log (EJSON.stringify cmd: command)
       HTTP.post "/api/v1/stream/#{connectionId}/send", (data: cmd: command), (err, response) ->
         term.error err if err
-        console.log response
       undefined
-    t.$('#terminal').terminal evaluator, prompt: '$ ', greetings: robochick
+    t.$('#terminal').terminal evaluator, prompt: '$ ', greetings: robochick, exit: false
 
 HTTPS_PORTS = ['443', '8443']
 HTTP_PORTS = ['80', '8080', '8081', '8181', '8668', '9000']
