@@ -20,7 +20,9 @@
             <a href="#" class="toggle-services"><i class="icon-info-sign"></i></a>
             <div class="hidden">
               {{#each services}}
-              <a href="#" class="select-service" data-toggle="modal" data-target="#termModal">{{name}}</a>
+              {{#with service=. instance=..}}
+              <a href="#" class="select-service" data-toggle="modal" data-target="#termModal">{{service.name}}</a>
+              {{/with}}
               <pre>{{pretify data}}</pre>
               {{/each}}
             </div>
@@ -42,15 +44,5 @@
         {{/each}}
       </tbody>
     </table>
-
-    <div id="termModal" class="modal fade" style="background-color:#000;">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body" style="max-height: 600px;">
-            <div id="terminal" style="height:500px;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
 
 </template>

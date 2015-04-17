@@ -64,6 +64,7 @@ Meteor.startup ->
             @response.write "event: data\n"
             @response.write "data: #{EJSON.stringify data: data}\n\n"
           else
+            console.log 'skipping token:', data
             tokenCount += 1
 
         ssh2 host: '10.19.88.24', username: 'core', privateKeyPath: '~/.ssh/docker-cluster/id_rsa', (err, sess) =>
@@ -81,8 +82,7 @@ Meteor.startup ->
           sess.on 'end', =>
             finish()
           sess.exec "docker exec -it #{@params.containerName} bash", {pty:true}, (err, s) =>
-            s.write 'stty -echo\n'
-            s.write 'export PS1="\\w $ \n";\n'
+            s.write 'stty -echo;export PS1="\\w $ \n";\n'
             console.log err if err
             connections[connectionId] = s
 
