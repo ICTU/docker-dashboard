@@ -78,14 +78,21 @@ Meteor.startup ->
       where: 'server'
       path: '/api/v1/stream/:containerName'
       action: ->
-        #@response.setHeader 'Content-Type', 'text/event-stream'
-        #@response.setHeader 'Transfer-Encoding', 'chunked'
-        #@response.setHeader 'Cache-Control: no-cache'
         @response.writeHead 200, 'Content-Type': 'text/event-stream'
         connectionId = Random.id()
-        console.log 'connectionId', connectionId
-        ssh2 = Meteor.npmRequire('ssh2-connect')
-        check(@params.containerName, String)
+        streamSplitter = (Meteor.npmRequire 'stream-splitter') '\n'
+        ssh2 = Meteor.npmRequire 'ssh2-connect'
+
+        check @params.containerName, String
+
+        tokenCount = 0
+        streamSplitter.on 'token', (token) =>
+          data = token.toString()
+          if tokenCount > 7
+            @response.write "event: data\n"
+            @response.write "data: #{EJSON.stringify data: data}\n\n"
+          else
+            tokenCount += 1
 
         ssh2 host: '10.19.88.24', username: 'core', privateKeyPath: '~/.ssh/docker-cluster/id_rsa', (err, sess) =>
           finish = =>
@@ -99,20 +106,16 @@ Meteor.startup ->
             finish()
           @request.on 'end', ->
             console.log 'request ended'
-          @request.on 'data', (data) ->
-            console.log 'data received: ', data.toString()
           sess.on 'end', =>
             finish()
           sess.exec "docker exec -it #{@params.containerName} bash", {pty:true}, (err, s) =>
-            s.write 'IGNORE_THIS_LINE=1;export PS1="\\w $ "\n'
+            s.write 'stty -echo\n'
+            s.write 'export PS1="\\w $ \n";\n'
             console.log err if err
             connections[connectionId] = s
 
             s.on 'data', (data) =>
-              output = data.toString()
-              if output.indexOf('IGNORE_THIS_LINE=1') == -1
-                @response.write "event: data\n"
-                @response.write "data: #{EJSON.stringify data: data.toString()}\n\n"
+              streamSplitter.write data
             s.on 'end', =>
               console.log 's onEnd'
               finish()

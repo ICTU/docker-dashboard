@@ -40,6 +40,14 @@
           }
         }
       }
+    },
+    "stream-splitter": {
+      "version": "0.3.2",
+      "dependencies": {
+        "buffers": {
+          "version": "0.1.1"
+        }
+      }
     }
   }
 }
