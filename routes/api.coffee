@@ -60,14 +60,18 @@ Meteor.startup ->
         tokenCount = 0
         streamSplitter.on 'token', (token) =>
           data = token.toString()
-          if tokenCount > 7
-            @response.write "event: data\n"
-            @response.write "data: #{EJSON.stringify data: data}\n\n"
+          if tokenCount > 3
+            if data.match /^ROBOCHICK_PROMPT/
+              @response.write "event: prompt\n"
+              @response.write "data: #{EJSON.stringify data: data[16..-2]}\n\n"
+            else
+              @response.write "event: data\n"
+              @response.write "data: #{EJSON.stringify data: data}\n\n"
           else
             console.log 'skipping token:', data
             tokenCount += 1
 
-        ssh2 host: '10.19.88.24', username: 'core', privateKeyPath: '~/.ssh/docker-cluster/id_rsa', (err, sess) =>
+        ssh2 host: '10.19.88.24', username: Settings.ssh.username(), privateKeyPath: Settings.ssh.keyPath(), (err, sess) =>
           finish = =>
             delete connections[connectionId]
             sess.end()
@@ -82,7 +86,7 @@ Meteor.startup ->
           sess.on 'end', =>
             finish()
           sess.exec "docker exec -it #{@params.containerName} bash", {pty:true}, (err, s) =>
-            s.write 'stty -echo;export PS1="\\w $ \n";\n'
+            s.write 'stty -echo;sleep 1;export PS1="ROBOCHICK_PROMPT\\w $ \n";\n'
             console.log err if err
             connections[connectionId] = s
 
