@@ -4,6 +4,10 @@
   "coreos": {
     "ssh": "ssh core@10.19.88.24"
   },
+  "ssh": {
+    "user": "core",
+    "keyPath": "~/.ssh/docker-cluster_id"
+  },
   "fleet": false,
   "public": {
     "projectName": "Innovation Project",
