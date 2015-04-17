@@ -38,7 +38,7 @@ Template.instancesTable.events
       connectionId = event.data
       t.$('#terminal').terminal().echo "ConnectionId: #{connectionId}"
     evt.addEventListener 'data', (event) ->
-      t.$('#terminal').terminal().echo event.data
+      t.$('#terminal').terminal().echo EJSON.parse(event.data).data
     evaluator = (command, term) ->
       console.log (EJSON.stringify cmd: command)
       HTTP.post "/api/v1/stream/#{connectionId}/send", (data: cmd: command), (err, response) ->

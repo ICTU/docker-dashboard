@@ -87,7 +87,7 @@ Meteor.startup ->
         ssh2 = Meteor.npmRequire('ssh2-connect')
         check(@params.containerName, String)
 
-        ssh2 host: '10.19.88.24', username: 'core', (err, sess) =>
+        ssh2 host: '10.19.88.24', username: 'core', privateKeyPath: '~/.ssh/docker-cluster/id_rsa', (err, sess) =>
           finish = =>
             delete connections[connectionId]
             sess.end()
@@ -109,7 +109,7 @@ Meteor.startup ->
 
             s.on 'data', (data) =>
               @response.write "event: data\n"
-              @response.write "data: #{data}\n\n"
+              @response.write "data: #{EJSON.stringify data: data.toString()}\n\n"
             s.on 'end', =>
               finish()
             s.on 'error', console.log
