@@ -50,56 +50,51 @@ Meteor.startup ->
       where: 'server'
       path: '/api/v1/stream/:containerName'
       action: ->
+        check @params.containerName, String
         @response.writeHead 200, 'Content-Type': 'text/event-stream'
         connectionId = Random.id()
-        streamSplitter = (Meteor.npmRequire 'stream-splitter') '\n'
         ssh2 = Meteor.npmRequire 'ssh2-connect'
-
-        check @params.containerName, String
-
-        tokenCount = 0
-        streamSplitter.on 'token', (token) =>
-          data = token.toString()
-          if tokenCount > 3
-            if data.match /^ROBOCHICK_PROMPT/
-              @response.write "event: prompt\n"
-              @response.write "data: #{EJSON.stringify data: data[16..-2]}\n\n"
-            else
-              @response.write "event: data\n"
-              @response.write "data: #{EJSON.stringify data: data}\n\n"
-          else
-            console.log 'skipping token:', data
-            tokenCount += 1
 
         ssh2 host: '10.19.88.24', username: Settings.ssh.username(), privateKeyPath: Settings.ssh.keyPath(), (err, sess) =>
           finish = =>
             delete connections[connectionId]
             sess.end()
             @response.end()
+            console.log "Finished all connections for session #{connectionId}"
           @response.write "event: connectionId\n"
           @response.write "data: #{connectionId}\n\n"
-          @response.on 'close', ->
-            console.log 'response ended'
-            finish()
-          @request.on 'end', ->
-            console.log 'request ended'
-          sess.on 'end', =>
-            finish()
+          @response.on 'close', -> finish()
+          sess.on 'end', -> finish()
           sess.exec "docker exec -it #{@params.containerName} bash", {pty:true}, (err, s) =>
-            s.write 'stty -echo;sleep 1;export PS1="ROBOCHICK_PROMPT\\w $ \n";\n'
+            s.write 'export PS1="\\w $ ";\n\n'
             console.log err if err
             connections[connectionId] = s
 
+            appender = ""
             s.on 'data', (data) =>
-              streamSplitter.write data
-            s.on 'end', =>
-              console.log 's onEnd'
-              finish()
+              if appender.match /# export PS1="\\w \$ ";/
+                @response.write "event: data\n"
+                @response.write "data: #{EJSON.stringify data: data.toString()}\n\n"
+              else
+                appender = "#{appender}#{data.toString()}"
+            s.on 'end', => finish()
             s.on 'error', console.log
+    @route 'sendStreamDataToContainer',
+      where: 'server'
+      path: '/api/v1/stream/:connectionId/send'
+      action: ->
+        check(@params.connectionId, String)
+        if connections[@params.connectionId]
+          console.log "writing to connection #{@params.connectionId}: #{@request.body.cmd}"
+          connections[@params.connectionId].write "#{@request.body.cmd}"
+          @response.end()
+        else
+          @response.writeHead 404, 'Content-Type': 'application/json'
+          @response.end '{"error": "Connection does not exist"}'
 
     @route 'sendSshCommandToContainer',
       where: 'server'
-      path: '/api/v1/stream/:connectionId/send'
+      path: '/api/v1/stream/:connectionId/command'
       action: ->
         check(@params.connectionId, String)
         if connections[@params.connectionId]
