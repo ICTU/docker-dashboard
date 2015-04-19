@@ -1,6 +1,6 @@
 Router.map ->
-  @route 'terminal',
-    path: '/terminal/:instanceName/:serviceName'
+  @route 'terminal2',
+    path: '/terminal2/:instanceName/:serviceName'
     layoutTemplate: null
     waitOn: ->
       Meteor.subscribe 'instanceByName', @params.instanceName
