@@ -10,6 +10,7 @@ Template.instancesTable.helpers
   isAdminBoard: -> Meteor.settings.public.admin
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2
+  isAdminBoard: -> Meteor.settings.public?.admin
 
 Template.instancesTable.created = -> Meteor.subscribe('instances')
 
