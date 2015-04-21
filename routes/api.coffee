@@ -73,13 +73,10 @@ Meteor.startup ->
           @response.write "data: #{connectionId}\n\n"
           @response.on 'close', -> finish()
           sess.on 'end', -> finish()
-          #sess.shell {cols:160, rows:48}, (err, s) =>
-            #console.log 'woooooo', err
-            #s.write "docker exec -it #{service.dockerContainerName} bash\n"
           sess.exec "docker exec -it #{service.dockerContainerName} bash", {pty:{cols:80, rows:24}}, (err, s) =>
+            s.write 'export TERM=linux;\n'
             s.write 'export PS1="\\w $ ";\n\n'
             console.log err if err
-            #s.setWindow 24, 80
             connections[connectionId] = s
 
             appender = ""

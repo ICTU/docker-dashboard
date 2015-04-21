@@ -45,7 +45,6 @@ Template.terminal.onRendered ->
 
   term.open document.body
   term.write "\x1b[31m#{robochick}\x1b[m\r\n"
-  term.write '\x1b[8;48;160t'
 
   window.onresize = (event) ->
     clearTimeout @id
