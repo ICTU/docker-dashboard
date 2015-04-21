@@ -48,15 +48,22 @@ Meteor.startup ->
           @response.end '{"message": "Instance not found"}'
     @route 'sshToContainer',
       where: 'server'
-      path: '/api/v1/stream/:containerName'
+      path: '/api/v1/terminal/stream/:instanceName/:serviceName'
       action: ->
-        check @params.containerName, String
+        check [@params.instanceName, @params.serviceName], [String]
+        instance = Instances.findOne name: @params.instanceName
+        check instance, Object
+        service = instance.services[@params.serviceName]
+        check service, Object
+
         @response.writeHead 200, 'Content-Type': 'text/event-stream'
         connectionId = Random.id()
         ssh2 = Meteor.npmRequire 'ssh2-connect'
 
-        ssh2 host: '10.19.88.24', username: Settings.ssh.username(), privateKeyPath: Settings.ssh.keyPath(), (err, sess) =>
+        ssh2 host: service.hostIp, username: Settings.ssh.username(), privateKeyPath: Settings.ssh.keyPath(), (err, sess) =>
           finish = =>
+            @response.write "event: exit\n"
+            @response.write "data: \n\n"
             delete connections[connectionId]
             sess.end()
             @response.end()
@@ -65,7 +72,7 @@ Meteor.startup ->
           @response.write "data: #{connectionId}\n\n"
           @response.on 'close', -> finish()
           sess.on 'end', -> finish()
-          sess.exec "docker exec -it #{@params.containerName} bash", {pty:true}, (err, s) =>
+          sess.exec "docker exec -it #{service.dockerContainerName} bash", {pty:true}, (err, s) =>
             s.write 'export PS1="\\w $ ";\n\n'
             console.log err if err
             connections[connectionId] = s
@@ -79,11 +86,13 @@ Meteor.startup ->
                 appender = "#{appender}#{data.toString()}"
             s.on 'end', => finish()
             s.on 'error', console.log
+
     @route 'sendStreamDataToContainer',
       where: 'server'
-      path: '/api/v1/stream/:connectionId/send'
+      path: '/api/v1/terminal/send/:connectionId'
       action: ->
         check(@params.connectionId, String)
+        console.log @params.connectionId, @request.body.cmd
         if connections[@params.connectionId]
           console.log "writing to connection #{@params.connectionId}: #{@request.body.cmd}"
           connections[@params.connectionId].write "#{@request.body.cmd}"
@@ -94,7 +103,7 @@ Meteor.startup ->
 
     @route 'sendSshCommandToContainer',
       where: 'server'
-      path: '/api/v1/stream/:connectionId/command'
+      path: '/api/v1/terminal/command/:connectionId'
       action: ->
         check(@params.connectionId, String)
         if connections[@params.connectionId]

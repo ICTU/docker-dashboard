@@ -6,7 +6,7 @@
   },
   "ssh": {
     "user": "core",
-    "keyPath": "~/.ssh/docker-cluster_id"
+    "keyPath": "~/.ssh/docker-cluster/id_rsa"
   },
   "fleet": false,
   "public": {

@@ -9,9 +9,7 @@ robochick =
 _____|_|____\r\n
 \x1b[5C\" \""
 
-Template.terminal2.onRendered ->
-
-  console.log robochick
+Template.terminal.onRendered ->
 
   connectionId = null
   instance = @data.instance
@@ -27,16 +25,20 @@ Template.terminal2.onRendered ->
   $('html').css 'cssText', 'height:100% !important;'
   $('body').css 'cssText', 'height:100% !important; background:none !important; background-color: #000 !important; padding: 0 10px 0 10px !important;'
 
-  evt = new EventSource "/api/v1/stream/#{service.dockerContainerName}"
-  evt.addEventListener 'connectionId', (event) =>
+  evt = new EventSource "/api/v1/terminal/stream/#{@data.instanceName}/#{@data.serviceName}"
+  evt.addEventListener 'connectionId', (event) ->
     connectionId = event.data
-    term.write "Connection established to #{service.hostname}"
-  evt.addEventListener 'data', (event) =>
+    term.write "Connection established to #{service.hostname}\r\n"
+  evt.addEventListener 'data', (event) ->
     term.write EJSON.parse(event.data).data
+  evt.addEventListener 'exit', ->
+    evt.close()
+    term.write "\r\nTerminal exited"
 
   term.on 'data', (data) ->
-    HTTP.post "/api/v1/stream/#{connectionId}/send", (data: cmd: data), (err, response) ->
-      term.error err if err
+    if evt.readyState == EventSource.OPEN
+      HTTP.post "/api/v1/terminal/send/#{connectionId}", (data: cmd: data), (err, response) ->
+        term.error err if err
 
   term.on 'title', (title) ->
     document.title = title

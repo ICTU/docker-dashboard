@@ -22,7 +22,7 @@ Template.instancesTable.events
   'click .toggle-services': (e, t) ->
     t.$(e.target).closest('td').find('div').toggleClass 'hidden'
   'click .select-service': (e, t) ->
-    window.open Router.url('terminal2', {instanceName: @instance.name, serviceName: @service.name}),
+    window.open Router.url('terminal', {instanceName: @instance.name, serviceName: @service.name}),
     Random.id(), 'height=347,width=596'
 
 HTTPS_PORTS = ['443', '8443']
