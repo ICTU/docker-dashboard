@@ -46,7 +46,8 @@ Meteor.startup ->
         else
           @response.writeHead 404, 'Content-Type': 'application/json'
           @response.end '{"message": "Instance not found"}'
-    @route 'sshToContainer',
+
+    @route 'streamTerminal',
       where: 'server'
       path: '/api/v1/terminal/stream/:instanceName/:serviceName'
       action: ->
@@ -72,9 +73,13 @@ Meteor.startup ->
           @response.write "data: #{connectionId}\n\n"
           @response.on 'close', -> finish()
           sess.on 'end', -> finish()
-          sess.exec "docker exec -it #{service.dockerContainerName} bash", {pty:true}, (err, s) =>
+          #sess.shell {cols:160, rows:48}, (err, s) =>
+            #console.log 'woooooo', err
+            #s.write "docker exec -it #{service.dockerContainerName} bash\n"
+          sess.exec "docker exec -it #{service.dockerContainerName} bash", {pty:{cols:80, rows:24}}, (err, s) =>
             s.write 'export PS1="\\w $ ";\n\n'
             console.log err if err
+            #s.setWindow 24, 80
             connections[connectionId] = s
 
             appender = ""
@@ -87,7 +92,7 @@ Meteor.startup ->
             s.on 'end', => finish()
             s.on 'error', console.log
 
-    @route 'sendStreamDataToContainer',
+    @route 'sendDataToTerminal',
       where: 'server'
       path: '/api/v1/terminal/send/:connectionId'
       action: ->
@@ -101,7 +106,23 @@ Meteor.startup ->
           @response.writeHead 404, 'Content-Type': 'application/json'
           @response.end '{"error": "Connection does not exist"}'
 
-    @route 'sendSshCommandToContainer',
+    @route 'setTerminalWindow',
+      where: 'server'
+      path: '/api/v1/terminal/resize-window/:connectionId'
+      action: ->
+        check(@params.connectionId, String)
+        console.log @params.connectionId, @request.body
+        if connections[@params.connectionId]
+          console.log "Resizing terminal window #{@params.connectionId}: #{@request.body}"
+          s = connections[@params.connectionId]
+          s.write "#{@request.body.cmd}"
+          s._client._sshstream.windowChange(s.outgoing.id, @request.body.rows, @request.body.cols)
+          @response.end()
+        else
+          @response.writeHead 404, 'Content-Type': 'application/json'
+          @response.end '{"error": "Connection does not exist"}'
+
+    @route 'sendCommandToTerminal',
       where: 'server'
       path: '/api/v1/terminal/command/:connectionId'
       action: ->

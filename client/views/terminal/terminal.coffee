@@ -45,3 +45,17 @@ Template.terminal.onRendered ->
 
   term.open document.body
   term.write "\x1b[31m#{robochick}\x1b[m\r\n"
+  term.write '\x1b[8;48;160t'
+
+  window.onresize = (event) ->
+    clearTimeout @id
+    @id = setTimeout doneResizing, 500
+
+  doneResizing = ->
+    rows = Math.round $(window).height()/15
+    cols = Math.round $(window).width()/7.5
+    console.log $(window).height(), $(window).width()
+    console.log rows, cols
+    HTTP.post "/api/v1/terminal/resize-window/#{connectionId}", (data: {cols: cols, rows: rows}), (err, response) ->
+      term.error err if err
+      term.resize cols, rows
