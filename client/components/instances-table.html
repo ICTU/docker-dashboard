@@ -21,11 +21,7 @@
             <div class="hidden">
               {{#each services}}
               {{#with service=. instance=..}}
-              {{#if isAdminBoard}}
               <a href="#" class="select-service">{{service.name}}</a>
-              {{else}}
-              <p>{{service.name}}</p>
-              {{/if}}
               {{/with}}
               <pre>{{pretify data}}</pre>
               {{/each}}
