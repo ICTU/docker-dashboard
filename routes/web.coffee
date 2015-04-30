@@ -6,6 +6,11 @@ Meteor.startup ->
     layoutTemplate: 'base-layout'
 
   Router.map ->
+    @route 'newui',
+      path: '/newui'
+      data:
+        pageName: 'newui'
+
     @route 'index',
       path: '/'
       data:

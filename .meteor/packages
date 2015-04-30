@@ -6,7 +6,6 @@
 meteor-platform
 coffeescript
 http
-bootstrap
 iron:router
 zimme:iron-router-active
 
@@ -17,3 +16,4 @@ meteorhacks:npm
 
 
 npm-container
+twbs:bootstrap
