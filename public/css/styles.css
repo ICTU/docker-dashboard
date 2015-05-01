@@ -1,11 +1,24 @@
+body, html {
+  background-color: #fff !important;
+}
+
 .navbar-static-top {
   margin-bottom:20px;
+}
+.navbar-inverse {
+  background-color: #111111 !important;
+  box-shadow: 0 3px 5px #AAAAAA;
+}
+
+h5 {
+  font-size: 16px;
+  font-style: oblique;
 }
 
 i {
   font-size:18px;
 }
-  
+
 footer {
   margin-top:20px;
   padding-top:20px;
@@ -28,4 +41,42 @@ footer {
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
   border-radius: 10px;
+}
+
+
+a.navbar-brand > img {
+  width:75px;
+  margin-left:15px;
+}
+
+/* Collapsible panels --> */
+.panel-heading a.toggle:after {
+    font-family:'Glyphicons Halflings';
+    content:"\e114";
+    float: right;
+    color: grey;
+}
+.panel-heading a.collapsed:after {
+    content:"\e080";
+}
+/* <-- Collapsible panels */
+
+.align-with-header {
+  position: absolute;
+  top: 20px;
+  left: -15px;
+}
+
+.labelbox {
+  padding-right:20px;
+}
+
+.instance-link > .glyphicon-link {
+  font-size: 12px;
+  color: #0074D9;
+}
+
+.open-terminal > .glyphicon-console {
+  font-size: 12px;
+  color: #0074D9;
 }

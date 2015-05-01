@@ -11,6 +11,12 @@ Meteor.startup ->
       data:
         pageName: 'newui'
 
+    @route 'instances',
+      path: '/instances'
+
+    @route 'apps',
+      path: '/new-apps'
+
     @route 'index',
       path: '/'
       data:

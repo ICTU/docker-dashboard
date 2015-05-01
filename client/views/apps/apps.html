@@ -1,0 +1,79 @@
+<template name="apps">
+<div class="container">
+  <div class="row">
+      <div class="col-sm-3">
+        <h3><i class="glyphicon glyphicon-briefcase"></i> Toolbox</h3>
+        <hr>
+
+        <ul class="nav nav-stacked">
+          <li><a href="javascript:;"><i class="glyphicon glyphicon-plus"></i> New Instance</a></li>
+        </ul>
+
+        <hr>
+
+      </div>
+
+      <div class="col-sm-9">
+        <div class="row">
+          <div class="col-md-8"><h3><i class="glyphicon glyphicon-dashboard"></i> Instances</h3></div>
+          <div class="col-md-4">
+            <div class="input-group align-with-header">
+              <input type="text" id="searchField" class="form-control" placeholder="Search for...">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button">Go!</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <hr>
+
+        <div class="row">
+          <div class="col-md-12">
+
+            {{#each instances}}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-target="#instancePanel-{{name}}"
+                     href="#instancePanel-{{name}}" class="collapsed toggle">{{name}}</a>
+                  {{#if instanceLink}}
+                  <a href="{{instanceLink}}" class="instance-link" target="_blank"><span class="glyphicon glyphicon-link" aria-hidden="true"></span>&nbsp;</a>
+                  {{/if}}
+                  <div class="labelbox pull-right">
+                    {{#each parameters.tags}}<span class="label label-default">{{this}}</span>{{/each}}
+                  </div>
+                </h4>
+
+              </div>
+              <div id="instancePanel-{{name}}" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    {{#each services}}
+                    <h5>{{name}}
+                      {{#with service=. instance=..}}
+                      <a href="#" class="open-terminal"><span class="glyphicon glyphicon-console" aria-hidden="true"></span>&nbsp;</a>
+                      {{/with}}
+                    </h5>
+                    <table class="table table-condensed">
+                      <tbody>
+                        <tr><th scope="row" style="width:250px;">FQDN</th><td>{{data.hostname}}</td></tr>
+                        <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr>
+                        <tr><th scope="row">Host IP</th><td>{{data.hostIp}}</td></tr>
+                        <tr><th scope="row">Ports</th><td>{{data.ports}}</td></tr>
+                        <tr><th scope="row">Port Mapping</th><td>{{data.portMapping}}</td></tr>
+                        <tr><th scope="row">Container Name</th><td>{{data.dockerContainerName}}</td></tr>
+                      </tbody>
+                    </table>
+                    {{/each}}
+                  </div>
+              </div>
+            </div>
+            {{/each}}
+
+          </div>
+
+        </div>
+      </div>
+
+  </div>
+</div>
+</template>

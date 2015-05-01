@@ -1,3 +1,33 @@
 <template name="base-layout">
+  <!-- Header -->
+  <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">Cloud Dashboard
+          <!--img alt="ICTU Logo" src="/img/logo-ictu.png" --></a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="{{pathFor 'instances'}}">Instances</a></li>
+          <li><a href="{{pathFor 'apps'}}">Apps</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+
+          <li class="dropdown">
+            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+              <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
+            <ul id="g-account-menu" class="dropdown-menu" role="menu">
+              <li><a href="#">My Profile</a></li>
+              <li><a href="#"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div><!-- /container -->
+  </div>
+  <!-- /Header -->
+
   {{> yield}}
+
+  <!-- footer class="text-center">Another awesome product of IQT</footer -->
 </template>
