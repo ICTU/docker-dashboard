@@ -1,33 +1,22 @@
-body {
-  background: #4d4d4d url(../img/bg-grey.jpg);
-}
-#ictulogo {
-  width: 60pt;
-}
-#header a.brand {
-  opacity: 1;
-  padding: 0;
-  width: 215px;
-  padding: 18px 0;
+.card {
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #CCC;
+  border-radius: 8px;
   text-align: center;
-}
-img.avatar {
-  height: 20pt;
-}
-#sidebar > ul > li > ul.sub > li {
-  border-bottom: 1px solid #363636;
-}
-.big-icon {
-  font-size:80px;
-}
-.display {
-  padding-top:5px;
+  padding: 0;
+  color: #ffffff;
 }
 
-.metro-overview {
-  height:100px;
+.card .content {
+  font-size: 16px;
+  line-height: 10px;
+  padding-bottom: 10px;
 }
-.metro-overview .details .numbers {
-  font-size: 40px !important;
-  padding-top: 5px !important;
+
+.card h1 {
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 70px;
+  margin:10px;
 }
