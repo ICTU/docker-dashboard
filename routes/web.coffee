@@ -13,9 +13,15 @@ Meteor.startup ->
 
     @route 'instances',
       path: '/instances'
+      onBeforeAction: ->
+        Meteor.subscribe 'instances', @next
 
     @route 'apps',
       path: '/new-apps'
+      onBeforeAction: ->
+        Meteor.subscribe 'applicationDefs'
+        Meteor.subscribe 'apps'
+        @next()
 
     @route 'index',
       path: '/'

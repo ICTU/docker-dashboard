@@ -6,19 +6,23 @@
         <hr>
 
         <ul class="nav nav-stacked">
-          <li><a href="javascript:;"><i class="glyphicon glyphicon-plus"></i> New Instance</a></li>
+          {{#with appDefTemplate}}
+          <li><a title="New App" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-plus"></i> New App</a></li>
+          {{/with}}
         </ul>
 
         <hr>
 
       </div>
 
+      {{> editAppDefBox appDefTemplate}}
+
       <div class="col-sm-9">
         <div class="row">
-          <div class="col-md-8"><h3><i class="glyphicon glyphicon-dashboard"></i> Instances</h3></div>
+          <div class="col-md-8"><h3><i class="glyphicon glyphicon-dashboard"></i> Apps</h3></div>
           <div class="col-md-4">
             <div class="input-group align-with-header">
-              <input type="text" id="searchField" class="form-control" placeholder="Search for...">
+              <input type="text" id="searchField" class="form-control" placeholder="Search for..." value="{{searchTerms}}">
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button">Go!</button>
               </span>
@@ -30,44 +34,52 @@
         <div class="row">
           <div class="col-md-12">
 
-            {{#each instances}}
+            {{#each apps}}
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  <a data-toggle="collapse" data-target="#instancePanel-{{name}}"
-                     href="#instancePanel-{{name}}" class="collapsed toggle">{{name}}</a>
-                  {{#if instanceLink}}
-                  <a href="{{instanceLink}}" class="instance-link" target="_blank"><span class="glyphicon glyphicon-link" aria-hidden="true"></span>&nbsp;</a>
-                  {{/if}}
-                  <div class="labelbox pull-right">
-                    {{#each parameters.tags}}<span class="label label-default">{{this}}</span>{{/each}}
-                  </div>
+                  <a data-toggle="collapse" data-target="#appPanel-{{name}}"
+                     href="#" class="collapsed toggle"><span class="badge">{{appDefCount}}</span> {{name}}</a>
                 </h4>
 
               </div>
-              <div id="instancePanel-{{name}}" class="panel-collapse collapse">
+              <div id="appPanel-{{name}}" class="appPanel panel-collapse collapse">
                   <div class="panel-body">
-                    {{#each services}}
-                    <h5>{{name}}
-                      {{#with service=. instance=..}}
-                      <a href="#" class="open-terminal"><span class="glyphicon glyphicon-console" aria-hidden="true"></span>&nbsp;</a>
-                      {{/with}}
-                    </h5>
-                    <table class="table table-condensed">
+                    <table class="table table-hover">
                       <tbody>
-                        <tr><th scope="row" style="width:250px;">FQDN</th><td>{{data.hostname}}</td></tr>
-                        <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr>
-                        <tr><th scope="row">Host IP</th><td>{{data.hostIp}}</td></tr>
-                        <tr><th scope="row">Ports</th><td>{{data.ports}}</td></tr>
-                        <tr><th scope="row">Port Mapping</th><td>{{data.portMapping}}</td></tr>
-                        <tr><th scope="row">Container Name</th><td>{{data.dockerContainerName}}</td></tr>
+                        {{#each appDefs}}
+                        <tr>
+                          <th scope="row" style="width:250px; padding: 20px;">
+                            {{version}}
+                          </th>
+                          <td style="padding: 20px;">
+                            <div class="labelbox">
+                              {{#each tags}}<span class="label label-info">{{this}}</span>{{/each}}
+                            </div>
+                          </td>
+                          <td style="width: 100px;">
+                            {{> appActions}}
+                          </td>
+                        </tr>
+                        {{/each}}
                       </tbody>
                     </table>
-                    {{/each}}
                   </div>
               </div>
             </div>
+
+            {{#each appDefs}}
+            {{> editAppDefBox}}
             {{/each}}
+
+            {{/each}}
+
+            {{#if isSearching}}
+            <div class="searchInfo">
+              Showing results for: "{{searchTerms}}" <br />
+              <button id="reset" type="button" class="btn btn-link">- reset -</button>
+            </div>
+            {{/if}}
 
           </div>
 
@@ -76,4 +88,88 @@
 
   </div>
 </div>
+</template>
+
+<template name="appActions">
+  <ul class="nav nav-justified">
+    <li class="btn-group">
+
+      <a title="Start" href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="glyphicon glyphicon-play"></i>
+      </a>
+      <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
+          <div class="form-group" style="width:30em">
+              <label>Instance name</label>
+              <input required pattern="/?[a-zA-Z0-9_-]+" type="text"
+                class="form-control instance-name" style="width:90%"
+                placeholder="A unique name. Must match /?[a-zA-Z0-9_-]+."
+                value="{{name}}">
+              {{#each parameters}}
+              <label>{{this}}</label>
+              <input required type="text" class="form-control parameter" data-parameter="{{this}}" style="width:90%">
+              {{/each}}
+          </div>
+          <button type="button" class="start-app btn btn-mini">Go!</button>
+      </form>
+
+    </li>
+    <li><a title="Edit" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-cog"></i></a></li>
+    <li class="btn-group">
+
+      <a title="Remove" href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="glyphicon glyphicon-trash"></i>
+      </a>
+      <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
+          <div class="form-group" style="width:20em">
+            <div class="alert alert-warning" role="alert">
+              <strong>Warning!</strong> Do you really want to remove this application?
+            </div>
+          </div>
+          <button type="button" class="remove-app btn btn-mini btn-danger pull-right">Yes!</button>
+      </form>
+    </li>
+  </ul>
+</template>
+
+<template name="editAppDefBox">
+  <div id="editbox-{{hash}}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Edit {{name}}:{{version}}</h4>
+        </div>
+        <div class="modal-body">
+          {{> editAppDefForm}}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button id="submitButton" type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="editAppDefForm">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label for="appName" class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="appName" value="{{name}}" disabled>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="appVersion" class="col-sm-2 control-label">Version</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="appVersion" value="{{version}}" disabled>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="nameInput" class="col-sm-2 control-label">Definition</label>
+      <div class="col-sm-10">
+        <textarea id="appDef" class="form-control" rows="20" value="{{def}}"></textarea>
+      </div>
+    </div>
+  </form>
 </template>

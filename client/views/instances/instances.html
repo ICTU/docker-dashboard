@@ -18,7 +18,7 @@
           <div class="col-md-8"><h3><i class="glyphicon glyphicon-dashboard"></i> Instances</h3></div>
           <div class="col-md-4">
             <div class="input-group align-with-header">
-              <input type="text" id="searchField" class="form-control" placeholder="Search for...">
+              <input type="text" id="searchField" class="form-control" placeholder="Search for..." value="{{searchTerms}}">
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button">Go!</button>
               </span>
@@ -34,10 +34,12 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  <a data-toggle="collapse" data-target="#instancePanel-{{name}}"
-                     href="#instancePanel-{{name}}" class="collapsed toggle">{{name}}</a>
+                  <a data-toggle="collapse" data-target="#instancePanel-{{instanceHash}}"
+                     href="#instancePanel-{{name}}" class="collapsed toggle">
+                     <span class="glyphicon glyphicon-{{activityIcon}}"></span>
+                     {{name}}</a>
                   {{#if instanceLink}}
-                  <a href="{{instanceLink}}" class="instance-link" target="_blank"><span class="glyphicon glyphicon-link" aria-hidden="true"></span>&nbsp;</a>
+                  <a href="{{instanceLink}}" class="instance-link" target="_blank"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
                   {{/if}}
                   <div class="labelbox pull-right">
                     {{#each parameters.tags}}<span class="label label-default">{{this}}</span>{{/each}}
@@ -45,10 +47,45 @@
                 </h4>
 
               </div>
-              <div id="instancePanel-{{name}}" class="panel-collapse collapse">
+              <div id="instancePanel-{{instanceHash}}" class="panel-collapse collapse">
                   <div class="panel-body">
+
+                    <ul class="nav nav-justified pull-right" style="width:100px">
+                      <li class="btn-group">
+
+                        <a title="Stop" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          <i class="glyphicon glyphicon-stop"></i>
+                        </a>
+                        <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
+                            <div class="form-group" style="width:20em">
+                              Do you really want to stop this application?
+                            </div>
+                            <button type="button" class="stop-instance btn btn-mini btn-danger pull-right">Yes!</button>
+                        </form>
+
+                      </li>
+                      <li class="btn-group">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          <i class="glyphicon glyphicon-trash"></i>
+                        </a>
+                        <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
+                            <div class="form-group" style="width:20em">
+                              <div class="alert alert-warning" role="alert">
+                                <span class="label label-danger">Expert feature!</span> <br />
+                                Do you really want to clear the instance meta information?
+                              </div>
+
+                            </div>
+                            <button type="button" class="clear-instance btn btn-mini btn-danger pull-right">Yes!</button>
+                        </form>
+
+                      </li>
+                    </ul>
+
                     {{#each services}}
-                    <h5>{{name}}
+                    <h5>
+                      {{name}}
                       {{#with service=. instance=..}}
                       <a href="#" class="open-terminal"><span class="glyphicon glyphicon-console" aria-hidden="true"></span>&nbsp;</a>
                       {{/with}}
@@ -69,6 +106,12 @@
             </div>
             {{/each}}
 
+            {{#if isSearching}}
+            <div class="searchInfo">
+              Showing results for: "{{searchTerms}}" <br />
+              <button id="reset" type="button" class="btn btn-link">- reset -</button>
+            </div>
+            {{/if}}
           </div>
 
         </div>

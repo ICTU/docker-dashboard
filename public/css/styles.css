@@ -61,6 +61,23 @@ a.navbar-brand > img {
 }
 /* <-- Collapsible panels */
 
+/* Spinning icons --> */
+.glyphicon.spinning {
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+/* <-- Spinning icons */
+
 .align-with-header {
   position: absolute;
   top: 20px;
@@ -79,4 +96,34 @@ a.navbar-brand > img {
 .open-terminal > .glyphicon-console {
   font-size: 12px;
   color: #0074D9;
+}
+
+.searchInfo {
+  text-align: center;
+}
+.searchInfo > a.#reset {
+  padding: 0;
+}
+
+.appPanel table {
+  margin-bottom: 0;
+}
+.appPanel tr:first-child td, .appPanel tr:first-child th {
+  border-top: 0;
+}
+.appPanel .panel-body {
+  padding: 0;
+}
+.badge {
+  background-color: #AAAAAA !important;
+}
+
+.glyphicon-ok-sign {
+  color: #2ECC40 !important;
+}
+.glyphicon-refresh {
+  color: #AAAAAA !important;
+}
+.glyphicon-exclamation-sign {
+  color: #FF4136 !important;
 }

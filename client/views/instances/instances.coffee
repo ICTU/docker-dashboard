@@ -4,6 +4,14 @@ Template.instances.helpers
       Instances.find {name: {$regex: Session.get 'queryName'}}, sort: key: 1
     else
       Instances.find {}, sort: key: 1
+  activityIcon: ->
+    if @meta.state is 'active'
+      'ok-sign'
+    else if @meta.state in ['loading', 'activating']
+      'refresh spinning'
+    else
+      'exclamation-sign'
+
   showLoading: -> @meta.state isnt 'active'
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
@@ -16,21 +24,21 @@ Template.instances.helpers
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2
   isAdminBoard: -> Meteor.settings.public?.admin
-
-Template.instances.created = -> Meteor.subscribe('instances')
+  isSearching: -> Session.get('queryName')?.length
+  searchTerms: -> Session.get('queryName')
+  instanceHash: -> CryptoJS.MD5 "#{@key}"
 
 Template.instances.events
   'click .stop-instance': ->
     Meteor.call 'stopInstance', @project, @name
   'click .clear-instance': ->
     Meteor.call 'clearInstance', @project, @name
-  'click .toggle-services': (e, t) ->
-    t.$(e.target).closest('td').find('div').toggleClass 'hidden'
   'click .open-terminal': (e, t) ->
     window.open Router.url('terminal', {instanceName: @instance.name, serviceName: @service.name}),
     Random.id(), 'height=347,width=596'
-  'change #searchField': (e, t) ->
+  'input #searchField': (e, t) ->
     Session.set 'queryName', e.currentTarget.value
+  'click #reset': -> Session.set 'queryName', null
 
 HTTPS_PORTS = ['443', '8443']
 HTTP_PORTS = ['80', '4567', '8080', '8081', '8181', '8668', '9000']
