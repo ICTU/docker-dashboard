@@ -6,10 +6,11 @@ Meteor.startup ->
     layoutTemplate: 'base-layout'
 
   Router.map ->
+    @route 'index',
+      path: '/'
+
     @route 'newui',
       path: '/newui'
-      data:
-        pageName: 'newui'
 
     @route 'instances',
       path: '/instances'
@@ -17,33 +18,11 @@ Meteor.startup ->
         Meteor.subscribe 'instances', @next
 
     @route 'apps',
-      path: '/new-apps'
+      path: '/apps'
       onBeforeAction: ->
         Meteor.subscribe 'applicationDefs'
         Meteor.subscribe 'apps'
         @next()
 
-    @route 'index',
-      path: '/'
-      data:
-        pageName: 'Dashboard'
-
-    @route 'applications',
-      path: '/apps'
-      data:
-        pageName: 'Applications'
-
-    @route 'createApplication',
-      path: '/apps/create'
-      template: 'editApplication'
-      data:
-        parent: 'Applications'
-        pageName: 'Create new application'
-
-    @route 'editApplication',
-      path: '/apps/edit/:name/:version'
-      data: ->
-        parent: 'Applications'
-        pageName: 'Edit application'
-        appName: @params.name
-        appVersion: @params.version
+    @route 'appstore',
+      path: '/appstore'

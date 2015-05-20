@@ -127,3 +127,25 @@ a.navbar-brand > img {
 .glyphicon-exclamation-sign {
   color: #FF4136 !important;
 }
+
+
+.appcard {
+  height: 200px;
+  background-color: white !important;
+  color: black;
+  box-shadow: 0 1px 5px #DDDDDD;
+  border-radius: 3px 10px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #CCC;
+  padding: 0;
+}
+.appcard > img {
+  height: 200px;
+  background-color: white;
+  padding: 10px;
+}
+.appcard > div {
+  padding-left:10px;
+  width:220px;
+}
