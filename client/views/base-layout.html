@@ -10,18 +10,36 @@
         <ul class="nav navbar-nav">
           <li><a href="{{pathFor 'instances'}}">Instances</a></li>
           <li><a href="{{pathFor 'apps'}}">Apps</a></li>
+          {{#if isAdminBoard}}
           <li><a href="{{pathFor 'appstore'}}">App Store</a></li>
+          {{/if}}
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#"><i class="glyphicon glyphicon-queen"></i> SuperUser</a></li>
+          {{#if isAdminBoard}}
           <li class="dropdown">
+            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+              <i class="glyphicon glyphicon-queen"></i> SuperUser <span class="caret"></span>
+            </a>
+            <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em; width:250px;">
+                <div class="form-group">
+                  <label for="projectName">Project</label>
+                  <input id="projectName" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="targetHost">Target host</label>
+                  <input id="targetHost" class="form-control">
+                </div>
+            </form>
+          </li>
+          {{/if}}
+          <!--li class="dropdown">
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
               <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
             <ul id="g-account-menu" class="dropdown-menu" role="menu">
               <li><a href="#">My Profile</a></li>
               <li><a href="#"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
             </ul>
-          </li>
+          </li-->
         </ul>
       </div>
     </div><!-- /container -->
