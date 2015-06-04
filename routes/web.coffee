@@ -4,25 +4,31 @@ Meteor.startup ->
 
   Router.configure
     layoutTemplate: 'base-layout'
+    loadingTemplate: 'loading'
 
   Router.map ->
     @route 'index',
       path: '/'
-
-    @route 'newui',
-      path: '/newui'
+      loadingTemplate: 'loading'
+      subscriptions: -> [
+        Meteor.subscribe 'apps'
+        Meteor.subscribe 'applicationDefs'
+        Meteor.subscribe 'instances'
+      ]
 
     @route 'instances',
       path: '/instances'
-      onBeforeAction: ->
-        Meteor.subscribe 'instances', @next
+      subscriptions: -> [
+        Meteor.subscribe 'instances'
+      ]
 
     @route 'apps',
       path: '/apps'
-      onBeforeAction: ->
+      loadingTemplate: 'loading'
+      subscriptions: -> [
         Meteor.subscribe 'applicationDefs'
         Meteor.subscribe 'apps'
-        @next()
+      ]
 
     @route 'appstore',
       path: '/appstore'
