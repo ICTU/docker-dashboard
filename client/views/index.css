@@ -20,3 +20,10 @@
   line-height: 70px;
   margin:10px;
 }
+
+#velocity-status-widget {
+  left: 10px !important;
+  position: fixed !important;
+  top: 12px !important;
+  right: initial !important;
+}
