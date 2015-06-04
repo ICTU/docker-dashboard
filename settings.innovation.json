@@ -11,6 +11,6 @@
   "fleet": false,
   "public": {
     "projectName": "Innovation Project",
-    "admin": false
+    "admin": true
   }
 }
