@@ -41,7 +41,7 @@ Template.instances.events
   'click #reset': -> Session.set 'queryName', null
 
 HTTPS_PORTS = ['443', '8443']
-HTTP_PORTS = ['80', '4567', '8080', '8081', '8181', '8668', '9000']
+HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
 
 findWebPort = (service) ->
   p = 80
