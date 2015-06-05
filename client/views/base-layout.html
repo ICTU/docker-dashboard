@@ -32,6 +32,11 @@
             </form>
           </li>
           {{/if}}
+          <li class="dropdown">
+            <a id="messagesMenuItem" class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+              <i class="glyphicon glyphicon-envelope"></i> Messages
+            </a>
+          </li>
           <!--li class="dropdown">
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
               <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
@@ -46,7 +51,11 @@
   </div>
   <!-- /Header -->
 
+  {{> sAlert}}
+
   {{> yield}}
+
+  {{> chat}}
 
   <!-- footer class="text-center">Another awesome product of IQT</footer -->
 </template>

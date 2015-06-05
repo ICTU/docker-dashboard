@@ -6,3 +6,5 @@ Template['base-layout'].events
     Meteor.call 'set', "{\"project\":\"#{e.target.value}\"}"
   'change #targetHost': (e, t) ->
     Meteor.call 'set', "{\"coreos\":{\"ssh\":\"ssh core@#{e.target.value}\"}}"
+  'click #messagesMenuItem': ->
+    Chat.show()

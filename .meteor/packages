@@ -19,4 +19,7 @@ npm-container
 twbs:bootstrap
 fortawesome:fontawesome
 jparker:crypto-md5
-multiply:iron-router-progress
+hiukim:slack-client
+arunoda:streams
+juliancwirko:s-alert
+juliancwirko:s-alert-slide

@@ -1,0 +1,25 @@
+<template name="chat">
+  <div id="chat">
+    <div id="header">
+      <h2>Messages</h2>
+      <div id="close" class="pull-right">
+        <button type="button" id="closeButton" class="btn btn-link">
+          <i class="glyphicon glyphicon-remove" ></i>
+        </button>
+        </div>
+    </div>
+
+    <div id="messages">
+      {{#each messages}}
+        <p>{{text}}</p>
+      {{/each}}
+    </div>
+
+    <div id="messageContainer">
+      <form>
+        <textarea class="form-control" rows="3"></textarea>
+        <button type="button" class="btn btn-default">Send Message</button>
+      </form>
+    </div>
+  </div>
+</template>

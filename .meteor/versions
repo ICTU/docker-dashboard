@@ -1,5 +1,6 @@
 aldeed:template-extension@3.4.3
 amplify@1.0.0
+arunoda:streams@0.1.17
 autoupdate@1.2.1
 babrahams:editable-json@0.4.3
 base64@1.0.3
@@ -18,6 +19,7 @@ fastclick@1.0.3
 fortawesome:fontawesome@4.3.0
 geojson-utils@1.0.3
 gwendall:session-json@0.1.7
+hiukim:slack-client@1.0.4
 html-tools@1.0.4
 htmljs@1.0.4
 http@1.1.0
@@ -34,6 +36,8 @@ jparker:crypto-core@0.1.0
 jparker:crypto-md5@0.1.1
 jquery@1.11.3_2
 json@1.0.3
+juliancwirko:s-alert@2.4.0
+juliancwirko:s-alert-slide@1.1.3
 lai:collection-extensions@0.1.3
 launch-screen@1.0.2
 less@1.0.14
@@ -49,7 +53,6 @@ minimongo@1.0.8
 mobile-status-bar@1.0.3
 mongo@1.1.0
 msavin:mongol@1.0.90
-multiply:iron-router-progress@1.0.1
 npm-container@1.0.0
 observe-sequence@1.0.6
 ordered-dict@1.0.3

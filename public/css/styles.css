@@ -2,6 +2,10 @@ body, html {
   background-color: #fff !important;
 }
 
+body {
+  overflow-y:scroll;
+}
+
 .navbar-static-top {
   margin-bottom:20px;
 }
@@ -148,4 +152,12 @@ a.navbar-brand > img {
 .appcard > div {
   padding-left:10px;
   width:220px;
+}
+
+
+#velocity-status-widget {
+  left: 10px !important;
+  position: fixed !important;
+  top: 12px !important;
+  right: initial !important;
 }

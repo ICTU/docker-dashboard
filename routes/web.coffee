@@ -4,7 +4,11 @@ Meteor.startup ->
 
   Router.configure
     layoutTemplate: 'base-layout'
-    loadingTemplate: 'loading'
+
+    subscriptions: -> [
+      Meteor.subscribe 'messages',
+      Meteor.subscribe 'instances'
+    ]
 
   Router.map ->
     @route 'index',
@@ -13,14 +17,10 @@ Meteor.startup ->
       subscriptions: -> [
         Meteor.subscribe 'apps'
         Meteor.subscribe 'applicationDefs'
-        Meteor.subscribe 'instances'
       ]
 
     @route 'instances',
       path: '/instances'
-      subscriptions: -> [
-        Meteor.subscribe 'instances'
-      ]
 
     @route 'apps',
       path: '/apps'
