@@ -47,12 +47,12 @@ meteor@1.1.6
 meteor-platform@1.2.2
 meteorhacks:async@1.0.0
 meteorhacks:npm@1.3.0
-meteortoys:toykit@0.5.0
+meteortoys:toykit@0.7.0
 minifiers@1.1.5
 minimongo@1.0.8
 mobile-status-bar@1.0.3
 mongo@1.1.0
-msavin:mongol@1.0.90
+msavin:mongol@1.0.97
 npm-container@1.0.0
 observe-sequence@1.0.6
 ordered-dict@1.0.3
