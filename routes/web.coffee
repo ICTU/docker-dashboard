@@ -1,5 +1,7 @@
 connections = {}
 
+@InstanceMeta = notify: false
+
 Meteor.startup ->
 
   Router.configure
@@ -7,7 +9,17 @@ Meteor.startup ->
 
     subscriptions: -> [
       Meteor.subscribe 'messages',
-      Meteor.subscribe 'instances'
+      Meteor.subscribe 'instances', ->
+        InstanceMeta.notify = false
+        Instances.find().observe
+          changed: (newDoc, oldDoc) ->
+            if newDoc?.meta?.state == 'active' && oldDoc?.meta.state != 'active'
+              sAlert.success "Instance #{newDoc.name} has become active"
+          removed: (doc) ->
+            sAlert.warning "Instance #{doc.name} has stopped", timeout: 'none' if InstanceMeta.notify
+          added: (doc) ->
+            sAlert.info "Instance #{doc.name} is starting..." if InstanceMeta.notify
+        InstanceMeta.notify = true
     ]
 
   Router.map ->

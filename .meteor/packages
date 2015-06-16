@@ -6,7 +6,6 @@
 meteor-platform
 coffeescript
 http
-iron:router
 zimme:iron-router-active
 
 velocity:html-reporter
@@ -24,11 +23,10 @@ arunoda:streams
 juliancwirko:s-alert
 juliancwirko:s-alert-slide
 joshowens:accounts-entry
-yogiben:admin
 aldeed:autoform
-mizzao:partitioner
 dburles:collection-helpers
 aldeed:collection2
 accounts-base
 accounts-password
 alanning:roles
+iron:router
