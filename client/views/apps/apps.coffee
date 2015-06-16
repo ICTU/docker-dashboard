@@ -30,7 +30,7 @@ Template.appActions.helpers
   parameters: ->
     params = @def.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
     if params?.length
-      params.map (p) -> p.replace('{{', '').trim()
+      _.uniq(params.map (p) -> p.replace('{{', '').trim())
     else
       []
 
