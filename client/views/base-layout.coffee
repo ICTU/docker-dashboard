@@ -1,5 +1,6 @@
 Template['base-layout'].helpers
   isAdminBoard: -> Meteor.settings.public.admin
+  user: -> Meteor.user().emails[0].address
 
 Template['base-layout'].events
   'change #projectName': (e, t) ->
