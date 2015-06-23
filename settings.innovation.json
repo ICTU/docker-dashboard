@@ -9,9 +9,9 @@
     "keyPath": "~/.ssh/docker-cluster/id_rsa"
   },
   "services": {
-    "startApp": "localhost:9000/app/bash/start",
-    "stopApp": "localhost:9000/app/bash/stop",
-    "appStatus": "localhost:9000/app/bash/status"
+    "startApp": "iqtservices.isd.org:8080/app/bash/start",
+    "stopApp": "iqtservices.isd.org:8080/app/bash/stop",
+    "appStatus": "iqtservices.isd.org:8080/app/bash/status"
   },
   "fleet": false,
   "public": {
