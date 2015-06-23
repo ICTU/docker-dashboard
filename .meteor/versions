@@ -1,9 +1,10 @@
 accounts-base@1.2.0
 accounts-password@1.1.1
 alanning:roles@1.2.13
-aldeed:autoform@4.2.2
+aldeed:autoform@5.3.0
 aldeed:collection2@2.3.3
 aldeed:simple-schema@1.3.3
+aldeed:tabular@1.2.0
 aldeed:template-extension@3.4.3
 amplify@1.0.0
 arunoda:streams@0.1.17
@@ -47,7 +48,7 @@ jparker:crypto-core@0.1.0
 jparker:crypto-md5@0.1.1
 jquery@1.11.3_2
 json@1.0.3
-juliancwirko:s-alert@2.4.0
+juliancwirko:s-alert@2.4.1
 juliancwirko:s-alert-slide@1.1.3
 lai:collection-extensions@0.1.3
 launch-screen@1.0.2
@@ -58,13 +59,16 @@ logging@1.0.7
 meteor@1.1.6
 meteor-platform@1.2.2
 meteorhacks:async@1.0.0
+meteorhacks:meteorx@1.0.2
 meteorhacks:npm@1.3.0
+meteorhacks:unblock@1.1.0
 meteortoys:toykit@0.7.0
 minifiers@1.1.5
 minimongo@1.0.8
 mobile-status-bar@1.0.3
 momentjs:moment@2.10.3
 mongo@1.1.0
+mongo-livedata@1.0.8
 mrt:underscore-string-latest@2.3.3
 msavin:mongol@1.0.97
 npm-bcrypt@0.7.8_2
@@ -74,11 +78,13 @@ ordered-dict@1.0.3
 package-version-parser@3.0.3
 practicalmeteor:chai@1.9.2_3
 practicalmeteor:loglevel@1.1.0_3
+raix:handlebar-helpers@0.2.4
 random@1.0.3
 reactive-dict@1.1.0
 reactive-var@1.0.5
 reload@1.1.3
 retry@1.0.3
+reywood:publish-composite@1.3.6
 routepolicy@1.0.5
 sanjo:jasmine@0.14.0
 sanjo:karma@1.5.1
@@ -95,7 +101,7 @@ spacebars-compiler@1.0.6
 srp@1.0.3
 templating@1.1.1
 tracker@1.0.7
-twbs:bootstrap@3.3.4
+twbs:bootstrap@3.3.5
 ui@1.0.6
 underscore@1.0.3
 underscorestring:underscore.string@3.0.3_1
@@ -108,4 +114,6 @@ velocity:meteor-stubs@1.1.0
 velocity:shim@0.1.0
 webapp@1.2.0
 webapp-hashing@1.0.3
+yogiben:admin@1.2.0
+zimme:active-route@2.0.4_1
 zimme:iron-router-active@1.0.4
