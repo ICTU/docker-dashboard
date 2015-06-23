@@ -8,6 +8,11 @@
     "user": "core",
     "keyPath": "~/.ssh/docker-cluster/id_rsa"
   },
+  "services": {
+    "startApp": "localhost:9000/app/bash/start",
+    "stopApp": "localhost:9000/app/bash/stop",
+    "appStatus": "localhost:9000/app/bash/status"
+  },
   "fleet": false,
   "public": {
     "projectName": "Innovation Project",

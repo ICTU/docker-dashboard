@@ -8,7 +8,7 @@ ssh2 = Meteor.npmRequire('ssh2-connect')
     console.log "Cluster.startApp #{key}, #{project}, #{instance}, #{parameters}"
     startScript = if Meteor.settings.fleet then "/opt/bin/start-app.sh" else "/opt/bin/start-app-nofleet.sh"
     if key[0...1] == '/' then key = key[1..]
-    ssh "curl --form \"projectName=#{project}\" --form \"instanceName=#{instance}\" --form \"definitionUrl=#{Meteor.settings.etcd}/#{key}\" iqtservices.isd.org:8080/app/bash/start | sudo sh" , Meteor.bindEnvironment (error, stdout, stderr) ->
+    ssh "curl --form \"projectName=#{project}\" --form \"instanceName=#{instance}\" --form \"definitionUrl=#{Meteor.settings.etcd}/#{key}\" #{Settings.services.startApp()} | sudo sh" , Meteor.bindEnvironment (error, stdout, stderr) ->
       console.log(error) if error
       console.log stdout, stderr
       sync()
@@ -18,7 +18,7 @@ ssh2 = Meteor.npmRequire('ssh2-connect')
     console.log "Cluster.stopInstance #{project}, #{instance}"
     inst = Instances.findOne {project: project, name: instance}
     definitionUrl = "#{Meteor.settings.etcd}/apps/#{inst.project}/#{inst.meta.appName}/#{inst.meta.appVersion}"
-    ssh "curl --form \"projectName=#{project}\" --form \"instanceName=#{instance}\" --form \"definitionUrl=#{definitionUrl}\" iqtservices.isd.org:8080/app/bash/stop | sudo sh" , Meteor.bindEnvironment (error, stdout, stderr) ->
+    ssh "curl --form \"projectName=#{project}\" --form \"instanceName=#{instance}\" --form \"definitionUrl=#{definitionUrl}\" #{Settings.services.stopApp()} | sudo sh" , Meteor.bindEnvironment (error, stdout, stderr) ->
       console.log(error) if error
       console.log stdout, stderr
       sync()
