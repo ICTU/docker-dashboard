@@ -44,6 +44,7 @@ Template.appActions.events
   'click .remove-app': (event, tpl) ->
     Meteor.call 'deleteApp', @name, @version
 
+
 Template.editAppDefBox.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
 
@@ -52,6 +53,16 @@ Template.editAppDefBox.events
     tpl.$('form').submit()
     tpl.$('.modal').modal('hide')
 
+Template.editAppDefForm.onRendered ->
+  console.log 'editAppDefForm', @.$('.appDefEditor'), @
+
+  @editor = ace.edit @.$('.appDefEditor').get(0)
+  @editor.setOptions
+    enableBasicAutocompletion: true
+  @editor.setTheme "ace/theme/chrome"
+  @editor.getSession().setMode "ace/mode/yaml"
+  @editor.getSession().setUseWrapMode(true)
+
 Template.editAppDefForm.events
   'input #appDef': (event, tpl) ->
     [appName, appVersion] = extractAppNameAndVersion val(tpl, 'appDef')
@@ -59,13 +70,13 @@ Template.editAppDefForm.events
     tpl.$('#appVersion').val appVersion
   'submit form': (event, tpl) ->
     event.preventDefault()
-    if val(tpl, 'appName') && val(tpl, 'appVersion')
-      Meteor.call 'saveApp', val(tpl, 'appName'), val(tpl, 'appVersion'), val(tpl, 'appDef')
-      #tpl.$("#alertSuccess").fadeIn(0).delay(2500).addClass("in").fadeOut(1000)
-    #else
-      #tpl.$("#alertWrongNameVersion").fadeIn(0).delay(2500).addClass("in").fadeOut(1000)
+    [appName, appVersion] = extractAppNameAndVersion tpl.editor.getValue()
+    if appName && appVersion
+      Meteor.call 'saveApp', appName, appVersion, tpl.editor.getValue()
+    else
+      console.log 'Unable to get the appName and/or appVersion from the definition'
 
-val = (tpl, id) -> tpl.$("##{id}").val()
+val = (tpl, selector) -> tpl.$("#{selector}").val()
 extractAppNameAndVersion = (appDef) ->
   try
     yaml = jsyaml.load appDef

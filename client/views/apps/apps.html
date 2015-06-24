@@ -154,21 +154,8 @@
 <template name="editAppDefForm">
   <form class="form-horizontal">
     <div class="form-group">
-      <label for="appName" class="col-sm-2 control-label">Name</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="appName" value="{{name}}" disabled>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="appVersion" class="col-sm-2 control-label">Version</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="appVersion" value="{{version}}" disabled>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="nameInput" class="col-sm-2 control-label">Definition</label>
-      <div class="col-sm-10">
-        <textarea id="appDef" class="form-control" rows="20" value="{{def}}"></textarea>
+      <div class="col-sm-12">
+        <div class="appDefEditor" style="height:600px;">{{def}}</div>
       </div>
     </div>
   </form>

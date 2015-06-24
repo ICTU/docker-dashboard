@@ -72,6 +72,7 @@ npm-container@1.0.0
 observe-sequence@1.0.6
 ordered-dict@1.0.3
 package-version-parser@3.0.3
+pntbr:js-yaml-client@0.0.1
 practicalmeteor:chai@1.9.2_3
 practicalmeteor:loglevel@1.1.0_3
 random@1.0.3
