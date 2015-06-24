@@ -66,4 +66,9 @@ Template.editAppDefForm.events
       #tpl.$("#alertWrongNameVersion").fadeIn(0).delay(2500).addClass("in").fadeOut(1000)
 
 val = (tpl, id) -> tpl.$("##{id}").val()
-extractAppNameAndVersion = (appDef) -> appDef.trim().split('\n')[0].split(':')
+extractAppNameAndVersion = (appDef) ->
+  try
+    yaml = jsyaml.load appDef
+    return [ yaml?.name, yaml?.version ] if yaml?.name and yaml?.version
+  catch err
+  ['', '']
