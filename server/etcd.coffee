@@ -1,4 +1,5 @@
 etcd = (endpoint) ->
+  endpoint = endpoint[...-1] if endpoint[-1..] is "/" # remove the trailing / if there is one
 
   get: (key) ->
     HTTP.get "#{endpoint}/#{key}"

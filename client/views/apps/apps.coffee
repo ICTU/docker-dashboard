@@ -54,8 +54,6 @@ Template.editAppDefBox.events
     tpl.$('.modal').modal('hide')
 
 Template.editAppDefForm.onRendered ->
-  console.log 'editAppDefForm', @.$('.appDefEditor'), @
-
   @editor = ace.edit @.$('.appDefEditor').get(0)
   @editor.setOptions
     enableBasicAutocompletion: true
