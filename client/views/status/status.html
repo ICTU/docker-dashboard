@@ -1,0 +1,23 @@
+<template name="status">
+  <div class="container statusPage">
+    <div class="row">
+
+      <div class="col-sm-12">
+        <h3><i class="glyphicon glyphicon-dashboard"></i> Status</h3>
+        <hr>
+      </div>
+    </div>
+
+    {{#each services}}
+      <div class="row" style="padding-bottom:10px;">
+        <div class="col-sm-1"><div class="led {{statusColor}} bigger"></div></div>
+        <div class="col-sm-11">
+          <div class="status">{{name}}</div>
+          <div class="lastCheck">last checked: {{lastCheckHuman}}</div>
+        </div>
+        <hr>
+      </div>
+    {{/each}}
+
+  </div>
+</template>

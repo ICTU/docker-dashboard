@@ -25,6 +25,7 @@ ejson@1.0.6
 email@1.0.6
 fastclick@1.0.3
 fortawesome:fontawesome@4.3.0
+fourseven:scss@3.1.1
 geojson-utils@1.0.3
 gwendall:session-json@0.1.7
 handlebars@1.0.3
@@ -65,6 +66,7 @@ minimongo@1.0.8
 mobile-status-bar@1.0.3
 momentjs:moment@2.10.3
 mongo@1.1.0
+mrt:later@1.6.1
 mrt:underscore-string-latest@2.3.3
 msavin:mongol@1.0.97
 npm-bcrypt@0.7.8_2
@@ -107,6 +109,7 @@ velocity:html-reporter@0.6.2
 velocity:meteor-internals@1.1.0_7
 velocity:meteor-stubs@1.1.0
 velocity:shim@0.1.0
+vsivsi:job-collection@1.1.4
 webapp@1.2.0
 webapp-hashing@1.0.3
 zimme:iron-router-active@1.0.4

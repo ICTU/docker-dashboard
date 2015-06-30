@@ -1,0 +1,43 @@
+.statusPage {
+
+  .status {
+    margin-top:3px;
+    font-size: 20px;
+  }
+
+  .lastCheck {
+    font-size:12px;
+  }
+
+}
+
+@mixin led($size:0px, $color:#444444) {
+  width: $size;
+  height: $size;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: #000 0px 0px 1px 0px, $color $size*-0.1 $size*-0.2 $size*0.6 2px inset, 0px 0px $size*0.5 0px $color;
+}
+
+.led {
+  margin: 10px auto;
+  &.bigger {
+    &.green {@include led(30px, #6eb300);}
+    &.yellow {@include led(30px, #b3a000);}
+    &.red {@include led(30px, #b30600);}
+    &.blue {@include led(30px, #004ab3);}
+    &.gray {@include led(30px, rgba(40, 40, 40, 0.75));}
+  }
+  &.big {
+    &.green {@include led(20px, #6eb300);}
+    &.yellow {@include led(20px, #b3a000);}
+    &.red {@include led(20px, #b30600);}
+    &.blue {@include led(20px, #004ab3);}
+    &.gray {@include led(20px, rgba(40, 40, 40, 0.75));}
+  }
+  &.green {@include led(8px, #6eb300);}
+  &.yellow {@include led(8px, #b3a000);}
+  &.red {@include led(8px, #b30600);}
+  &.blue {@include led(8px, #004ab3);}
+  &.gray {@include led(8px, rgba(40, 40, 40, 0.75));}
+}
