@@ -1,6 +1,7 @@
 Template['base-layout'].helpers
   isAdminBoard: -> Meteor.settings.public.admin
   user: -> Meteor.user().emails[0].address
+  statusColor: -> if Services.findOne(isUp:false) then 'red' else 'green'
 
 Template['base-layout'].events
   'change #projectName': (e, t) ->

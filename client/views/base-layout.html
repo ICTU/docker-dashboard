@@ -15,7 +15,7 @@
           {{/if}}
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><div class="led green pull-left" style="margin-top:21px"></div><a href="{{pathFor 'status'}}">Status</a></li>
+          <li><div class="led {{statusColor}} pull-left" style="margin-top:21px"></div><a href="{{pathFor 'status'}}">Status</a></li>
           {{#if isAdminBoard}}
           <li class="dropdown">
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
