@@ -7,7 +7,7 @@ Template.instances.helpers
   activityIcon: ->
     if @meta.state is 'active'
       'ok-sign'
-    else if @meta.state in ['loading', 'activating']
+    else if "#{@meta.state}".match /loading|activating/ 
       'refresh spinning'
     else
       'exclamation-sign'

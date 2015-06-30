@@ -1,4 +1,5 @@
 Meteor.startup ->
+
   clean()
   sync()
   Meteor.setInterval sync, 1000
@@ -10,7 +11,7 @@ toApp = (node) ->
   [ignore..., keyBase, project, appName, version] = node.key?.split('/')
   {project: project, name: appName, key: node.key?.split('/')[0..-2].join '/'}
 
-@sync = ->
+@sync = (callback)->
   try
     Etcd.discover "apps/#{Meteor.settings.project}", (err, nodes) ->
       apps = if nodes then (toApp node for node in nodes) else []
@@ -31,9 +32,11 @@ toApp = (node) ->
             tags: Helper.extractTags n.value
 
       ApplicationDefs.updateCollection objects
+      callback() if callback
 
   catch
     console.log "Error while trying to read #{baseKey}!"
+    callback "Error while trying to read #{baseKey}!"
 
   Etcd.discover "instances/#{Meteor.settings.project}", (err, nodes) ->
     objects = {}

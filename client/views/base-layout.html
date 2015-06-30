@@ -15,10 +15,11 @@
           {{/if}}
         </ul>
         <ul class="nav navbar-nav navbar-right">
+          <li><div class="led green pull-left" style="margin-top:21px"></div><a href="{{pathFor 'status'}}">Status</a></li>
           {{#if isAdminBoard}}
           <li class="dropdown">
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-              <i class="glyphicon glyphicon-queen"></i> SuperUser <span class="caret"></span>
+              <i style="font-size:12px;" class="glyphicon glyphicon-queen"></i> SuperUser <span class="caret"></span>
             </a>
             <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em; width:250px;">
                 <div class="form-group">
@@ -34,7 +35,7 @@
           {{/if}}
           <li class="dropdown">
             <a id="messagesMenuItem" class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-              <i class="glyphicon glyphicon-envelope"></i> Messages
+              <i style="font-size:12px;" class="glyphicon glyphicon-envelope"></i> Messages
             </a>
           </li>
           {{#if currentUser}}

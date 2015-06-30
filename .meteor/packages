@@ -30,4 +30,7 @@ accounts-base
 accounts-password
 alanning:roles
 iron:router
-yogiben:admin@1.2.0
+pntbr:js-yaml-client
+vsivsi:job-collection
+fourseven:scss
+momentjs:moment

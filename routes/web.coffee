@@ -8,6 +8,7 @@ Meteor.startup ->
     layoutTemplate: 'base-layout'
 
     subscriptions: -> [
+      Meteor.subscribe 'services',
       Meteor.subscribe 'messages',
       Meteor.subscribe 'instances', ->
         InstanceMeta.notify = false
@@ -44,3 +45,8 @@ Meteor.startup ->
 
     @route 'appstore',
       path: '/appstore'
+
+    @route 'status',
+      path: '/status'
+      data: ->
+        services: Services.find()

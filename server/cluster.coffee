@@ -8,8 +8,9 @@ ssh2 = Meteor.npmRequire('ssh2-connect')
     console.log "Cluster.startApp #{key}, #{project}, #{instance}, #{parameters}"
     startScript = if Meteor.settings.fleet then "/opt/bin/start-app.sh" else "/opt/bin/start-app-nofleet.sh"
     if key[0...1] == '/' then key = key[1..]
-    console.log "curl -s #{Meteor.settings.etcd}/#{key} | /opt/bin/jq -r '.node.value' | #{startScript} #{project} #{instance} '#{EJSON.stringify(parameters)}'"
-    ssh "curl -s #{Meteor.settings.etcd}/#{key} | /opt/bin/jq -r '.node.value' | #{startScript} #{project} #{instance} '#{EJSON.stringify(parameters)}'", Meteor.bindEnvironment (error, stdout, stderr) ->
+    cmd = "curl --form \"projectName=#{project}\" --form \"instanceName=#{instance}\" --form \"definitionUrl=#{Meteor.settings.etcd}/#{key}\" #{Settings.services.startApp()} | sudo sh"
+    console.log cmd
+    ssh cmd, Meteor.bindEnvironment (error, stdout, stderr) ->
       console.log(error) if error
       console.log stdout, stderr
       sync()
@@ -18,14 +19,10 @@ ssh2 = Meteor.npmRequire('ssh2-connect')
   stopInstance: (project, instance) ->
     console.log "Cluster.stopInstance #{project}, #{instance}"
     inst = Instances.findOne {project: project, name: instance}
-    firstService = Object.keys(inst.services)[0]
-    hostIp = inst.services[firstService].hostIp # we assume all services live on the same host for now
-    ctl = if Meteor.settings.fleet then "fleetctl" else "systemctl"
-    cmd = "ssh core@#{hostIp} \"sudo #{ctl} stop main@#{project}-#{instance}.service\""
-    console.log "Cluster.stopInstance -> #{cmd}"
-    exec cmd, Meteor.bindEnvironment (error, stdout, stderr) ->
+    definitionUrl = "#{Meteor.settings.etcd}/apps/#{inst.project}/#{inst.meta.appName}/#{inst.meta.appVersion}"
+    ssh "curl --form \"projectName=#{project}\" --form \"instanceName=#{instance}\" --form \"definitionUrl=#{definitionUrl}\" #{Settings.services.stopApp()} | sudo sh" , Meteor.bindEnvironment (error, stdout, stderr) ->
       console.log(error) if error
-      console.log "Cluster.stopInstance completed -> #{cmd}"
+      console.log stdout, stderr
       sync()
     ""
 
