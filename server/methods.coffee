@@ -7,6 +7,8 @@ Meteor.methods
   set: (setting) ->
     Meteor.settings = _.extend Meteor.settings, EJSON.parse(setting)
   execService: Cluster.execService
+  saveAppInStore: (parsed, raw) ->
+    AppStore.upsert {name: parsed.name, version: parsed.version}, _.extend(parsed, def: raw)
 
   restartTag: (tag) ->
     for instance in Instances.find('parameters.tags': tag).fetch()

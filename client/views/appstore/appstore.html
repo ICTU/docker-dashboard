@@ -1,0 +1,21 @@
+<template name="appstore">
+  <div class="container">
+      {{#each apps}}
+          <div style="width: 33%; float:left; margin-bottom: 10px">
+            <div class="appcard" style="height:200px; background-color:#001f3f; margin-right: 15px">
+                <img src="{{pic}}" style="width:135px; background-color:white;" class="pull-left"/>
+                <div class="pull-left">
+                  <h2>{{name}}</h2>
+                  <h3>{{version}}</h3>
+                  <p>
+                    {{description}}
+                  </p>
+                  <button type="button" class="btn btn-link pull-right btn-install-app">Install</button>
+                  <button type="button" class="btn btn-link pull-right btn-edit-app" data-toggle="modal" data-target="#editbox-{{hash}}">Edit</button>
+                </div>
+            </div>
+          </div>
+          {{> editAppDefBox}}
+      {{/each}}
+  </div>
+</template>

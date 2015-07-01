@@ -45,6 +45,9 @@ Meteor.startup ->
 
     @route 'appstore',
       path: '/appstore'
+      subscriptions: -> [
+        Meteor.subscribe 'appstore'
+      ]
 
     @route 'status',
       path: '/status'
