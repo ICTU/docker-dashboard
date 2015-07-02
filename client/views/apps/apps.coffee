@@ -23,8 +23,8 @@ Template.apps.events
   'input #searchField': (e, t) ->
     Session.set 'queryAppName', e.currentTarget.value
   'click #reset': -> Session.set 'queryAppName', null
-  'save-app-def': (e, tpl, parsed, raw) ->
-    Meteor.call 'saveApp', parsed.name, parsed.version, raw
+  'save-app-def': (e, tpl) ->
+    Meteor.call 'saveApp', e.yaml.parsed.name, e.yaml.parsed.version, e.yaml.raw
 
 Template.appActions.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"

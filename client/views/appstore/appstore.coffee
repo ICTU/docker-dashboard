@@ -5,5 +5,5 @@ Template.appstore.helpers
 Template.appstore.events
   "click .btn-install-app": (event, template) ->
     Meteor.call 'saveApp', @name, @version, @def
-  'save-app-def': (e, tpl, parsed, raw) ->
-    Meteor.call 'saveAppInStore', parsed, raw
+  'save-app-def': (e, tpl) ->
+    Meteor.call 'saveAppInStore', e.yaml.parsed, e.yaml.raw

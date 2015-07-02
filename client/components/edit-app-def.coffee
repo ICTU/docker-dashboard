@@ -20,7 +20,10 @@ Template.editAppDefForm.events
     data = tpl.editor.getValue()
     parsed = exctractAttributes data
     if parsed?.name && parsed?.version
-      tpl.$("form").trigger 'save-app-def', [parsed, data]
+      tpl.$("form").trigger $.Event 'save-app-def',
+        yaml:
+          parsed: parsed
+          raw: data
     else
       console.log 'Unable to get the name and/or version from the definition'
 
