@@ -2,8 +2,8 @@ Template.chat.helpers
   messages: -> Messages.find()
 
 Template.chat.events
-  'click #closeButton': -> Chat.hide()
+  'click .intercom-sheet-header-close-button': -> Chat.hide()
 
 @Chat =
-  show: -> $('#chat').css 'display', 'block'
-  hide: -> $('#chat').css 'display', 'none'
+  show: -> $('#intercom-container').css 'display', 'block'
+  hide: -> $('#intercom-container').css 'display', 'none'

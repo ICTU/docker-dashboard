@@ -9,7 +9,6 @@ http
 zimme:iron-router-active
 
 velocity:html-reporter
-sanjo:jasmine
 msavin:mongol
 meteorhacks:npm
 

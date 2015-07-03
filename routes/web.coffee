@@ -9,7 +9,8 @@ Meteor.startup ->
 
     subscriptions: -> [
       Meteor.subscribe 'services',
-      Meteor.subscribe 'messages',
+      Meteor.subscribe 'chatMessages',
+      Meteor.subscribe 'latestNotice',
       Meteor.subscribe 'instances', ->
         InstanceMeta.notify = false
         Instances.find().observe
