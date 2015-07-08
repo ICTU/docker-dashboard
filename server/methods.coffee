@@ -9,6 +9,8 @@ Meteor.methods
   execService: Cluster.execService
   saveAppInStore: (parsed, raw) ->
     AppStore.upsert {name: parsed.name, version: parsed.version}, _.extend(parsed, def: raw)
+  removeAppFromStore: (name, version) ->
+    AppStore.remove name: name, version: version
 
   restartTag: (tag) ->
     for instance in Instances.find('parameters.tags': tag).fetch()
