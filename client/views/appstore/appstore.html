@@ -20,5 +20,19 @@
           </div>
           {{> editAppDefBox}}
       {{/each}}
+      {{#if isAdminBoard}}
+      <div style="width: 33%; float:left; margin-bottom: 10px">
+        <div class="appcard" style="height:200px; background-color:#001f3f; margin-right: 15px">
+        <button type="button" class="btn btn-link center-block btn-edit-app" data-toggle="modal" data-target="#editbox-{{hash}}" title="Create new application">
+            <img src="/img/new-app.png" style="width:135px; background-color:white;" class="pull-left"/>
+            <!-- <div class="pull-left">
+              <h4>Create new application</h4>
+            </div> -->
+        </button>
+        </div>
+      </div>
+      {{> editAppDefBox}}
+      {{/if}}
+
   </div>
 </template>
