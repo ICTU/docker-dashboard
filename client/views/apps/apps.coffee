@@ -5,7 +5,9 @@ appDefTemplate =
 
 nameSearch = ->
   if Session.get('queryAppName')?.length
-    name: $regex: Session.get 'queryAppName'
+    name:
+      $regex: Session.get 'queryAppName'
+      $options: 'i'
   else {}
 
 Template.apps.helpers
