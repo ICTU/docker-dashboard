@@ -1,13 +1,13 @@
 Template.instances.helpers
   instances: ->
     if Session.get('queryName')?.length
-      Instances.find {name: {$regex: Session.get 'queryName'}}, sort: key: 1
+      Instances.find {name: {$regex: Session.get('queryName'), $options: 'i'}}, sort: key: 1
     else
       Instances.find {}, sort: key: 1
   activityIcon: ->
     if @meta.state is 'active'
       'ok-sign'
-    else if "#{@meta.state}".match /loading|activating/ 
+    else if "#{@meta.state}".match /loading|activating/
       'refresh spinning'
     else
       'exclamation-sign'
