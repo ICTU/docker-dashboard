@@ -2,12 +2,12 @@
   <div class="container appstore">
       <div class="row">
           <div class="col-sm-12">
-              <h1 class="pageTitle"><i class="glyphicon glyphicon-dashboard"></i> App Store</h1>
+              <h1 class="pageTitle"><i class="glyphicon glyphicon-shopping-cart"></i> App Store</h1>
           </div>
       </div>
       <hr>
 
-      {{#if isAdminBoard}}
+      {{#if hasLocalAppstore}}
       <div style="width: 33%; float:left; margin-bottom: 10px">
         <div class="appcard" style="height:200px; background-color:#001f3f; margin-right: 15px; padding-top:30px">
         <button type="button" class="btn btn-link center-block btn-edit-app" data-toggle="modal" data-target="#editbox-{{hash}}" title="Create new application">
@@ -28,7 +28,7 @@
                     {{description}}
                   </p>
                   <button type="button" class="btn btn-link pull-right btn-install-app">Install</button>
-                  {{#if isAdminBoard}}
+                  {{#if hasLocalAppstore}}
                   <button type="button" class="btn btn-link pull-right btn-edit-app" data-toggle="modal" data-target="#editbox-{{hash}}">Edit</button>
                   <button type="button" class="btn btn-link pull-right btn-remove-app">Remove</button>
                   {{/if}}
