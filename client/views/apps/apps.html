@@ -40,6 +40,9 @@
                 <h4 class="panel-title">
                   <a data-toggle="collapse" data-target="#appPanel-{{name}}"
                      href="#" class="collapsed toggle"><span class="badge">{{appDefCount}}</span> {{name}}</a>
+                     <div class="pull-right" style="margin-right:10px;">
+                       {{#each allTags}}<span class="label label-info" style="margin-right:5px;">{{this}}</span>{{/each}}
+                     </div>
                 </h4>
 
               </div>
