@@ -1,10 +1,17 @@
 <template name="appstore">
-  <div class="container">
+  <div class="container appstore">
+      <div class="row">
+          <div class="col-sm-12">
+              <h1 class="pageTitle"><i class="glyphicon glyphicon-dashboard"></i> App Store</h1>
+          </div>
+      </div>
+      <hr>
+
       {{#if isAdminBoard}}
       <div style="width: 33%; float:left; margin-bottom: 10px">
-        <div class="appcard" style="height:200px; background-color:#001f3f; margin-right: 15px">
+        <div class="appcard" style="height:200px; background-color:#001f3f; margin-right: 15px; padding-top:30px">
         <button type="button" class="btn btn-link center-block btn-edit-app" data-toggle="modal" data-target="#editbox-{{hash}}" title="Create new application">
-            <img src="/img/new-app.png" style="width:135px; background-color:white;" class="pull-left"/>
+            <i style="font-size: 100px; color:grey;" class="glyphicon glyphicon-plus"></i>
         </button>
         </div>
       </div>
@@ -13,7 +20,7 @@
       {{#each apps}}
           <div style="width: 33%; float:left; margin-bottom: 10px">
             <div class="appcard" style="height:200px; background-color:#001f3f; margin-right: 15px">
-                <img src="{{pic}}" style="width:135px; background-color:white;" class="pull-left"/>
+                <div style="background-image: url({{pic}});" class="pull-left img">&nbsp;</div>
                 <div class="pull-left">
                   <h2>{{name}}</h2>
                   <h3>{{version}}</h3>
