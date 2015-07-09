@@ -2,12 +2,12 @@ Meteor.startup ->
 
   sAlert.config
     effect: 'slide'
-    position: 'bottom-right'
+    position: 'top-right'
     timeout: 5000
     html: true
     onRouteClose: false
     stack: true
-    offset: 0
+    offset: 20
 
   chatStream = new Meteor.Stream 'notificationStream'
   chatStream.on 'chatMessage', (message) ->

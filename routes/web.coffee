@@ -1,6 +1,7 @@
 connections = {}
 
 @InstanceMeta = notify: false
+@AppDefsMeta = notify: false
 
 Meteor.startup ->
 
@@ -8,11 +9,10 @@ Meteor.startup ->
     layoutTemplate: 'base-layout'
 
     subscriptions: -> [
-      Meteor.subscribe 'services',
-      Meteor.subscribe 'chatMessages',
-      Meteor.subscribe 'latestNotice',
+      Meteor.subscribe 'services'
+      Meteor.subscribe 'chatMessages'
+      Meteor.subscribe 'latestNotice'
       Meteor.subscribe 'instances', ->
-        InstanceMeta.notify = false
         Instances.find().observe
           changed: (newDoc, oldDoc) ->
             if newDoc?.meta?.state == 'active' && oldDoc?.meta.state != 'active'
@@ -22,6 +22,15 @@ Meteor.startup ->
           added: (doc) ->
             sAlert.info "Instance #{doc.name} is starting..." if InstanceMeta.notify
         InstanceMeta.notify = true
+      Meteor.subscribe 'applicationDefs', ->
+        ApplicationDefs.find().observe
+          changed: (doc) ->
+            sAlert.success "Application #{doc.name}:#{doc.version} was saved." if AppDefsMeta.notify
+          removed: (doc) ->
+            sAlert.warning "Application #{doc.name}:#{doc.version} was removed." if AppDefsMeta.notify
+          added: (doc) ->
+            sAlert.success "Application #{doc.name}:#{doc.version} was created." if AppDefsMeta.notify
+        AppDefsMeta.notify = true
     ]
 
   Router.map ->
