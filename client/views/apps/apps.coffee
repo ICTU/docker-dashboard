@@ -19,7 +19,7 @@ Template.apps.helpers
   searchTerms: -> Session.get('queryAppName')
   appDefTemplate: -> appDefTemplate
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
-  allTags: -> _.uniq(ApplicationDefs.find(name: @name).map (ad) -> ad.tags)
+  allTags: -> _.uniq _.flatten(ApplicationDefs.find(name: @name).map (ad) -> ad.tags)
 
 Template.apps.events
   'click .dropdown-menu': (e) -> e.stopPropagation() unless e.target.tagName.toUpperCase() == 'BUTTON'
