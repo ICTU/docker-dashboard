@@ -1,4 +1,4 @@
-parsed = new ReactiveVar {}
+parsed = new ReactiveVar null
 
 Template.editAppDefBox.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
@@ -8,6 +8,7 @@ Template.editAppDefBox.events
   'click #submitButton': (e, tpl) ->
     tpl.$('form').submit()
     tpl.$('.modal').modal('hide')
+  'shown.bs.modal .modal': -> parsed.set null
 
 Template.editAppDefForm.onRendered ->
   @editor = ace.edit @.$('.appDefEditor').get(0)
