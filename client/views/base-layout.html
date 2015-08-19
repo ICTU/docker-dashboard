@@ -59,15 +59,7 @@
   </div>
   <!-- /Header -->
 
-  <div class="container">
-      {{#each notices}}
-      <div class="row">
-          <div class="col-sm-12">
-              <div class="alert alert-warning" role="alert"><strong>Notice:</strong> {{text}}</div>
-          </div>
-      </div>
-      {{/each}}
-  </div>
+  {{> notices}}
 
   {{> sAlert}}
 
@@ -80,4 +72,16 @@
 
 <template name="open">
     {{> yield}}
+</template>
+
+<template name="notices">
+    <div class="container">
+        {{#each notices}}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="alert {{noticeCss}}" role="alert"><strong>{{noticePreamble}}</strong> {{text}}</div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
 </template>

@@ -9,10 +9,6 @@ Meteor.startup ->
   channelId = 0
   noticeChannelId = 0
 
-  chatStream = new Meteor.Stream 'chat'
-
-
-
   slack.on 'open', ->
     channel = slack.getChannelByName(channelName)
     noticeChannelId = slack.getChannelByName('dashboard-notice')?.id
@@ -22,32 +18,23 @@ Meteor.startup ->
       console.log "Slack channel '#{channelName}' does not exist"
 
   slack.on 'message', Meteor.bindEnvironment (message) ->
-    if message.channel == channelId
-      msg =
-        type: 'chat'
-        text: message.text
-        date: new Date()
-      Messages.insert msg
-      NotificationStream.notifyOfChatMessage msg
-
-    else if message.channel == noticeChannelId
-      console.log message
-      processMessage message
-      #msg =
-      #  type: 'notice'
-      #  text: message.text
-      #  date: new Date()
-      #Messages.insert msg
+    processMessage message if message.channel in [channelId, noticeChannelId]
 
   processMessage = (message) ->
-    type =  'chat'
-    if message.text.match /^info/ then type = 'info'
-    else if message.text.match /^notice/ then type = 'notice'
-    else if message.text.match /^warning/ then type = 'warning'
+    console.log 'process', message
     msg =
-      type: type
-      text: message.text
+      type:  'chat'
       date: new Date()
+    if message.text.match /^info/
+      msg.type = 'info'
+      msg.text = message.text.replace /^info:?/, ''
+    else if message.text.match /^warning/
+      msg.type = 'warning'
+      msg.text = message.text.replace /^warning:?/, ''
+    else
+      msg.text = message.text
+
     Messages.insert msg
+    NotificationStream.notifyOfChatMessage msg if msg.type == 'chat'
 
   slack.login()
