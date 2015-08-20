@@ -40,10 +40,11 @@
                             <div class="intercom-conversation-parts">
 
                                 {{#each messages}}
+                                  {{#if isMessageReceived}}
                                     <div class="intercom-conversation-part">
                                         <div class="intercom-comment intercom-comment-by-admin">
 
-                                            <img src="./pathToUrPicture.jpg" class="intercom-comment-avatar">
+                                            <!--img src="./pathToUrPicture.jpg" class="intercom-comment-avatar"-->
 
                                             <div class="intercom-comment-body-container">
                                                 <div class="intercom-comment-body intercom-embed-body">
@@ -62,10 +63,35 @@
                                                   </span>
                                                   <span class="intercom-relative-time">{{msgTime}}</span>
                                                 </div>
-                                                <!-- <div class="intercom-comment-readstate"><span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span> / <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></div> -->
                                             </div>
                                         </div>
                                     </div>
+                                  {{else}}
+                                    <div class="intercom-conversation-part">
+                                        <div class="intercom-comment intercom-comment-by-user">
+
+                                            <div class="intercom-comment-body-container">
+
+                                                <div class="intercom-comment-body intercom-embed-body">
+                                                    <p>{{text}}</p>
+                                                </div>
+                                                <div class="intercom-attachments" style="display: none;">
+
+                                                </div>
+                                                <div class="intercom-comment-caret"></div>
+                                                <div class="intercom-lwr-composer-container"></div>
+                                            </div>
+                                            <div class="intercom-comment-metadata-container">
+                                                <div class="intercom-comment-metadata">
+                                                  <span class="intercom-comment-state">
+
+                                                  </span>
+                                                    <span class="intercom-relative-time">{{msgTime}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  {{/if}}
                                 {{/each}}
 
 

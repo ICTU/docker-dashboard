@@ -1,6 +1,7 @@
 Template.chat.helpers
   messages: -> Messages.find()
   msgTime: -> moment(@date).fromNow()
+  isMessageReceived: -> @direction == 'received'
 
 Template.chat.events
   'click .intercom-sheet-header-close-button': -> Chat.hide()
