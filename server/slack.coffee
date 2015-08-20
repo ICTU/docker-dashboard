@@ -1,4 +1,4 @@
-Meteor.startup ->
+Meteor.startup =>
   authUrl = 'https://slack.com/api/rtm.start'
   authToken = 'xoxb-5125952660-xvSsHj7FcbQUSocm4xtEdzLt'
   autoReconnect = true
@@ -9,32 +9,33 @@ Meteor.startup ->
   channelId = 0
   noticeChannelId = 0
 
-  slack.on 'open', ->
-    channel = slack.getChannelByName(channelName)
-    noticeChannelId = slack.getChannelByName('dashboard-notice')?.id
+  slack.on 'open', =>
+    @channel = slack.getChannelByName(channelName)
+    @noticeChannel = slack.getChannelByName 'dashboard-notice'
+    noticeChannelId = noticeChannel?.id
     if channel
+      noticeChannel.send "A new dashboard connection was established from project #{channelName}"
       channelId = channel.id
     else
       console.log "Slack channel '#{channelName}' does not exist"
 
   slack.on 'message', Meteor.bindEnvironment (message) ->
-    processMessage message if message.channel in [channelId, noticeChannelId]
+    Messages.insert processMessage(message) if message.channel in [channelId, noticeChannelId]
 
   processMessage = (message) ->
-    console.log 'process', message
     msg =
       type:  'chat'
       date: new Date()
-    if message.text.match /^info/
-      msg.type = 'info'
-      msg.text = message.text.replace /^info:?/, ''
-    else if message.text.match /^warning/
-      msg.type = 'warning'
-      msg.text = message.text.replace /^warning:?/, ''
-    else
-      msg.text = message.text
-
-    Messages.insert msg
-    NotificationStream.notifyOfChatMessage msg if msg.type == 'chat'
+      text: message.text
+      direction: 'received'
+    if message.channel is noticeChannelId
+      if message.text.match /^info:/i
+        msg.type = 'info'
+        msg.text = message.text.replace /^info:?/i, ''
+      else if message.text.match /^warning:/i
+        msg.type = 'warning'
+        msg.text = message.text.replace /^warning:?/i, ''
+    NotificationStream.notifyOfChatMessage msg if msg.type is 'chat'
+    msg
 
   slack.login()

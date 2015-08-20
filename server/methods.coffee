@@ -23,3 +23,11 @@ Meteor.methods
         Cluster.startApp def.key, def.project, def.name, EJSON.stringify({tags: def.tags})
       catch err
         console.log err
+
+  sendChatMessage: (text) =>
+    @channel.send text
+    Messages.insert
+      type:  'chat'
+      date: new Date()
+      text: text
+      direction: 'sent'
