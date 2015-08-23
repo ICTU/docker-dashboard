@@ -1,5 +1,5 @@
 Template.chat.helpers
-  messages: -> Messages.find()
+  messages: -> Messages.find {}, {sort: date: 1}
   msgTime: -> moment(@date).fromNow()
   isMessageReceived: -> @direction == 'received'
 
