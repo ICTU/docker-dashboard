@@ -4,23 +4,27 @@
     <div class="row">
       <div class="col-sm-3">
           <div class="card" style="background-color:#001f3f">
+            <a href="{{pathFor 'apps'}}" style="color: white;">
               <div class="header">
                   <h1>{{appCount}}</h1>
               </div>
               <div class="content">
                   <p>Applications</p>
               </div>
+            </a>
           </div>
       </div>
 
       <div class="col-sm-3">
           <div class="card" style="background-color:#0074D9">
+            <a href="{{pathFor 'instances'}}" style="color: white;">
               <div class="header">
                   <h1>{{instanceCount}}</h1>
               </div>
               <div class="content">
                   <p>Instances</p>
               </div>
+            </a>
           </div>
       </div>
 
