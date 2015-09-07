@@ -5,7 +5,8 @@ Meteor.startup ->
     "entrySignOut",
     "entrySignUp",
     "entryForgotPassword",
-    "entryResetPassword"
+    "entryResetPassword",
+    "apiStatus"
   ]
 
   Router.onBeforeAction ->

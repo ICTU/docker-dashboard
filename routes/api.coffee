@@ -34,10 +34,10 @@ Meteor.startup ->
         instNames = Instances.find(project: Meteor.settings.project, "meta.appName": @params.app, "meta.appVersion": @params.version).map (inst) -> inst.name
         @response.writeHead 200, 'Content-Type': 'application/json'
         @response.end EJSON.stringify(instNames)
-    @route 'apiGetStatus',
+    @route 'apiStatus',
       where: 'server'
       path: '/api/v1/state/:name'
-      action: ->
+    .get ->
         check(@params.name, String)
         instance = Instances.findOne project: Meteor.settings.project, name: @params.name
         if instance
@@ -46,6 +46,16 @@ Meteor.startup ->
         else
           @response.writeHead 404, 'Content-Type': 'application/json'
           @response.end '{"message": "Instance not found"}'
+    .put ->
+        check(@params.name, String)
+        Instances.update {project: Meteor.settings.project, name: @params.name}, {$set: 'meta.state': @request.body.state}, (err, result) =>
+          console.log err, result
+          if err or not result
+            @response.writeHead 404, 'Content-Type': 'application/json'
+            @response.end '{"message": "Instance not found"}'
+          else
+            @response.writeHead 200, 'Content-Type': 'application/json'
+            @response.end "#{@params.name} state changed to #{@request.body.state}"
 
     @route 'streamTerminal',
       where: 'server'
