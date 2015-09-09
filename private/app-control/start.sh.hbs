@@ -1,0 +1,56 @@
+NIC=`/usr/bin/ifconfig | /usr/bin/grep -v PROMISC | /usr/bin/pcregrep -o1 '(ens[0-9]+):'`
+etcdctl --peers {{etcdCluster}} rm /instances/{{project}}/{{appName}}/{{instance}} --recursive
+etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/state "loading"
+etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/appName "{{appName}}"
+etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/appVersion "{{appVersion}}"
+etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/parameters "{{params}}"
+
+#========================================================
+{{#each services}}
+echo "Starting {{image}} for {{service}}-{{../project}}-{{../instance}}"
+
+# remove any left-behind instances
+docker kill {{service}}-{{../project}}-{{../instance}}
+docker rm {{service}}-{{../project}}-{{../instance}}
+
+# pull latest version of the image
+docker pull {{image}}
+
+etcdctl --peers {{etcdCluster}} set /instances/{{../project}}/{{../appName}}/{{../instance}}/meta_/state "activating {{num}} of {{../total}}"
+
+{{#each volumes}}
+mkdir -p /mnt/data/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
+chmod a+rw /mnt/data/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
+{{/each}}
+
+{{#each links}}
+# wait until linked container {{this}} is available
+while [ -z "$(docker ps | grep "{{this}}-{{../../project}}-{{../../instance}}")" ]; do
+  sleep 5;
+done
+{{/each}}
+
+# start container
+docker run -d \
+--name {{service}}-{{../project}}-{{../instance}} \
+{{dockerlinks}} \
+{{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
+{{dockervolumes "/mnt/data"}} \
+{{volumesfrom}} \
+{{opts}} \
+{{#if privileged}}--privileged{{/if}} \
+{{#if user}}-u {{user}}{{/if}} \
+{{{envs}}} \
+-v /etc/localtime:/etc/localtime:ro -P {{image}} {{command}}
+
+docker kill publicnetwork-{{service}}-{{../project}}-{{../instance}}
+docker rm publicnetwork-{{service}}-{{../project}}-{{../instance}}
+sudo /opt/bin/create-network-container.sh {{service}}-{{../project}}-{{../instance}} ${NIC}
+/opt/bin/add-route.sh {{service}}-{{../project}}-{{../instance}}
+/opt/bin/create-skydns-entry.sh {{service}}-{{../project}}-{{../instance}} {{../etcdCluster}}/v2/keys/skydns/ictu/{{../project}}/{{../instance}}/{{service}}
+/opt/bin/publish-app-info.sh {{service}}-{{../project}}-{{../instance}} {{../etcdCluster}} {{../project}} {{../appName}} {{../appVersion}} {{../instance}} {{service}}
+
+#========================================================
+{{/each}}
+
+etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/state "active"

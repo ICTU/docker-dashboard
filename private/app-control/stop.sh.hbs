@@ -1,0 +1,13 @@
+etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/state "stopping"
+
+{{#each services}}
+
+etcdctl --peers {{../etcdCluster}} rm /skydns/ictu/{{../project}}/{{../instance}}/{{this}}
+/opt/bin/delete-route.sh {{this}}-{{../project}}-{{../instance}}
+docker stop -t 5 publicnetwork-{{this}}-{{../project}}-{{../instance}}
+docker rm publicnetwork-{{this}}-{{../project}}-{{../instance}}
+docker stop -t 30 {{this}}-{{../project}}-{{../instance}}
+
+{{/each}}
+
+etcdctl --peers {{etcdCluster}} rm /instances/{{project}}/{{appName}}/{{instance}} --recursive
