@@ -45,7 +45,7 @@ HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
 
 findWebPort = (service) ->
   p = 80
-  service?.ports.split(' ').forEach (port) ->
+  service?.ports?.split(' ').forEach (port) ->
     if port in HTTPS_PORTS.concat(HTTP_PORTS) then p = port
   p
 
