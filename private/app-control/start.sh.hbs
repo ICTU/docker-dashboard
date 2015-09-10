@@ -1,9 +1,10 @@
 NIC=`/usr/bin/ifconfig | /usr/bin/grep -v PROMISC | /usr/bin/pcregrep -o1 '(ens[0-9]+):'`
+vlan=$(curl --silent http://iqtservices.isd.org:4001/v2/keys/networking/{{project}}/vlan | jq -r '.node.value')
 etcdctl --peers {{etcdCluster}} rm /instances/{{project}}/{{appName}}/{{instance}} --recursive
 etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/state "loading"
 etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/appName "{{appName}}"
 etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/appVersion "{{appVersion}}"
-etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/parameters "{{params}}"
+etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/parameters {{stringify params}}
 
 #========================================================
 {{#each services}}
@@ -45,7 +46,7 @@ docker run -d \
 
 docker kill publicnetwork-{{service}}-{{../project}}-{{../instance}}
 docker rm publicnetwork-{{service}}-{{../project}}-{{../instance}}
-sudo /opt/bin/create-network-container.sh {{service}}-{{../project}}-{{../instance}} ${NIC}
+sudo /opt/bin/create-network-container.sh {{service}}-{{../project}}-{{../instance}} ${NIC} ${vlan}
 /opt/bin/add-route.sh {{service}}-{{../project}}-{{../instance}}
 /opt/bin/create-skydns-entry.sh {{service}}-{{../project}}-{{../instance}} {{../etcdCluster}}/v2/keys/skydns/ictu/{{../project}}/{{../instance}}/{{service}}
 /opt/bin/publish-app-info.sh {{service}}-{{../project}}-{{../instance}} {{../etcdCluster}} {{../project}} {{../appName}} {{../appVersion}} {{../instance}} {{service}}

@@ -2,11 +2,11 @@ etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instanc
 
 {{#each services}}
 
-etcdctl --peers {{../etcdCluster}} rm /skydns/ictu/{{../project}}/{{../instance}}/{{this}}
-/opt/bin/delete-route.sh {{this}}-{{../project}}-{{../instance}}
-docker stop -t 5 publicnetwork-{{this}}-{{../project}}-{{../instance}}
-docker rm publicnetwork-{{this}}-{{../project}}-{{../instance}}
-docker stop -t 30 {{this}}-{{../project}}-{{../instance}}
+etcdctl --peers {{../etcdCluster}} rm /skydns/ictu/{{../project}}/{{../instance}}/{{service}}
+/opt/bin/delete-route.sh {{service}}-{{../project}}-{{../instance}}
+docker stop -t 5 publicnetwork-{{service}}-{{../project}}-{{../instance}}
+docker rm publicnetwork-{{service}}-{{../project}}-{{../instance}}
+docker stop -t 30 {{service}}-{{../project}}-{{../instance}}
 
 {{/each}}
 

@@ -30,7 +30,7 @@ Template.instances.helpers
 
 Template.instances.events
   'click .stop-instance': ->
-    Meteor.call 'stopInstance', @project, @name
+    Meteor.call 'stopInstance', @name
   'click .clear-instance': ->
     Meteor.call 'clearInstance', @project, @name
   'click .open-terminal': (e, t) ->

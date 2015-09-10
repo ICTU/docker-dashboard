@@ -20,7 +20,7 @@ Meteor.methods
         console.log err
     for def in ApplicationDefs.find('tags': tag).fetch()
       try
-        Cluster.startApp def.key, def.project, def.name, EJSON.stringify({tags: def.tags})
+        Cluster.startApp def.name, def.version, def.name, EJSON.stringify({tags: def.tags})
       catch err
         console.log err
 
