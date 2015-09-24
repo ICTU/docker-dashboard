@@ -1,40 +1,91 @@
-NIC=`/usr/bin/ifconfig | /usr/bin/grep -v PROMISC | /usr/bin/pcregrep -o1 '(ens[0-9]+):'`
-vlan=$(curl --silent http://iqtservices.isd.org:4001/v2/keys/networking/{{project}}/vlan | jq -r '.node.value')
-etcdctl --peers {{etcdCluster}} rm /instances/{{project}}/{{appName}}/{{instance}} --recursive
-etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/state "loading"
-etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/appName "{{appName}}"
-etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/appVersion "{{appVersion}}"
-etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/parameters {{stringify params}}
+#
+# GENERAL STATE CLEANUP AND CONFIGURATION
+#
+PROJECT="{{project}}"
+APPNAME="{{appName}}"
+INSTANCE="{{instance}}"
+ETCD_CLUSTER="{{etcdCluster}}"
+ETCD_INSTANCE_KEY="/instances/$PROJECT/$APPNAME/$INSTANCE"
+NIC=$(/usr/bin/ifconfig | /usr/bin/grep -v PROMISC | /usr/bin/pcregrep -o1 '(ens[0-9]+):')
+NORMALNIC=$(/usr/bin/ifconfig |  /usr/bin/grep -w -B1 inet | /usr/bin/pcregrep -o1 '(ens[0-9]+):');
+vlan=$(curl --silent $ETCD_CLUSTER/v2/keys/networking/{{project}}/vlan | jq -r '.node.value')
+TOTAL_STEPS=$(({{total}}*2))
+STEP=0
 
-#========================================================
+etcdctl --peers $ETCD_CLUSTER rm $ETCD_INSTANCE_KEY --recursive
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "loading"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appName "{{appName}}"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appVersion "{{appVersion}}"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/parameters {{stringify params}}
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS"
+
+
+# PULL ALL IMAGES
+
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "pulling"
 {{#each services}}
-echo "Starting {{image}} for {{service}}-{{../project}}-{{../instance}}"
-
-# remove any left-behind instances
-docker kill {{service}}-{{../project}}-{{../instance}}
-docker rm {{service}}-{{../project}}-{{../instance}}
-
-# pull latest version of the image
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Pulling image {{image}}"
 docker pull {{image}}
+STEP=$((STEP+1))
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
+{{/each}}
 
-etcdctl --peers {{etcdCluster}} set /instances/{{../project}}/{{../appName}}/{{../instance}}/meta_/state "activating {{num}} of {{../total}}"
+# ACTIVATE ALL SERVICES
 
+{{#each services}}
+
+DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
+DOCKERNETNAME="net-$DOCKERNAME"
+
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "activating"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Activating service {{service}}"
+
+#
+# Remove any left-behind instances
+#
+docker kill $DOCKERNETNAME
+docker rm $DOCKERNETNAME
+docker kill $DOCKERNAME
+docker rm $DOCKERNAME
+#
+# Prepare the volumes
+#
 {{#each volumes}}
 mkdir -p /mnt/data/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
 chmod a+rw /mnt/data/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
 {{/each}}
-
+#
+# Prepare the network
+#
+links=""
 {{#each links}}
-# wait until linked container {{this}} is available
-while [ -z "$(docker ps | grep "{{this}}-{{../../project}}-{{../../instance}}")" ]; do
-  sleep 5;
-done
+links="$links--link net-{{this}}-$PROJECT-$INSTANCE:{{this}} "
 {{/each}}
 
-# start container
+docker run --privileged \
+--name $DOCKERNETNAME \
+$links \
+-dti jeroenpeeters/public-networking:latest \
+bash -c "/opt/bin/pipework --wait -i eth1;dhclient -v eth1;bash"
+
+sudo /opt/bin/pipework $NIC $DOCKERNETNAME 0/0 @$vlan
+
+while [ 1 ]; do
+  pubip=$(docker exec $DOCKERNETNAME ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}');
+  if [[ $pubip ]]; then
+    echo "ip=$pubip"
+    break;
+  else
+    echo "waiting on IP from DHCP for $DOCKERNETNAME"
+    sleep 5
+  fi
+done
+
+#
+# Start the service container
+#
 docker run -d \
 --name {{service}}-{{../project}}-{{../instance}} \
-{{dockerlinks}} \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes "/mnt/data"}} \
 {{volumesfrom}} \
@@ -44,14 +95,32 @@ docker run -d \
 {{{envs}}} \
 -v /etc/localtime:/etc/localtime:ro -P {{image}} {{command}}
 
-docker kill publicnetwork-{{service}}-{{../project}}-{{../instance}}
-docker rm publicnetwork-{{service}}-{{../project}}-{{../instance}}
-sudo /opt/bin/create-network-container.sh {{service}}-{{../project}}-{{../instance}} ${NIC} ${vlan}
-/opt/bin/add-route.sh {{service}}-{{../project}}-{{../instance}}
-/opt/bin/create-skydns-entry.sh {{service}}-{{../project}}-{{../instance}} {{../etcdCluster}}/v2/keys/skydns/ictu/{{../project}}/{{../instance}}/{{service}}
-/opt/bin/publish-app-info.sh {{service}}-{{../project}}-{{../instance}} {{../etcdCluster}} {{../project}} {{../appName}} {{../appVersion}} {{../instance}} {{service}}
+#
+# Publish info about the container to etcd
+#
+image=$(docker inspect -f '{{{literal '{{.Config.Image}}'}}}' $DOCKERNAME)
+hostname="{{service}}.$INSTANCE.$PROJECT.ictu"
+myip=$(docker exec $DOCKERNETNAME ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
+ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' $image | grep -o -G '[0-9]*')
+hostIp=$(ifconfig $NORMALNIC | grep 'inet ' | awk '{ print $2 }')
 
-#========================================================
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ip "$myip"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostname "$hostname"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ports "${ports/\n/ }"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostIp "$hostIp"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerName "$DOCKERNAME"
+#
+# Create DNS entry
+#
+curl -XPUT $ETCD_CLUSTER/v2/keys/skydns/ictu/{{../project}}/{{../instance}}/{{service}} -d value={\"host\":\"$myip\"}
+#
+# Add local route
+#
+route add -host $myip docker0
+
+STEP=$((STEP+1))
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
 {{/each}}
 
-etcdctl --peers {{etcdCluster}} set /instances/{{project}}/{{appName}}/{{instance}}/meta_/state "active"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "active"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Active"
