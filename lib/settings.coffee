@@ -8,6 +8,7 @@ settings = Meteor.settings
   ssh:
     username: -> settings?.ssh?.user or 'core'
     keyPath: -> settings?.ssh?.keyPath or '~/.ssh/id_rsa'
+    proxy: -> settings?.coreos?.proxyssh or 'ssh core@172.17.42.1'
   services:
     startApp: -> settings?.services?.startApp or 'iqtservices.isd.org:8080/app/bash/start'
     stopApp: -> settings?.services?.stopApp or 'iqtservices.isd.org:8080/app/bash/stop'

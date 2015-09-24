@@ -1,6 +1,12 @@
 exec = Npm.require('child_process').exec
-ssh = (cmd, callback) -> exec "#{Meteor.settings.coreos.ssh} \"#{cmd}\"", callback
-ssht = (endpoint, cmd, cb) -> exec "ssh -t #{endpoint} #{cmd}", cb
+ssh = (cmd, callback) ->
+  cmd = JSON.stringify cmd
+  console.log 'command on the docker host ->', cmd
+  cmd = JSON.stringify "#{Meteor.settings.coreos.ssh} #{cmd}"
+  console.log 'ssh command ->', cmd
+  command = "#{Settings.ssh.proxy()} #{cmd}"
+  console.log 'ssh proxy command ->', command
+  exec command, callback
 ssh2 = Meteor.npmRequire('ssh2-connect')
 fs = Npm.require 'fs'
 
