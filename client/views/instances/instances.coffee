@@ -9,10 +9,15 @@ Template.instances.helpers
       'ok-sign'
     else if "#{@meta.state}".match /loading|activating/
       'refresh spinning'
+    else if "#{@meta.state}".match /pulling/
+      'download'
     else
       'exclamation-sign'
-
-  showLoading: -> @meta.state isnt 'active'
+  showProgressbar: -> "#{@meta.state}".match /loading|activating|pulling/
+  stateDescription: -> @meta.stateDescription unless @meta.state == 'active'
+  totalSteps: -> @meta.totalSteps
+  progress: -> @meta.progress
+  progressPercentage: -> (parseInt(@meta.progress)/parseInt(@meta.totalSteps))*100
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
     port = findWebPort @services?.www

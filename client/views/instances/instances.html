@@ -41,6 +41,13 @@
                   {{#if instanceLink}}
                   <a href="{{instanceLink}}" class="instance-link" target="_blank"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
                   {{/if}}
+                  {{#if showProgressbar}}
+                    <div class="progress pull-right" style="width:600px; margin-right:20px;">
+                      <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: {{progressPercentage}}%;">
+                        {{stateDescription}}
+                      </div>
+                    </div>
+                  {{/if}}
                   <div class="labelbox pull-right">
                     {{#each parameters.tags}}<span class="label label-default">{{this}}</span>{{/each}}
                   </div>
