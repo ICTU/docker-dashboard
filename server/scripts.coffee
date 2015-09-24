@@ -4,6 +4,7 @@ Meteor.startup ->
   SSR.compileTemplate 'stopApp', Assets.getText('app-control/stop.sh.hbs')
 
   helpers =
+    literal: (content) -> content
     dockervolumes: (rootPath) ->
       parentCtx = Template.parentData(1)
       @volumes?.reduce (prev, volume) =>
@@ -58,20 +59,28 @@ Meteor.startup ->
       ctx.services.push doc[service]
     ctx
 
-  render = (template) ->
-    (app, version, instance, params) ->
-      appDef = ApplicationDefs.findOne
-        project: Meteor.settings.project
-        name: app
-        version: version
-      ctx = createContext YAML.safeLoad(appDef.def),
-        project: Meteor.settings.project
-        instance: instance
-        etcdCluster: Meteor.settings.etcdBaseUrl
-        params: params || {}
-      SSR.render template, ctx
+  findAppDef = (name, version) ->
+    ApplicationDefs.findOne
+      project: Meteor.settings.project
+      name: name
+      version: version
+  renderForNameAndVersion = (template) -> (name, version, instance, params) ->
+    render template, findAppDef(name, version), instance, params
+
+  renderForInstanceName = (template) -> (instanceName) ->
+    instance = Instances.findOne name: instanceName
+    appDef = findAppDef instance.meta.appName, instance.meta.appVersion
+    render template, appDef, instanceName, instance.parameters
+
+  render = (template, appDef, instance, params) ->
+    ctx = createContext YAML.safeLoad(appDef.def),
+      project: Meteor.settings.project
+      instance: instance
+      etcdCluster: Meteor.settings.etcdBaseUrl
+      params: params || {}
+    SSR.render template, ctx
 
   @Scripts =
     bash:
-      start: render('startApp')
-      stop: render('stopApp')
+      start: renderForNameAndVersion 'startApp'
+      stop: renderForInstanceName 'stopApp'
