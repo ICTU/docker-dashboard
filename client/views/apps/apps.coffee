@@ -3,31 +3,43 @@ appDefTemplate =
   version: 'appVersion'
   def: 'appName:appVersion'
 
-nameSearch = ->
+appSearch = ->
+  filterObj = {}
   if Session.get('queryAppName')?.length
-    name:
+    filterObj.name =
       $regex: Session.get 'queryAppName'
       $options: 'i'
-  else {}
+  if tag = Session.get 'filterByTag'
+    filterObj.tags = $in: [tag]
+
+  console.log filterObj
+  filterObj
 
 Template.apps.helpers
   applicationDefs: -> ApplicationDefs.find {}, sort: name: 1
-  apps: -> Apps.find nameSearch(), sort: name: 1
-  appDefCount: -> ApplicationDefs.find({project: @project, name: @name}).count()
-  appDefs: -> ApplicationDefs.find {project: @project, name: @name}, sort: version: 1
-  isSearching: -> Session.get('queryAppName')?.length
+  appNames: -> _.uniq(ApplicationDefs.find(appSearch(), sort: name: 1).map (ad) -> ad.name)
+  appDefCount: -> ApplicationDefs.find(name: "#{@}").count()
+  appDefs: -> ApplicationDefs.find {name: "#{@}"}, sort: version: 1
+  isSearching: -> Session.get('queryAppName')?.length or Session.get('filterByTag')?.length
   searchTerms: -> Session.get('queryAppName')
+  filterByTag: -> Session.get 'filterByTag'
+  multipleSearchTerms: -> Session.get('queryAppName')?.length and Session.get 'filterByTag'
   appDefTemplate: -> appDefTemplate
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
-  allTags: -> _.uniq _.flatten(ApplicationDefs.find(name: @name).map (ad) -> ad.tags)
+  appTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find(name: "#{@}").map (ad) -> ad.tags if ad.tags)), undefined)
+  allTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find().map (ad) -> ad.tags if ad.tags)), undefined)
+
 
 Template.apps.events
   'click .dropdown-menu': (e) -> e.stopPropagation() unless e.target.tagName.toUpperCase() == 'BUTTON'
   'input #searchField': (e, t) ->
     Session.set 'queryAppName', e.currentTarget.value
-  'click #reset': -> Session.set 'queryAppName', null
+  'click #reset': ->
+    Session.set 'queryAppName', null
+    Session.set 'filterByTag', null
   'save-app-def': (e, tpl) ->
     Meteor.call 'saveApp', e.yaml.parsed.name, e.yaml.parsed.version, e.yaml.raw
+  'click .filterByTag': -> Session.set 'filterByTag', "#{@}"
 
 Template.appActions.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"

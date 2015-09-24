@@ -1,5 +1,5 @@
 <template name="apps">
-<div class="container">
+<div class="apps container">
   <div class="row">
       <div class="col-sm-3">
         <h3><i class="glyphicon glyphicon-briefcase"></i> Toolbox</h3>
@@ -9,6 +9,10 @@
           {{#with appDefTemplate}}
           <li><a title="New App" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-plus"></i> New App</a></li>
           {{/with}}
+          <hr>
+          {{#each allTags}}
+          <li><a title="{{this}}" class="filterByTag" href="#"><i class="glyphicon glyphicon-zoom-in"></i> {{this}}</a></li>
+          {{/each}}
         </ul>
 
         <hr>
@@ -33,20 +37,22 @@
 
         <div class="row">
           <div class="col-md-12">
-
-            {{#each apps}}
+            {{#each appNames}}
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-target="#appPanel-{{name}}"
-                     href="#" class="collapsed toggle"><span class="badge">{{appDefCount}}</span> {{name}}</a>
-                     <div class="pull-right" style="margin-right:10px;">
-                       {{#each allTags}}<span class="label label-info" style="margin-right:5px;">{{this}}</span>{{/each}}
-                     </div>
+                <h4 class="panel-title heading-flex-container">
+                  <a data-toggle="collapse" data-target="#appPanel-{{this}}" href="#" class="titleToggle collapsed toggle">
+                     <span class="badge">{{appDefCount}}</span> {{this}}
+                  </a>
+                  <div>
+                    {{#each appTags}}
+                      <span class="label label-info">{{this}}</span>
+                    {{/each}}
+                  </div>
+                  <a data-toggle="collapse" data-target="#appPanel-{{this}}" href="#" class="collapsed toggle"></a>
                 </h4>
-
               </div>
-              <div id="appPanel-{{name}}" class="appPanel panel-collapse collapse">
+              <div id="appPanel-{{this}}" class="appPanel panel-collapse collapse">
                   <div class="panel-body">
                     <table class="table table-hover">
                       <tbody>
@@ -79,7 +85,17 @@
 
             {{#if isSearching}}
             <div class="searchInfo">
-              Showing results for: "{{searchTerms}}" <br />
+              Showing apps matching:
+              {{#if searchTerms}}
+              name is '{{searchTerms}}'
+              {{/if}}
+              {{#if multipleSearchTerms}}
+              and
+              {{/if}}
+              {{#if filterByTag}}
+              tag is '{{filterByTag}}'
+              {{/if}}
+              <br />
               <button id="reset" type="button" class="btn btn-link">- reset -</button>
             </div>
             {{/if}}

@@ -1,0 +1,29 @@
+.apps.container .panel-title.heading-flex-container {
+  display:flex;
+  flex-direction: row;
+}
+
+.apps.container .panel-title.heading-flex-container a.titleToggle {
+  display: inline-block;
+  flex-grow: 1;
+}
+
+.apps.container .panel-title.heading-flex-container a.titleToggle:after {
+  content: '';
+}
+
+.apps.container .panel-title.heading-flex-container  a.titleToggle:hover {
+  text-decoration: none;
+}
+.apps.container .panel-title.heading-flex-container  a.titleToggle:active {
+  text-decoration: none;
+}
+
+.apps.container .panel-title.heading-flex-container div {
+  flex-shrink: 1;
+  margin-right:10px;
+}
+
+.apps.container .panel-title.heading-flex-container div span {
+  margin-right:5px;
+}
