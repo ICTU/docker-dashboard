@@ -1,0 +1,41 @@
+.instances.container .panel-title.heading-flex-container {
+  display:flex;
+  flex-direction: row;
+}
+.instances.container div.progress {
+  margin-right: 15px;
+  flex-grow: 100;
+  margin-bottom: 0;
+}
+.instances.container .panel-title.heading-flex-container > span.glyphicon {
+  margin:0;
+  padding:0;
+}
+
+.instances.container .labelbox .label {
+  margin-left: 5px;
+}
+
+.instances.container .panel-title.heading-flex-container a {
+  margin-left: 5px;
+}
+.instances.container .panel-title.heading-flex-container a.titleToggle {
+  display: inline-block;
+  flex-grow: 1;
+}
+
+.instances.container .panel-title.heading-flex-container a.titleToggle:after {
+  content: '';
+}
+
+.instances.container .panel-title.heading-flex-container  a.titleToggle:hover {
+  text-decoration: none;
+}
+.instances.container .panel-title.heading-flex-container  a.titleToggle:active {
+  text-decoration: none;
+}
+
+.instances.container .panel-title.heading-flex-container div {
+  flex-shrink: 1;
+  margin-right:10px;
+}

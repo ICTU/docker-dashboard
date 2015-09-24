@@ -9,8 +9,8 @@ ETCD_INSTANCE_KEY="/instances/$PROJECT/$APPNAME/$INSTANCE"
 NIC=$(/usr/bin/ifconfig | /usr/bin/grep -v PROMISC | /usr/bin/pcregrep -o1 '(ens[0-9]+):')
 NORMALNIC=$(/usr/bin/ifconfig |  /usr/bin/grep -w -B1 inet | /usr/bin/pcregrep -o1 '(ens[0-9]+):');
 vlan=$(curl --silent $ETCD_CLUSTER/v2/keys/networking/{{project}}/vlan | jq -r '.node.value')
-TOTAL_STEPS=$(({{total}}*2))
-STEP=0
+TOTAL_STEPS=$((({{total}}*2)+1))
+STEP=1
 
 etcdctl --peers $ETCD_CLUSTER rm $ETCD_INSTANCE_KEY --recursive
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "loading"
@@ -18,6 +18,7 @@ etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appName "{{appName}}"
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appVersion "{{appVersion}}"
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/parameters {{stringify params}}
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
 
 
 # PULL ALL IMAGES
@@ -122,5 +123,6 @@ STEP=$((STEP+1))
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
 {{/each}}
 
+sleep 2
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "active"
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Active"

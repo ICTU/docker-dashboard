@@ -1,5 +1,5 @@
 <template name="instances">
-<div class="container">
+<div class="container instances">
   <div class="row">
       <div class="col-sm-3">
         <h3><i class="glyphicon glyphicon-briefcase"></i> Toolbox</h3>
@@ -33,24 +33,28 @@
             {{#each instances}}
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h4 class="panel-title">
+                <h4 class="panel-title heading-flex-container">
+                  <span class="glyphicon glyphicon-{{activityIcon}}"></span>
                   <a data-toggle="collapse" data-target="#instancePanel-{{instanceHash}}"
-                     href="#instancePanel-{{name}}" class="collapsed toggle">
-                     <span class="glyphicon glyphicon-{{activityIcon}}"></span>
-                     {{name}}</a>
+                     href="#instancePanel-{{name}}" class="collapsed toggle titleToggle">
+                     {{name}}
+                  </a>
+                  {{#if showProgressbar}}
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: {{progressPercentage}}%;">
+                      {{stateDescription}}
+                    </div>
+                  </div>
+                  {{/if}}
+                  {{#with parameters.tags}}
+                  <div class="labelbox">
+                    {{#each this}}<span class="label label-default">{{this}}</span>{{/each}}
+                  </div>
+                  {{/with}}
                   {{#if instanceLink}}
                   <a href="{{instanceLink}}" class="instance-link" target="_blank"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
                   {{/if}}
-                  {{#if showProgressbar}}
-                    <div class="progress pull-right" style="width:600px; margin-right:20px;">
-                      <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: {{progressPercentage}}%;">
-                        {{stateDescription}}
-                      </div>
-                    </div>
-                  {{/if}}
-                  <div class="labelbox pull-right">
-                    {{#each parameters.tags}}<span class="label label-default">{{this}}</span>{{/each}}
-                  </div>
+                  <a data-toggle="collapse" data-target="#instancePanel-{{instanceHash}}" href="#" class="collapsed toggle"></a>
                 </h4>
 
               </div>
