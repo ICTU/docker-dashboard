@@ -14,4 +14,4 @@ Meteor.startup ->
     .post ->
       check(@request.body.instance, String)
       @response.writeHead 200, 'Content-Type': 'text/plain'
-      @response.end Scripts.bash.stop(@request.body.instance)
+      @response.end Scripts.bash.stopInstance(@request.body.instance)

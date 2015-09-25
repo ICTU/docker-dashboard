@@ -13,3 +13,4 @@ settings = Meteor.settings
     startApp: -> settings?.services?.startApp or 'iqtservices.isd.org:8080/app/bash/start'
     stopApp: -> settings?.services?.stopApp or 'iqtservices.isd.org:8080/app/bash/stop'
     appStatus: -> settings?.services?.appStatus or 'iqtservices.isd.org:8080/app/bash/status'
+  isAdmin: -> settings?.public?.admin or false

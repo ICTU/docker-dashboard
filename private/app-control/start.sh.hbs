@@ -16,7 +16,7 @@ etcdctl --peers $ETCD_CLUSTER rm $ETCD_INSTANCE_KEY --recursive
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "loading"
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appName "{{appName}}"
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appVersion "{{appVersion}}"
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/parameters {{stringify params}}
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/parameters '{{stringify params}}'
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS"
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
 
@@ -99,10 +99,9 @@ docker run -d \
 #
 # Publish info about the container to etcd
 #
-image=$(docker inspect -f '{{{literal '{{.Config.Image}}'}}}' $DOCKERNAME)
 hostname="{{service}}.$INSTANCE.$PROJECT.ictu"
 myip=$(docker exec $DOCKERNETNAME ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
-ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' $image | grep -o -G '[0-9]*')
+ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}} | grep -o -G '[0-9]*')
 hostIp=$(ifconfig $NORMALNIC | grep 'inet ' | awk '{ print $2 }')
 
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ip "$myip"

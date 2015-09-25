@@ -56,7 +56,10 @@ Template.appActions.events
     parameters = {}
     parameters[$(p).data('parameter')] = p.value for p in tpl.$('.parameter')
     parameters.tags = @tags
-    Meteor.call 'startApp', @name, @version, name, parameters
+    options =
+      targetHost: Session.get 'targetHost'
+      targetProject: Session.get 'targetProject'
+    Meteor.call 'startApp', @name, @version, name, parameters, options
   'click .remove-app': (event, tpl) ->
     Meteor.call 'deleteApp', @name, @version
 

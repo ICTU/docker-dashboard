@@ -1,8 +1,12 @@
 exec = Npm.require('child_process').exec
-ssh = (cmd, callback) ->
+ssh = (cmd, options, callback) ->
   cmd = JSON.stringify cmd
+  console.log options, Settings.isAdmin()
   console.log 'command on the docker host ->', cmd
-  cmd = JSON.stringify "#{Meteor.settings.coreos.ssh} #{cmd}"
+  if Settings.isAdmin() and options.targetHost
+    cmd = JSON.stringify "ssh core@#{options.targetHost} #{cmd}"
+  else
+    cmd = JSON.stringify "#{Meteor.settings.coreos.ssh} #{cmd}"
   console.log 'ssh command ->', cmd
   command = "#{Settings.ssh.proxy()} #{cmd}"
   console.log 'ssh proxy command ->', command
@@ -16,24 +20,30 @@ execHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
   cb && cb()
 
 @Cluster =
-  startApp: (app, version, instance, parameters) ->
+  startApp: (app, version, instance, parameters, options) ->
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify parameters} in project #{Meteor.settings.project}."
     dir = "#{Meteor.settings.project}-#{instance}"
-    ssh "mkdir -p #{dir}", execHandler ->
+    ssh "mkdir -p #{dir}", options, execHandler ->
       scripts = {}
+      if Settings.isAdmin() and options.targetHost
+        target = "ssh core@#{options.targetHost}"
+      else
+        target = Meteor.settings.coreos.ssh
       for op in ['start', 'stop']
         scripts[op] =
           script: Scripts.bash[op] app, version, instance, parameters
-          cmd: "#{Meteor.settings.coreos.ssh} 'cat > #{dir}/#{op}.sh' < /tmp/#{dir}-#{op}.sh"
+          cmd: "#{Settings.ssh.proxy()} \"#{target} 'cat > #{dir}/#{op}.sh'\" < /tmp/#{dir}-#{op}.sh"
         fs.writeFileSync "/tmp/#{dir}-#{op}.sh", scripts[op].script
       exec scripts.stop.cmd, execHandler()
       exec scripts.start.cmd, execHandler ->
-        ssh "bash #{dir}/start.sh", execHandler -> sync()
+        ssh "bash #{dir}/start.sh", options, execHandler -> sync()
     ""
 
-  stopInstance: (instance) ->
-    console.log "Cluster.stopInstance #{instance} in project #{Meteor.settings.project}."
-    ssh "bash #{Meteor.settings.project}-#{instance}/stop.sh" , execHandler -> sync()
+  stopInstance: (instanceName) ->
+    instance = Instances.findOne name: instanceName
+    options = targetHost: instance.services[Object.keys(instance.services)[0]].hostIp
+    console.log "Cluster.stopInstance #{instanceName} in project #{Meteor.settings.project}."
+    ssh "bash #{Meteor.settings.project}-#{instanceName}/stop.sh" , options, execHandler -> sync()
     ""
 
   clearInstance: (project, instance) ->

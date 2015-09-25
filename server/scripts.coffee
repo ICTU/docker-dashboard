@@ -77,7 +77,7 @@ Meteor.startup ->
     render template, appDef, instanceName, instance.parameters
 
   render = (template, appDef, instance, params = {}) ->
-    resolved  = resolveParams(appDef.def, (if typeof params == Object then params else EJSON.parse params))
+    resolved  = resolveParams(appDef.def, (if typeof params == 'object' then params else EJSON.parse params))
     ctx = createContext YAML.safeLoad(resolved),
       project: Meteor.settings.project
       instance: instance
@@ -88,4 +88,5 @@ Meteor.startup ->
   @Scripts =
     bash:
       start: renderForNameAndVersion 'startApp'
-      stop: renderForInstanceName 'stopApp'
+      stop: renderForNameAndVersion 'stopApp'
+      stopInstance: renderForInstanceName 'stopApp'
