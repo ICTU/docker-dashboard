@@ -17,7 +17,7 @@ execHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
 
 @Cluster =
   startApp: (app, version, instance, parameters) ->
-    console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{parameters} in project #{Meteor.settings.project}."
+    console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify parameters} in project #{Meteor.settings.project}."
     dir = "#{Meteor.settings.project}-#{instance}"
     ssh "mkdir -p #{dir}", execHandler ->
       scripts = {}
