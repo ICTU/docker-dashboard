@@ -59,6 +59,10 @@ Meteor.startup ->
       ctx.services.push doc[service]
     ctx
 
+  resolveParams = (appDef, params)->
+    appDef = appDef.replace "{{#{key}}}", value for key, value of params
+    appDef
+
   findAppDef = (name, version) ->
     ApplicationDefs.findOne
       project: Meteor.settings.project
@@ -72,8 +76,9 @@ Meteor.startup ->
     appDef = findAppDef instance.meta.appName, instance.meta.appVersion
     render template, appDef, instanceName, instance.parameters
 
-  render = (template, appDef, instance, params) ->
-    ctx = createContext YAML.safeLoad(appDef.def),
+  render = (template, appDef, instance, params = '') ->
+    resolved  = resolveParams(appDef.def, EJSON.parse params)
+    ctx = createContext YAML.safeLoad(resolved),
       project: Meteor.settings.project
       instance: instance
       etcdCluster: Meteor.settings.etcdBaseUrl
