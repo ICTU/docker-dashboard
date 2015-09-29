@@ -9,7 +9,7 @@ ETCD_INSTANCE_KEY="/instances/$PROJECT/$APPNAME/$INSTANCE"
 NIC=$(/usr/bin/ifconfig | /usr/bin/grep -v PROMISC | /usr/bin/pcregrep -o1 '(ens[0-9]+):')
 NORMALNIC=$(/usr/bin/ifconfig |  /usr/bin/grep -w -B1 inet | /usr/bin/pcregrep -o1 '(ens[0-9]+):');
 vlan=$(curl --silent $ETCD_CLUSTER/v2/keys/networking/{{project}}/vlan | jq -r '.node.value')
-TOTAL_STEPS=$((({{total}}*2)+1))
+TOTAL_STEPS=$((({{total}}*3)+1))
 STEP=1
 
 etcdctl --peers $ETCD_CLUSTER rm $ETCD_INSTANCE_KEY --recursive
@@ -39,7 +39,7 @@ DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
 DOCKERNETNAME="net-$DOCKERNAME"
 
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "activating"
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Activating service {{service}}"
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Preparing network for {{service}}"
 
 #
 # Remove any left-behind instances
@@ -81,10 +81,13 @@ while [ 1 ]; do
     sleep 5
   fi
 done
+STEP=$((STEP+1))
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
 
 #
 # Start the service container
 #
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Activating service {{service}}"
 docker run -d \
 --name {{service}}-{{../project}}-{{../instance}} \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
