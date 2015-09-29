@@ -12,16 +12,6 @@ Meteor.startup ->
     wait: 1000 * 60
   job.save()
 
-  job = new Job Jobs, 'serviceCheck',
-    name: 'App Control'
-    url: 'http://iqtservices.isd.org:8080/'
-  job.repeat
-    repeats: Jobs.forever
-    wait: 1000 * 60
-  job.retry
-    wait: 1000 * 60
-  job.save()
-
   Jobs.processJobs 'serviceCheck', (job, callback) ->
     HTTP.get job.data.url, (err, data) ->
       if err or not data
