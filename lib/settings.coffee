@@ -7,6 +7,7 @@ settings = Meteor.settings
   etcd: -> settings?.etcd or 'http://docker1.rni.org:4001/v2/keys/'
   ssh:
     username: -> settings?.ssh?.user or 'core'
+    host: -> settings?.ssh?.host or 'localhost'
     keyPath: -> settings?.ssh?.keyPath or '~/.ssh/id_rsa'
     proxy: -> settings?.coreos?.proxyssh or 'ssh core@172.17.42.1'
   services:

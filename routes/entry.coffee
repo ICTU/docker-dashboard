@@ -11,6 +11,10 @@ Meteor.startup ->
     "apiStatus",
     "app-control/start"
     "app-control/stop"
+    "streamTerminal"
+    "sendDataToTerminal"
+    "setTerminalWindow"
+    "sendCommandToTerminal"
   ]
 
   Router.onBeforeAction ->
