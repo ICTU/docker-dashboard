@@ -21,7 +21,7 @@ execHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
 
 @Cluster =
   startApp: (app, version, instance, parameters, options) ->
-    console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify parameters} in project #{Meteor.settings.project}."
+    console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{options}, #{EJSON.stringify parameters} in project #{Meteor.settings.project}."
     dir = "#{Meteor.settings.project}-#{instance}"
     ssh "mkdir -p #{dir}", options, execHandler ->
       scripts = {}
@@ -31,7 +31,7 @@ execHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
         target = Meteor.settings.coreos.ssh
       for op in ['start', 'stop']
         scripts[op] =
-          script: Scripts.bash[op] app, version, instance, parameters
+          script: Scripts.bash[op] app, version, instance, options, parameters
           cmd: "#{Settings.ssh.proxy()} \"#{target} 'cat > #{dir}/#{op}.sh'\" < /tmp/#{dir}-#{op}.sh"
         fs.writeFileSync "/tmp/#{dir}-#{op}.sh", scripts[op].script
       exec scripts.stop.cmd, execHandler()

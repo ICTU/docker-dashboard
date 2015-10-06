@@ -68,20 +68,21 @@ Meteor.startup ->
       project: Meteor.settings.project
       name: name
       version: version
-  renderForNameAndVersion = (template) -> (name, version, instance, params) ->
-    render template, findAppDef(name, version), instance, params
+  renderForNameAndVersion = (template) -> (name, version, instance, options, params) ->
+    render template, findAppDef(name, version), instance, options, params
 
   renderForInstanceName = (template) -> (instanceName) ->
     instance = Instances.findOne name: instanceName
     appDef = findAppDef instance.meta.appName, instance.meta.appVersion
-    render template, appDef, instanceName, instance.parameters
+    render template, appDef, instanceName, {}, instance.parameters
 
-  render = (template, appDef, instance, params = {}) ->
+  render = (template, appDef, instance, options, params = {}) ->
     resolved  = resolveParams(appDef.def, (if typeof params == 'object' then params else EJSON.parse params))
     ctx = createContext YAML.safeLoad(resolved),
       project: Meteor.settings.project
       instance: instance
       etcdCluster: Meteor.settings.etcdBaseUrl
+      vlan: options?.targetVlan
       params: params || {}
     SSR.render template, ctx
 

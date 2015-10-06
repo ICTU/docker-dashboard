@@ -8,7 +8,11 @@ ETCD_CLUSTER="{{etcdCluster}}"
 ETCD_INSTANCE_KEY="/instances/$PROJECT/$APPNAME/$INSTANCE"
 NIC=$(/usr/bin/ifconfig | /usr/bin/grep -v PROMISC | /usr/bin/pcregrep -o1 '(ens[0-9]+):')
 NORMALNIC=$(/usr/bin/ifconfig |  /usr/bin/grep -w -B1 inet | /usr/bin/pcregrep -o1 '(ens[0-9]+):');
+{{#if vlan}}
+vlan="{{vlan}}"
+{{else}}
 vlan=$(curl --silent $ETCD_CLUSTER/v2/keys/networking/{{project}}/vlan | jq -r '.node.value')
+{{/if}}
 TOTAL_STEPS=$((({{total}}*3)+1))
 STEP=1
 

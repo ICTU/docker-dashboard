@@ -4,16 +4,19 @@ Template.registerHelper 'hasLocalAppstore', -> not Meteor.settings.public.remote
 Template['base-layout'].helpers
   user: -> Meteor.user().emails[0].address
   statusColor: -> if Services.findOne(isUp:false) then 'red' else 'green'
+  session: (sessVar) -> Session.get sessVar
 
 Template['base-layout'].events
-  'change #projectName': (e, t) ->
+  'change #vlan': (e, t) ->
     InstanceMeta.notify = false
-    Session.set 'targetProject', e.target.value
+    Session.set 'targetVlan', e.target.value
     Meteor.setTimeout ->
       InstanceMeta.notify = true
     , 5000
+    t.$('li.dropdown.open').removeClass('open')
   'change #targetHost': (e, t) ->
     Session.set 'targetHost', e.target.value
+    t.$('li.dropdown.open').removeClass('open')
   'click #messagesMenuItem': ->
     Chat.show()
 

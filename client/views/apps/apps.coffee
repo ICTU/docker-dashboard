@@ -11,8 +11,6 @@ appSearch = ->
       $options: 'i'
   if tag = Session.get 'filterByTag'
     filterObj.tags = $in: [tag]
-
-  console.log filterObj
   filterObj
 
 Template.apps.helpers
@@ -58,7 +56,7 @@ Template.appActions.events
     parameters.tags = @tags
     options =
       targetHost: Session.get 'targetHost'
-      targetProject: Session.get 'targetProject'
+      targetVlan: Session.get 'targetVlan'
     Meteor.call 'startApp', @name, @version, name, parameters, options
   'click .remove-app': (event, tpl) ->
     Meteor.call 'deleteApp', @name, @version
