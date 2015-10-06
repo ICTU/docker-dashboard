@@ -8,9 +8,11 @@ Template.instances.helpers
     if @meta.state is 'active'
       'ok-sign'
     else if "#{@meta.state}".match /loading|activating/
-      'refresh spinning'
+      'play-circle'
     else if "#{@meta.state}".match /pulling/
       'download'
+    else if "#{@meta.state}".match /stopping/
+      'collapse-down'
     else
       'exclamation-sign'
   showProgressbar: -> "#{@meta.state}".match /loading|activating|pulling/
