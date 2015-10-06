@@ -1,3 +1,8 @@
+if [ "$(whoami)" != "root" ]; then
+  echo "Stop script should be executed with root privileges."
+  exit 1
+fi
+
 PROJECT="{{project}}"
 APPNAME="{{appName}}"
 INSTANCE="{{instance}}"

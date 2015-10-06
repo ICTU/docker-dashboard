@@ -36,14 +36,14 @@ execHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
         fs.writeFileSync "/tmp/#{dir}-#{op}.sh", scripts[op].script
       exec scripts.stop.cmd, execHandler()
       exec scripts.start.cmd, execHandler ->
-        ssh "bash #{dir}/start.sh", options, execHandler -> sync()
+        ssh "sudo bash #{dir}/start.sh", options, execHandler -> sync()
     ""
 
   stopInstance: (instanceName) ->
     instance = Instances.findOne name: instanceName
     options = targetHost: instance.services[Object.keys(instance.services)[0]].hostIp
     console.log "Cluster.stopInstance #{instanceName} in project #{Meteor.settings.project}."
-    ssh "bash #{Meteor.settings.project}-#{instanceName}/stop.sh" , options, execHandler -> sync()
+    ssh "sudo bash #{Meteor.settings.project}-#{instanceName}/stop.sh" , options, execHandler -> sync()
     ""
 
   clearInstance: (project, instance) ->

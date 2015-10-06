@@ -1,3 +1,8 @@
+if [ "$(whoami)" != "root" ]; then
+	echo "Start script should be executed with root privileges."
+	exit 1
+fi
+
 #
 # GENERAL STATE CLEANUP AND CONFIGURATION
 #
@@ -94,6 +99,7 @@ etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Activating service {{service}}"
 docker run -d \
 --name {{service}}-{{../project}}-{{../instance}} \
+--net="container:$DOCKERNETNAME" \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes "/mnt/data"}} \
 {{volumesfrom}} \
