@@ -49,7 +49,8 @@ Template.appActions.helpers
       []
 
 Template.appActions.events
-  'click .start-app': (e, tpl) ->
+  'submit #start-app-form': (e, tpl) ->
+    e.preventDefault()
     name = tpl.$('.instance-name').val();
     parameters = {}
     parameters[$(p).data('parameter')] = p.value for p in tpl.$('.parameter')
@@ -57,6 +58,7 @@ Template.appActions.events
     options =
       targetHost: Session.get 'targetHost'
       targetVlan: Session.get 'targetVlan'
+    tpl.$('li.open').removeClass('open')
     Meteor.call 'startApp', @name, @version, name, parameters, options
   'click .remove-app': (event, tpl) ->
     Meteor.call 'deleteApp', @name, @version

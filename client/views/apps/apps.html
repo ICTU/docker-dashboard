@@ -116,7 +116,7 @@
       <a title="Start" href="#" class="dropdown-toggle" data-toggle="dropdown">
         <i class="glyphicon glyphicon-play"></i>
       </a>
-      <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
+      <form id="start-app-form" role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
           <div class="form-group" style="width:30em">
               <label>Instance name</label>
               <input required pattern="/?[a-zA-Z0-9_-]+" type="text"
@@ -128,7 +128,7 @@
               <input required type="text" class="form-control parameter" data-parameter="{{this}}" style="width:90%">
               {{/each}}
           </div>
-          <button type="button" class="start-app btn btn-mini">Go!</button>
+          <button type="submit" class="start-app btn btn-mini">Go!</button>
       </form>
 
     </li>
