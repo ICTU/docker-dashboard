@@ -19,21 +19,21 @@
           {{#if isAdminBoard}}
           <li class="dropdown">
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-              <i style="font-size:12px;" class="glyphicon glyphicon-queen"></i> SuperUser <span class="caret"></span>
+              <i style="font-size:12px;" class="glyphicon glyphicon-king"></i>
+              SuperUser :: {{session 'targetHost'}}/{{session 'targetVlan'}}
+              <span class="caret"></span>
             </a>
-            <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em; width:250px;">
+            <form role="form" id="super-user-form" class="dropdown-menu dropdown-menu-right" style="padding:1em; width:250px;">
                 <div class="form-group">
                   <label for="vlan">VLAN</label>
-                  <input id="vlan" class="form-control">
+                  <input name="vlan" class="form-control">
                 </div>
                 <div class="form-group">
                   <label for="targetHost">Target host</label>
-                  <input id="targetHost" class="form-control">
+                  <input name="targetHost" class="form-control">
                 </div>
+                <button type="submit" hidden>Set</button>
             </form>
-          </li>
-          <li>
-            <p class="navbar-text">{{session 'targetHost'}}/{{session 'targetVlan'}}</p>
           </li>
           {{/if}}
           <li class="dropdown">

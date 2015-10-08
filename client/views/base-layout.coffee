@@ -19,6 +19,15 @@ Template['base-layout'].events
     t.$('li.dropdown.open').removeClass('open')
   'click #messagesMenuItem': ->
     Chat.show()
+  'submit #super-user-form': (e, t) ->
+    e.preventDefault()
+    Session.set 'targetVlan', e.target.vlan.value
+    Session.set 'targetHost', e.target.targetHost.value
+    Meteor.setTimeout ->
+      InstanceMeta.notify = true
+    , 5000
+    t.$('li.dropdown.open').removeClass('open')
+
 
 Template.notices.helpers
   notices: -> Messages.find $or: [{type: 'info'}, {type: 'warning'}]
