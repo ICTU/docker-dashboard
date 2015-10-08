@@ -7,16 +7,6 @@ Template['base-layout'].helpers
   session: (sessVar) -> Session.get sessVar
 
 Template['base-layout'].events
-  'change #vlan': (e, t) ->
-    InstanceMeta.notify = false
-    Session.set 'targetVlan', e.target.value
-    Meteor.setTimeout ->
-      InstanceMeta.notify = true
-    , 5000
-    t.$('li.dropdown.open').removeClass('open')
-  'change #targetHost': (e, t) ->
-    Session.set 'targetHost', e.target.value
-    t.$('li.dropdown.open').removeClass('open')
   'click #messagesMenuItem': ->
     Chat.show()
   'submit #super-user-form': (e, t) ->
@@ -27,7 +17,6 @@ Template['base-layout'].events
       InstanceMeta.notify = true
     , 5000
     t.$('li.dropdown.open').removeClass('open')
-
 
 Template.notices.helpers
   notices: -> Messages.find $or: [{type: 'info'}, {type: 'warning'}]
