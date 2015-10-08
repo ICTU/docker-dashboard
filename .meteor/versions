@@ -30,7 +30,6 @@ fourseven:scss@3.2.0
 geojson-utils@1.0.3
 grigio:babel@0.1.7
 gwendall:session-json@0.1.7
-handlebars@1.0.3
 hiukim:slack-client@1.0.4
 html-tools@1.0.4
 htmljs@1.0.4
@@ -44,8 +43,6 @@ iron:location@1.0.9
 iron:middleware-stack@1.0.9
 iron:router@1.0.9
 iron:url@1.0.9
-joshowens:accounts-entry@1.0.3
-joshowens:simple-form@0.2.2
 jparker:crypto-core@0.1.0
 jparker:crypto-md5@0.1.1
 jquery@1.11.3_2
@@ -70,7 +67,6 @@ mobile-status-bar@1.0.3
 momentjs:moment@2.10.6
 mongo@1.1.0
 mrt:later@1.6.1
-mrt:underscore-string-latest@2.3.3
 msavin:mongol@1.1.5
 npm-bcrypt@0.7.8_2
 npm-container@1.0.0
@@ -89,11 +85,9 @@ routepolicy@1.0.5
 sanjo:long-running-child-process@1.0.3
 sanjo:meteor-files-helpers@1.1.0_7
 sanjo:meteor-version@1.0.0
-schnie:uploader@2.0.3
 service-configuration@1.0.4
 session@1.1.0
 sha@1.0.3
-softwarerero:accounts-t9n@1.0.9
 spacebars@1.0.6
 spacebars-compiler@1.0.6
 srp@1.0.3
