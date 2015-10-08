@@ -60,6 +60,9 @@
               </div>
               <div id="instancePanel-{{instanceHash}}" class="panel-collapse collapse">
                   <div class="panel-body">
+                    {{#with meta}}
+                    <span class="badge">{{appName}}:{{appVersion}}</span>
+                    {{/with}}
 
                     <ul class="nav nav-justified pull-right" style="width:100px">
                       <li class="btn-group">
