@@ -109,7 +109,7 @@ docker run -d \
 --name {{service}}-{{../project}}-{{../instance}} \
 --net="container:$DOCKERNETNAME" \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
-{{dockervolumes "$DATA_DIR"}} \
+{{dockervolumes}} \
 {{volumesfrom}} \
 {{opts}} \
 {{#if privileged}}--privileged{{/if}} \

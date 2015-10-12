@@ -5,12 +5,12 @@ Meteor.startup ->
 
   helpers =
     literal: (content) -> content
-    dockervolumes: (rootPath) ->
+    dockervolumes: ->
       parentCtx = Template.parentData(1)
       @volumes?.reduce (prev, volume) =>
         if volume.indexOf(':') > -1 then "-v #{volume} "
         else
-          "#{prev}-v #{rootPath}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{volume}:#{volume} "
+          "#{prev}-v #{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{volume}:#{volume} "
       , ""
     envs: ->
       @environment?.reduce (prev, env) =>
