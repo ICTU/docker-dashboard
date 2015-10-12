@@ -5,6 +5,7 @@ settings = Meteor.settings
 
   project: -> settings?.project or 'undef'
   etcd: -> settings?.etcd or 'http://docker1.rni.org:4001/v2/keys/'
+  dataDir: -> settings?.dataDir or '/local/data'
   ssh:
     username: -> settings?.ssh?.user or 'core'
     keyPath: -> settings?.ssh?.keyPath or '~/.ssh/id_rsa'

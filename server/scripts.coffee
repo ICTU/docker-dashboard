@@ -83,6 +83,7 @@ Meteor.startup ->
       instance: instance
       etcdCluster: Meteor.settings.etcdBaseUrl
       vlan: options?.targetVlan
+      dataDir: options?.dataDir
       params: params || {}
     SSR.render template, ctx
 

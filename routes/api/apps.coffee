@@ -7,9 +7,10 @@ Meteor.startup ->
       path: '/api/v1/start-app/:app/:version/:name'
       action: ->
         check([@params.app, @params.version, @params.name], [String])
-        if ApplicationDefs.find(project: Meteor.settings.project, name: @params.app, version: @params.version).count()
+        console.log 'start app via api', @params.app, @params.version, @params.name
+        if ApplicationDefs.find(project: Settings.project, name: @params.app, version: @params.version).count()
           Cluster.startApp @params.app, @params.version, @params.name, @request.query
-          @response.writeHead 200, 'Content-Type': 'application/json'
+          @response.writeHead 200, 'Content-Type': 'text/plain'
           @response.end "Application #{@params.name} (#{@params.app}:#{@params.version}) is scheduled for execution."
         else
           @response.writeHead 404, 'Content-Type': 'text/plain'
@@ -20,5 +21,5 @@ Meteor.startup ->
       action: ->
         check(@params.name, String)
         Cluster.stopInstance @params.name
-        @response.writeHead 200, 'Content-Type': 'application/json'
+        @response.writeHead 200, 'Content-Type': 'text/plain'
         @response.end "#{@params.name} instance is scheduled for destruction."
