@@ -6,6 +6,8 @@ fi
 #
 # GENERAL STATE CLEANUP AND CONFIGURATION
 #
+# Root data directory is {{dataDir}}
+#
 PROJECT="{{project}}"
 APPNAME="{{appName}}"
 INSTANCE="{{instance}}"
@@ -13,12 +15,6 @@ ETCD_CLUSTER="{{etcdCluster}}"
 ETCD_INSTANCE_KEY="/instances/$PROJECT/$APPNAME/$INSTANCE"
 NIC=$(/usr/bin/ifconfig | /usr/bin/grep -v PROMISC | /usr/bin/pcregrep -o1 '(ens[0-9]+):')
 NORMALNIC=$(/usr/bin/ifconfig |  /usr/bin/grep -w -B1 inet | /usr/bin/pcregrep -o1 '(ens[0-9]+):');
-
-{{#if dataDir}}
-DATA_DIR="{{dataDir}}"
-{{else}}
-DATA_DIR="/local/data"
-{{/if}}
 
 {{#if vlan}}
 vlan="{{vlan}}"
@@ -69,8 +65,8 @@ docker rm $DOCKERNAME
 # Prepare the volumes
 #
 {{#each volumes}}
-mkdir -p $DATA_DIR/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
-chmod a+rw $DATA_DIR/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
+mkdir -p {{dataDir}}/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
+chmod a+rw {{dataDir}}/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
 {{/each}}
 #
 # Prepare the network
