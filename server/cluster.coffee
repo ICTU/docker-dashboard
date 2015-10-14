@@ -24,20 +24,12 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
     options = _.extend {"dataDir": Settings.dataDir()}, options
     dir = "#{Meteor.settings.project}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Meteor.settings.project}."
-    ssh "mkdir -p #{dir}", options, loggingHandler ->
-      scripts = {}
-      if Settings.isAdmin() and options.targetHost
-        target = "ssh core@#{options.targetHost}"
-      else
-        target = Meteor.settings.coreos.ssh
-      for op in ['start', 'stop']
-        scripts[op] =
-          script: Scripts.bash[op] app, version, instance, options, parameters
-          saveCmd: "#{Settings.ssh.proxy()} \"#{target} 'cat > #{dir}/#{op}.sh'\" < /tmp/#{dir}-#{op}.sh"
-        fs.writeFileSync "/tmp/#{dir}-#{op}.sh", scripts[op].script
-      exec scripts.stop.saveCmd, loggingHandler()
-      exec scripts.start.saveCmd, loggingHandler ->
-        ssh "sudo bash #{dir}/start.sh", options, loggingHandler -> sync()
+    data =
+      dir: dir
+      startScript: Scripts.bash.start app, version, instance, options, parameters
+      stopScript: Scripts.bash.stop app, version, instance, options, parameters
+    HTTP.post "#{Settings.agentUrl()}/app/install-and-run", {data: data}, (err, result) ->
+      console.log "Sent request to start instance. Response from the agent is", result
     ""
 
   stopInstance: (instanceName) ->

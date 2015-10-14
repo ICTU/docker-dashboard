@@ -1,5 +1,41 @@
 {
   "dependencies": {
+    "ssh2": {
+      "version": "0.4.11",
+      "dependencies": {
+        "readable-stream": {
+          "version": "1.0.33",
+          "dependencies": {
+            "core-util-is": {
+              "version": "1.0.1"
+            },
+            "isarray": {
+              "version": "0.0.1"
+            },
+            "string_decoder": {
+              "version": "0.10.31"
+            },
+            "inherits": {
+              "version": "2.0.1"
+            }
+          }
+        },
+        "ssh2-streams": {
+          "version": "0.0.18",
+          "dependencies": {
+            "streamsearch": {
+              "version": "0.1.2"
+            },
+            "asn1": {
+              "version": "0.2.3"
+            },
+            "jsbn": {
+              "version": "0.0.0"
+            }
+          }
+        }
+      }
+    },
     "ssh2-connect": {
       "version": "0.0.6",
       "dependencies": {
