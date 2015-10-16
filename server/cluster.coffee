@@ -3,7 +3,7 @@ ssh = (cmd, options, callback) ->
   cmd = JSON.stringify cmd
   console.log options, Settings.isAdmin()
   console.log 'command on the docker host ->', cmd
-  if Settings.isAdmin() and options.targetHost
+  if options.targetHost
     cmd = JSON.stringify "ssh core@#{options.targetHost} #{cmd}"
   else
     cmd = JSON.stringify "#{Meteor.settings.coreos.ssh} #{cmd}"
