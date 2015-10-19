@@ -6,7 +6,12 @@ settings = Meteor.settings
   project: -> settings?.project or 'undef'
   etcd: -> settings?.etcd or 'http://docker1.rni.org:4001/v2/keys/'
   dataDir: -> settings?.dataDir or '/local/data'
-  agentUrl: -> settings?.agentUrl or 'http://agent'
+  agentUrl: ->
+    aurl = settings?.agentUrl
+    if aurl
+      if aurl.constructor is Array then aurl else [aurl]
+    else
+      ['http://agent']
   ssh:
     username: -> settings?.ssh?.user or 'core'
     keyPath: -> settings?.ssh?.keyPath or '~/.ssh/id_rsa'

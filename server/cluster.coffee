@@ -26,14 +26,13 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Meteor.settings.project}."
 
     callOpts =
-      npmRequestOptions:
-        agent: false
       data :
         dir: dir
         startScript: Scripts.bash.start app, version, instance, options, parameters
         stopScript: Scripts.bash.stop app, version, instance, options, parameters
 
-    HTTP.post "#{Settings.agentUrl()}/app/install-and-run", callOpts, (err, result) ->
+    agentUrl = Random.choice Settings.agentUrl()
+    HTTP.post "#{agentUrl}/app/install-and-run", callOpts, (err, result) ->
       console.log "Sent request to start instance. Response from the agent is", result
     ""
 
