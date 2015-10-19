@@ -31,7 +31,7 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
         startScript: Scripts.bash.start app, version, instance, options, parameters
         stopScript: Scripts.bash.stop app, version, instance, options, parameters
 
-    agentUrl = Random.choice Settings.agentUrl()
+    agentUrl = if options?.targetHost then "http://#{options.targetHost}" else Random.choice Settings.agentUrl()
     HTTP.post "#{agentUrl}/app/install-and-run", callOpts, (err, result) ->
       console.log "Sent request to start instance. Response from the agent is", result
     ""
