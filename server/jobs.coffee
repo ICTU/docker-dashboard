@@ -4,7 +4,7 @@ Meteor.startup ->
 
   job = new Job Jobs, 'serviceCheck',
     name: 'ETCD'
-    url: Settings.etcd()
+    url: Settings.findOne().etcd
   job.repeat
     repeats: Jobs.forever
     wait: 1000 * 60

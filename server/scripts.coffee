@@ -65,7 +65,7 @@ Meteor.startup ->
 
   findAppDef = (name, version) ->
     ApplicationDefs.findOne
-      project: Meteor.settings.project
+      project: Settings.findOne().project
       name: name
       version: version
   renderForNameAndVersion = (template) -> (name, version, instance, options, params) ->
@@ -79,9 +79,9 @@ Meteor.startup ->
   render = (template, appDef, instance, options, params = {}) ->
     resolved  = resolveParams(appDef.def, (if typeof params == 'object' then params else EJSON.parse params))
     ctx = createContext YAML.safeLoad(resolved),
-      project: Meteor.settings.project
+      project: Settings.findOne().project
       instance: instance
-      etcdCluster: Meteor.settings.etcdBaseUrl
+      etcdCluster: Settings.findOne().etcdBaseUrl
       vlan: options?.targetVlan
       dataDir: options?.dataDir
       params: params || {}

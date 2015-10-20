@@ -1,5 +1,5 @@
-if Meteor.settings.public.remoteAppstoreUrl
-  central = DDP.connect Meteor.settings.public.remoteAppstoreUrl
+if Settings.findOne().remoteAppstoreUrl
+  central = DDP.connect Settings.findOne().remoteAppstoreUrl
   @AppStore = new Mongo.Collection 'appstore',
     connection: central
 

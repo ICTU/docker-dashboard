@@ -47,6 +47,8 @@ Meteor.startup ->
 
     @route 'config',
       path: '/config'
+      data: ->
+        settings: Settings.findOne()
 
     @route 'apps',
       path: '/apps'

@@ -18,7 +18,7 @@ Meteor.startup ->
         connectionId = Random.id()
         ssh2 = Meteor.npmRequire 'ssh2-connect'
 
-        ssh2 host: service.hostIp, username: Settings.ssh.username(), privateKeyPath: Settings.ssh.keyPath(), (err, sess) =>
+        ssh2 host: service.hostIp, username: Settings.findOne().ssh.username(), privateKeyPath: Settings.findOne().ssh.keyPath(), (err, sess) =>
           finish = =>
             @response.write "event: exit\n"
             @response.write "data: \n\n"
