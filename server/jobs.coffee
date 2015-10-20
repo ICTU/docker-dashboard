@@ -2,15 +2,24 @@ Meteor.startup ->
   Jobs  = JobCollection 'jobs'
   Jobs.remove {}
 
-  job = new Job Jobs, 'serviceCheck',
+  jobs = [
     name: 'ETCD'
     url: Settings.findOne().etcd
-  job.repeat
-    repeats: Jobs.forever
-    wait: 1000 * 60
-  job.retry
-    wait: 1000 * 60
-  job.save()
+  ]
+
+  for agent in Settings.findOne().agentUrl
+    jobs.push
+      name: "Agent #{agent}"
+      url: "#{agent}/ping"
+
+  for j in jobs
+    job = new Job Jobs, 'serviceCheck', j
+    job.repeat
+      repeats: Jobs.forever
+      wait: 1000 * 60
+    job.retry
+      wait: 1000 * 60
+    job.save()
 
   Jobs.processJobs 'serviceCheck', (job, callback) ->
     HTTP.get job.data.url, (err, data) ->
