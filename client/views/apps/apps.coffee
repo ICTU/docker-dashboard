@@ -25,6 +25,7 @@ Template.apps.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
   appTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find(name: "#{@}").map (ad) -> ad.tags if ad.tags)), undefined)
   allTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find().map (ad) -> ad.tags if ad.tags)), undefined)
+  searchTerms: -> Session.get 'queryAppName'
 
 
 Template.apps.events

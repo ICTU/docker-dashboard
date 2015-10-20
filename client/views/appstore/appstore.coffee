@@ -1,5 +1,5 @@
 Template.appstore.helpers
-  apps: -> AppStore.find()
+  apps: -> AppStore?.find()
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
 
 Template.appstore.events

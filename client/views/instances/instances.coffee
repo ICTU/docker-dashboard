@@ -33,6 +33,7 @@ Template.instances.helpers
   isAdminBoard: -> Settings.findOne()?.admin
   isSearching: -> Session.get('queryName')?.length
   instanceHash: -> CryptoJS.MD5 "#{@key}"
+  searchTerms: -> Session.get 'queryName'
 
 Template.instances.events
   'click .stop-instance': ->

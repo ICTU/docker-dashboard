@@ -1,5 +1,5 @@
-Template.registerHelper 'isAdminBoard', -> Settings.findOne().isAdmin
-Template.registerHelper 'hasLocalAppstore', -> not Settings.findOne().remoteAppstoreUrl
+Template.registerHelper 'isAdminBoard', -> Settings.findOne()?.isAdmin
+Template.registerHelper 'hasLocalAppstore', -> not Settings.findOne()?.remoteAppstoreUrl
 
 Template['base-layout'].helpers
   user: -> Meteor.user().emails[0].address
