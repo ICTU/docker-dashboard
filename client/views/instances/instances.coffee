@@ -32,7 +32,6 @@ Template.instances.helpers
   pretify: (json) -> JSON.stringify json, undefined, 2
   isAdminBoard: -> Settings.findOne()?.admin
   isSearching: -> Session.get('queryName')?.length
-  searchTerms: -> Session.get('queryName')
   instanceHash: -> CryptoJS.MD5 "#{@key}"
 
 Template.instances.events
@@ -43,8 +42,6 @@ Template.instances.events
   'click .open-terminal': (e, t) ->
     window.open Router.url('terminal', {instanceName: @instance.name, serviceName: @service.name}),
     Random.id(), 'height=347,width=596'
-  'input #searchField': (e, t) ->
-    Session.set 'queryName', e.currentTarget.value
   'click #reset': -> Session.set 'queryName', null
 
 HTTPS_PORTS = ['443', '8443']

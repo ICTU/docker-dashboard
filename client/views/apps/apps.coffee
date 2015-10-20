@@ -19,7 +19,6 @@ Template.apps.helpers
   appDefCount: -> ApplicationDefs.find(name: "#{@}").count()
   appDefs: -> ApplicationDefs.find {name: "#{@}"}, sort: version: 1
   isSearching: -> Session.get('queryAppName')?.length or Session.get('filterByTag')?.length
-  searchTerms: -> Session.get('queryAppName')
   filterByTag: -> Session.get 'filterByTag'
   multipleSearchTerms: -> Session.get('queryAppName')?.length and Session.get 'filterByTag'
   appDefTemplate: -> appDefTemplate
