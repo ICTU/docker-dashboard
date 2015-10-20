@@ -3,7 +3,7 @@
   "etcd": "http://docker1.rni.org:4001/v2/keys/",
   "etcdBaseUrl": "http://docker1.rni.org:4001",
   "coreos": {
-    "ssh": "ssh core@10.19.88.24"
+    "ssh": "ssh core@10.19.88.24",
   },
   "ssh": {
     "user": "core",

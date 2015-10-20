@@ -45,6 +45,9 @@ Meteor.startup ->
     @route 'instances',
       path: '/instances'
 
+    @route 'config',
+      path: '/config'
+
     @route 'apps',
       path: '/apps'
       loadingTemplate: 'loading'

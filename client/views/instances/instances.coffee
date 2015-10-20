@@ -15,7 +15,7 @@ Template.instances.helpers
       'collapse-down'
     else
       'exclamation-sign'
-  showProgressbar: -> "#{@meta.state}".match /loading|activating|pulling/
+  showProgressbar: -> "#{@meta.state}".match /loading|activating|pulling|stopping/
   stateDescription: -> @meta.stateDescription unless @meta.state == 'active'
   totalSteps: -> @meta.totalSteps
   progress: -> @meta.progress
