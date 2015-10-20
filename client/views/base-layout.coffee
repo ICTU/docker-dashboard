@@ -5,6 +5,7 @@ Template['base-layout'].helpers
   user: -> Meteor.user().emails[0].address
   statusColor: -> if Services.findOne(isUp:false) then 'red' else 'green'
   session: (sessVar) -> Session.get sessVar
+  appVersion: -> version
 
 Template['base-layout'].events
   'click #messagesMenuItem': ->
