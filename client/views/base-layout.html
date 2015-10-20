@@ -10,9 +10,7 @@
         <ul class="nav navbar-nav">
           <li><a href="{{pathFor 'instances'}}">Instances</a></li>
           <li><a href="{{pathFor 'apps'}}">Apps</a></li>
-          {{#if isAdminBoard}}
           <li><a href="{{pathFor 'appstore'}}">App Store</a></li>
-          {{/if}}
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><div class="led {{statusColor}} pull-left" style="margin-top:21px"></div><a href="{{pathFor 'status'}}">Status</a></li>
