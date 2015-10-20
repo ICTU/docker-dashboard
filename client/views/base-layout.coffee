@@ -1,4 +1,4 @@
-Template.registerHelper 'isAdminBoard', -> Settings.findOne().admin
+Template.registerHelper 'isAdminBoard', -> Settings.findOne().isAdmin
 Template.registerHelper 'hasLocalAppstore', -> not Settings.findOne().remoteAppstoreUrl
 
 Template['base-layout'].helpers
