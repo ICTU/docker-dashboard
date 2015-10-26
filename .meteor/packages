@@ -8,7 +8,6 @@ coffeescript
 http
 zimme:iron-router-active
 
-velocity:html-reporter
 msavin:mongol
 meteorhacks:npm
 
