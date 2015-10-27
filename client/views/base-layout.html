@@ -1,6 +1,6 @@
 <template name="base-layout">
   <!-- Header -->
-  <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+  <div id="top-nav" class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <a class="navbar-brand" href="/">Cloud Dashboard {{appVersion}}
@@ -65,7 +65,9 @@
 
   {{> sAlert}}
 
-  {{> yield}}
+  <div class="content-container">
+    {{> yield}}
+  </div>
 
   {{> chat}}
 
