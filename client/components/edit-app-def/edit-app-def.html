@@ -7,11 +7,33 @@
           <h4 class="modal-title" id="myModalLabel">Edit {{name}}:{{version}}</h4>
         </div>
         <div class="modal-body">
-          {{> editAppDefForm}}
+          <div class="app-def-form">
+            {{> editAppDefForm}}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myid2">Help</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button id="submitButton" type="button" class="btn btn-primary" {{disableOnError}}>Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="myid2" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 99999999999;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Help</h4>
+        </div>
+        <div class="modal-body">
+          <div class="app-def-form">
+            {{> editAppDefHelp}}
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button id="submitButton" type="button" class="btn btn-primary" {{disableOnError}}>Save changes</button>
         </div>
       </div>
     </div>
@@ -26,4 +48,60 @@
       </div>
     </div>
   </form>
+</template>
+
+<template name="editAppDefHelp">
+  <div>
+    <p>
+      The application definition uses simple yaml-like format.<br>
+      Example of an application definition:
+    </p>
+
+    <pre>
+      name: my_application
+      version: 1.0
+
+      www:
+          image: my.private.registry:5000/web-app:latest
+          opts: -m 1024 m
+          volumes:
+              - /folder/in/container/to/persist
+              - /another/folder/to/persist
+          links:
+              - db
+          env:
+              - ENV_VAR_1=value
+              - ENV_VAR_2=value2
+
+      db:
+          image: my.private.registry:5000/db:latest
+          opts: --entrypoint="/command/to/execute"
+    </pre>
+
+    <p>
+      The first two lines of the definition should start with the name and version of the application.<br>
+      Create a section for each of the services that comprise the application. Note that the name of the service<br>
+      will be used when creating the FQDN of the service. You can reach any of the defined services using the following<br>
+      hostname:
+    </p>
+
+    <code>
+      [[ servce_name ]].[[ instance_name ]].[[ project_name ]].ictu
+    </code>
+
+    <p><br>For each service the following attributes can be defined:</p>
+    <ul>
+      <li><strong>image</strong>: specify the name of the image. This should be the full name of the image including the repo name.</li>
+      <li><strong>links</strong>: specify in a list the name of the services to link</li>
+      <li><strong>volumes</strong>: specify in a list the full path of the files or directory to persist on the docker host</li>
+      <li><strong>env</strong>: specify in a list the environment variables that need to be injected in the service</li>
+      <li><strong>expose</strong>: specify the port to expose to linked services</li>
+      <li><strong>opts</strong>: specify docker specific run-time options. For a complete list of the options click <a href="https://docs.docker.com/reference/commandline/run/">here</a></li>
+    </ul>
+
+    <p>
+      <strong>Note</strong>: The following docker run-time options '--volume=[]', '--link=[]', '--env=[]' should not be used in the 'opts' service attribute.<br>
+      Instead you should use the service attributes 'volumes', 'links', 'env' as these are augmented versions of the docker run-time options and is required by the dashboard.
+    </p>
+  </div>
 </template>
