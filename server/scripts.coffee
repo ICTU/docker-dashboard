@@ -12,21 +12,19 @@ Meteor.startup ->
         else
           "#{prev}-v #{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{volume}:#{volume} "
       , ""
-    envs: ->
-      @environment?.reduce (prev, env) =>
-        env = "#{env}".replace /"/g, '\\"'
-        "#{prev}-e \"#{env}\" "
-      , ""
-    dockerlinks: ->
-      parentCtx = Template.parentData(1)
-      @links?.reduce (prev, link) ->
-        "#{prev}--link #{link}-#{parentCtx.project}-#{parentCtx.instance}:#{link} "
-      , ""
+
     volumesfrom: ->
       parentCtx = Template.parentData(1)
       @service['volumes-from']?.reduce (prev, volume) ->
         "#{prev}--volumes-from #{volume}-#{parentCtx.project}-#{parentCtx.instance} "
       , ""
+
+    attribute: (attrName, attrPrefix) ->
+      @[attrName]?.reduce (left, right) =>
+        acc = "#{right}".replace /"/g, '\\"'
+        "#{left}#{attrPrefix}\"#{acc}\" "
+      , ""
+
     stringify: EJSON.stringify
 
   Template.startApp.helpers helpers
