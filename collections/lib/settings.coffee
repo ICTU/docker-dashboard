@@ -24,7 +24,9 @@ Settings.attachSchema new SimpleSchema
   services: type: ServicesSchema
   isAdmin: type: Boolean
   projectName: type: String
-  remoteAppstoreUrl: type: String
+  remoteAppstoreUrl:
+    type: String
+    optional: true
 
 Meteor.startup ->
   if Meteor.server
