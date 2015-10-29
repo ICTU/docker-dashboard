@@ -21,6 +21,8 @@ Meteor.startup =>
 
   slack.on 'message', Meteor.bindEnvironment (message) ->
     Messages.insert processMessage(message) if message.channel in [channelId, noticeChannelId]
+  slack.on 'error', Meteor.bindEnvironment (err) ->
+    console.error 'Slack error:', err
 
   processMessage = (message) ->
     msg =
