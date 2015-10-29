@@ -1,3 +1,5 @@
+activeLogs = new ReactiveVar null
+
 Template.instances.helpers
   instances: ->
     if Session.get('queryName')?.length
@@ -16,7 +18,6 @@ Template.instances.helpers
     else
       'exclamation-sign'
   showProgressbar: -> "#{@meta.state}".match /loading|activating|pulling|stopping/
-  stateDescription: -> @meta.stateDescription unless @meta.state == 'active'
   totalSteps: -> @meta.totalSteps
   progress: -> @meta.progress
   progressPercentage: -> (parseInt(@meta.progress)/parseInt(@meta.totalSteps))*100
@@ -44,6 +45,12 @@ Template.instances.events
     window.open Router.url('terminal', {instanceName: @instance.name, serviceName: @service.name}),
     Random.id(), 'height=347,width=596'
   'click #reset': -> Session.set 'queryName', null
+  'click .showLogs': ->
+    console.log 'clicked on showLogs', @logs
+    activeLogs.set @logs
+
+Template.logsModal.helpers
+  logs: -> activeLogs.get()
 
 HTTPS_PORTS = ['443', '8443']
 HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']

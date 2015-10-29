@@ -56,11 +56,13 @@
               </div>
               <div id="instancePanel-{{instanceHash}}" class="panel-collapse collapse">
                   <div class="panel-body">
-                    {{#with meta}}
-                    <span class="badge">{{appName}}:{{appVersion}}</span>
-                    {{/with}}
+                    <ul class="nav nav-justified pull-right" style="margin-bottom:5px">
+                      <li class="btn-group">
 
-                    <ul class="nav nav-justified pull-right" style="width:100px">
+                        <a title="Logs" class="showLogs" href="#" data-toggle="modal" data-target="#logsModal">
+                          <i class="glyphicon glyphicon-list-alt"></i>
+                        </a>
+                      </li>
                       <li class="btn-group">
 
                         <a title="Stop" href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -92,6 +94,16 @@
 
                       </li>
                     </ul>
+
+                    {{#with meta}}
+                    <table class="table table-condensed">
+                      <tbody>
+                        <tr><th scope="row" style="width:250px;">Application name</th><td>{{appName}}</td></tr>
+                        <tr><th scope="row">Application version</th><td>{{appVersion}}</td></tr>
+                        <tr><th scope="row">State</th><td>{{stateDescription}}</td></tr>
+                      </tbody>
+                    </table>
+                    {{/with}}
 
                     {{#each services}}
                     <h5>
@@ -129,4 +141,25 @@
 
   </div>
 </div>
+
+{{> logsModal }}
+</template>
+
+<template name="logsModal">
+  <div id="logsModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 99999999999;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Log</h4>
+        </div>
+        <div class="modal-body">
+           <textarea class="form-control" rows="35">{{logs.bootstrapLog}}</textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
