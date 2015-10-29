@@ -13,6 +13,8 @@ ssh = (cmd, options, callback) ->
   exec command, callback
 ssh2 = Meteor.npmRequire('ssh2-connect')
 fs = Npm.require 'fs'
+str2stream = Meteor.npmRequire 'string-to-stream'
+JSONStream = Meteor.npmRequire 'JSONStream'
 
 loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
   console.log(error) if error
@@ -26,15 +28,26 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.findOne().project}."
 
     callOpts =
-      data :
+      responseType: "buffer"
+      data:
         dir: dir
         startScript: Scripts.bash.start app, version, instance, options, parameters
         stopScript: Scripts.bash.stop app, version, instance, options, parameters
 
     agentUrl = if options?.targetHost then "http://#{options.targetHost}" else Random.choice Settings.findOne().agentUrl
     console.log "Sending request to #{agentUrl}"
+
     HTTP.post "#{agentUrl}/app/install-and-run", callOpts, (err, result) ->
-      console.log "Sent request to start instance. Response from the agent is", result
+      console.log "Sent request to start instance. Response from the agent is" #, "#{result.content}"
+      s = JSONStream.parse()
+      s.on 'data', (data) -> console.log 'data', data
+      s.on 'error', (err) -> console.log 'err', err
+      str2stream("#{result.content}").pipe(s)
+      # console.log "#{result.content}"
+      x = Instances.update {name: instance, application: app},
+        $set: {'logs.bootstrapLog': "#{result.content}"}
+      console.log 'updated', x
+      console.log Instances.findOne({name: instance, application: app})
     ""
 
   stopInstance: (instanceName) ->

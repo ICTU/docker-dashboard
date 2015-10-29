@@ -1,5 +1,16 @@
 {
   "dependencies": {
+    "JSONStream": {
+      "version": "1.0.6",
+      "dependencies": {
+        "jsonparse": {
+          "version": "1.2.0"
+        },
+        "through": {
+          "version": "2.3.8"
+        }
+      }
+    },
     "ssh2": {
       "version": "0.4.11",
       "dependencies": {
@@ -38,6 +49,14 @@
     },
     "ssh2-connect": {
       "version": "0.0.6"
+    },
+    "string-to-stream": {
+      "version": "1.0.1",
+      "dependencies": {
+        "inherits": {
+          "version": "2.0.1"
+        }
+      }
     },
     "term.js": {
       "version": "0.0.4"
