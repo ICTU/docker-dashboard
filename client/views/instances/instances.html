@@ -30,9 +30,13 @@
               <div class="panel-heading">
                 <h4 class="panel-title heading-flex-container">
                   <span class="glyphicon glyphicon-{{activityIcon}}"></span>
+                  {{#if instanceLink}}
+                    <a href="{{instanceLink}}" class="instance-link" target="_blank">{{name}}</a>
+                  {{else}}
+                    <span style="padding-left:5px;" title="This application does not have a web UI.">{{name}}</span>
+                  {{/if}}
                   <a data-toggle="collapse" data-target="#instancePanel-{{instanceHash}}"
                      href="#instancePanel-{{name}}" class="collapsed toggle titleToggle">
-                     {{name}}
                   </a>
                   {{#if showProgressbar}}
                   <div class="progress">
@@ -46,9 +50,6 @@
                     {{#each this}}<span class="label label-default">{{this}}</span>{{/each}}
                   </div>
                   {{/with}}
-                  {{#if instanceLink}}
-                  <a href="{{instanceLink}}" class="instance-link" target="_blank"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
-                  {{/if}}
                   <a data-toggle="collapse" data-target="#instancePanel-{{instanceHash}}" href="#" class="collapsed toggle"></a>
                 </h4>
 
