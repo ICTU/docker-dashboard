@@ -101,6 +101,9 @@
                         <tr><th scope="row" style="width:250px;">Application name</th><td>{{appName}}</td></tr>
                         <tr><th scope="row">Application version</th><td>{{appVersion}}</td></tr>
                         <tr><th scope="row">State</th><td>{{stateDescription}}</td></tr>
+                        {{#if isAdminBoard}}
+                        <tr><th scope="row">Agent URL</th><td>{{agentUrl}}</td></tr>
+                        {{/if}}
                       </tbody>
                     </table>
                     {{/with}}
@@ -118,7 +121,6 @@
                         <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr>
                         {{#if isAdminBoard}}
                         <tr><th scope="row">Host IP</th><td>{{data.hostIp}}</td></tr>
-                        <tr><th scope="row">Agent IP</th><td>{{data.agentIp}}</td></tr>
                         {{/if}}
                         <tr><th scope="row">Ports</th><td>{{data.ports}}</td></tr>
                         <tr><th scope="row">Port Mapping</th><td>{{data.portMapping}}</td></tr>

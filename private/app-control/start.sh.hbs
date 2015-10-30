@@ -36,6 +36,7 @@ etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appVersion "{{appVers
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/parameters '{{stringify params}}' > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/agentUrl "{{agentUrl}}" > /dev/null
 
 #echo_json "state" "loading"
 
@@ -135,7 +136,6 @@ etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ip "$myip" > /d
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostname "$hostname" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ports "${ports/\n/ }" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostIp "$hostIp" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/agentIp "_AGENT_IP_" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerName "$DOCKERNAME" > /dev/null
 #
 # Create DNS entry

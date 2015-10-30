@@ -27,6 +27,7 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
     dir = "#{Settings.findOne().project}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.findOne().project}."
 
+    options.agentUrl = if options?.targetHost then "http://#{options.targetHost}" else Random.choice Settings.findOne().agentUrl
     callOpts =
       responseType: "buffer"
       data:
@@ -34,10 +35,9 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
         startScript: Scripts.bash.start app, version, instance, options, parameters
         stopScript: Scripts.bash.stop app, version, instance, options, parameters
 
-    agentUrl = if options?.targetHost then "http://#{options.targetHost}" else Random.choice Settings.findOne().agentUrl
-    console.log "Sending request to #{agentUrl}"
+    console.log "Sending request to #{options.agentUrl}"
 
-    HTTP.post "#{agentUrl}/app/install-and-run", callOpts, (err, result) ->
+    HTTP.post "#{options.agentUrl}/app/install-and-run", callOpts, (err, result) ->
       console.log "Sent request to start instance. Response from the agent is"
       console.log err if err
       s = JSONStream.parse()
@@ -51,20 +51,19 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
   stopInstance: (instanceName) ->
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.findOne().project}."
     instance = Instances.findOne name: instanceName
-    firstServiceProps = _.chain(instance.services).toArray().first().value()
-    if agentIp = firstServiceProps.agentIp
-      console.log "Agent ip is #{agentIp}. Sending a POST request to stop the applicaiton."
+    if agentUrl = instance.meta.agentUrl
+      console.log "Agent URL is #{agentUrl}. Sending a POST request to stop the applicaiton."
       callOpts =
         responseType: "buffer"
         data:
           dir: "#{Settings.findOne().project}-#{instanceName}"
 
-      HTTP.post "http://#{agentIp}/app/stop", callOpts, (err, result) ->
+      HTTP.post "#{agentUrl}/app/stop", callOpts, (err, result) ->
         console.log "Sent request to stop instance. Response from the agent is #{result.content}"
         console.log err if err
     else
-      console.log "Agent ip for this application was not found. Trying to stop via ssh."
-      options = targetHost: firstServiceProps.hostIp
+      console.log "Agent URL for this application was not found. Trying to stop via ssh."
+      options = targetHost: _.chain(instance.services).toArray().first().value().hostIp
       ssh "sudo bash #{Settings.findOne().project}-#{instanceName}/stop.sh" , options, loggingHandler -> sync()
     ""
 
