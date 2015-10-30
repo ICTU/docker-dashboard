@@ -28,10 +28,8 @@ Template.instances.helpers
     if @services?.www?.hostname
       "#{protocol}://#{@services?.www?.hostname}:#{port}"
   params: -> key: k, value: v for k, v of @parameters if @parameters
-  isAdminBoard: -> Settings.findOne().admin
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2
-  isAdminBoard: -> Settings.findOne()?.admin
   isSearching: -> Session.get('queryName')?.length
   instanceHash: -> CryptoJS.MD5 "#{@key}"
   searchTerms: -> Session.get 'queryName'

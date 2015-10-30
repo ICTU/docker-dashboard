@@ -38,24 +38,34 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
     console.log "Sending request to #{agentUrl}"
 
     HTTP.post "#{agentUrl}/app/install-and-run", callOpts, (err, result) ->
-      console.log "Sent request to start instance. Response from the agent is" #, "#{result.content}"
+      console.log "Sent request to start instance. Response from the agent is"
       console.log err if err
       s = JSONStream.parse()
       s.on 'data', (data) -> console.log 'data', data
       s.on 'error', (err) -> console.log 'err', err
       str2stream("#{result.content}").pipe(s)
-      # console.log "#{result.content}"
-      x = Instances.update {name: instance, application: app},
+      Instances.update {name: instance, application: app},
         $set: {'logs.bootstrapLog': "#{result.content}"}
-      console.log 'updated', x
-      console.log Instances.findOne({name: instance, application: app})
     ""
 
   stopInstance: (instanceName) ->
-    instance = Instances.findOne name: instanceName
-    options = targetHost: instance.services[Object.keys(instance.services)[0]].hostIp
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.findOne().project}."
-    ssh "sudo bash #{Settings.findOne().project}-#{instanceName}/stop.sh" , options, loggingHandler -> sync()
+    instance = Instances.findOne name: instanceName
+    firstServiceProps = _.chain(instance.services).toArray().first().value()
+    if agentIp = firstServiceProps.agentIp
+      console.log "Agent ip is #{agentIp}. Sending a POST request to stop the applicaiton."
+      callOpts =
+        responseType: "buffer"
+        data:
+          dir: "#{Settings.findOne().project}-#{instanceName}"
+
+      HTTP.post "http://#{agentIp}/app/stop", callOpts, (err, result) ->
+        console.log "Sent request to stop instance. Response from the agent is #{result.content}"
+        console.log err if err
+    else
+      console.log "Agent ip for this application was not found. Trying to stop via ssh."
+      options = targetHost: firstServiceProps.hostIp
+      ssh "sudo bash #{Settings.findOne().project}-#{instanceName}/stop.sh" , options, loggingHandler -> sync()
     ""
 
   clearInstance: (project, instance) ->
