@@ -39,6 +39,7 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
 
     HTTP.post "#{agentUrl}/app/install-and-run", callOpts, (err, result) ->
       console.log "Sent request to start instance. Response from the agent is" #, "#{result.content}"
+      console.log err if err
       s = JSONStream.parse()
       s.on 'data', (data) -> console.log 'data', data
       s.on 'error', (err) -> console.log 'err', err
