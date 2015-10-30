@@ -38,8 +38,8 @@ Meteor.startup ->
     arr
 
   toServiceArray = (doc) ->
-    notNameAndVersion = (service) -> service != 'name' and service != 'version'
-    service for service in Object.keys doc when notNameAndVersion service
+    isService = (service) -> service not in ['name', 'version', 'pic', 'description']
+    service for service in Object.keys doc when isService service
 
   createContext = (doc, ctx) ->
     srvArray = toServiceArray doc
