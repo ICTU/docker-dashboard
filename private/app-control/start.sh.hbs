@@ -121,6 +121,7 @@ docker run -d \
 {{attribute "expose" "--expose="}} \
 {{#if privileged}}--privileged{{/if}} \
 {{#if user}}-u {{user}}{{/if}} \
+{{#if mem_limit}}-m {{mem_limit}}{{/if}} \
 {{{attribute "environment" "-e "}}} \
 -v /etc/localtime:/etc/localtime:ro {{image}} {{command}} > /dev/null
 
