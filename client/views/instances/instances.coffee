@@ -20,7 +20,12 @@ Template.instances.helpers
   showProgressbar: -> "#{@meta.state}".match /loading|activating|pulling|stopping/
   totalSteps: -> @meta.totalSteps
   progress: -> @meta.progress
-  progressPercentage: -> (parseInt(@meta.progress)/parseInt(@meta.totalSteps))*100
+  progressPercentage: ->
+    if "#{@meta.state}".match /stopping/
+      # let the percentage count down
+      ((parseInt(@meta.totalSteps)-parseInt(@meta.progress))/parseInt(@meta.totalSteps))*100
+    else
+      (parseInt(@meta.progress)/parseInt(@meta.totalSteps))*100
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
     port = findWebPort @services?.www

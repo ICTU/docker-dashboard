@@ -59,6 +59,7 @@ etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /d
 
 DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
 DOCKERNETNAME="net-$DOCKERNAME"
+DOCKERSSHDNAME="sshd-$DOCKERNAME"
 
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "activating" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Preparing network for {{service}}" > /dev/null
@@ -71,6 +72,8 @@ docker kill $DOCKERNETNAME 2>/dev/null
 docker rm $DOCKERNETNAME 2>/dev/null
 docker kill $DOCKERNAME 2>/dev/null
 docker rm $DOCKERNAME 2>/dev/null
+docker kill $DOCKERSSHDNAME 2>/dev/null
+docker rm $DOCKERSSHDNAME 2>/dev/null
 #
 # Prepare the volumes
 #
@@ -112,7 +115,7 @@ etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /d
 #
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Activating service {{service}}"
 docker run -d \
---name {{service}}-{{../project}}-{{../instance}} \
+--name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes}} \
@@ -124,6 +127,19 @@ docker run -d \
 {{#if mem_limit}}-m {{mem_limit}}{{/if}} \
 {{{attribute "environment" "-e "}}} \
 -v /etc/localtime:/etc/localtime:ro {{image}} {{command}} > /dev/null
+
+{{#if enable_ssh}}
+#
+# Start the ssh container
+#
+docker run -d --name $DOCKERSSHDNAME \
+-e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
+-e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
+--net="container:$DOCKERNETNAME" \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v $(which docker):/usr/bin/docker \
+jeroenpeeters/docker-ssh
+{{/if}}
 
 #
 # Publish info about the container to etcd

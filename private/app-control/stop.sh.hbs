@@ -9,7 +9,7 @@ INSTANCE="{{instance}}"
 ETCD_CLUSTER="{{etcdCluster}}"
 ETCD_INSTANCE_KEY="/instances/$PROJECT/$APPNAME/$INSTANCE"
 TOTAL_STEPS=$((({{total}}*2)+1))
-STEP=1
+STEP=0
 
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "stopping"
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS"
@@ -18,19 +18,26 @@ etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
 {{#each services}}
   DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
   DOCKERNETNAME="net-$DOCKERNAME"
+  DOCKERSSHDNAME="sshd-$DOCKERNAME"
 
   myip=$(docker exec $DOCKERNETNAME ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
   etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Stopping network for {{service}}"
-  etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
   STEP=$((STEP+1))
+  etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+
   route del -host $myip docker0
   docker stop -t 5 $DOCKERNETNAME
   docker rm $DOCKERNETNAME
-  etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Stopping {{service}}"
+
+  etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Stopping service {{service}}"
   etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
   STEP=$((STEP+1))
+  etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+  docker stop -t 10 $DOCKERSSHDNAME
+  docker rm $DOCKERSSHDNAME
   docker stop -t 30 $DOCKERNAME
   docker rm $DOCKERNAME
+
   etcdctl --peers $ETCD_CLUSTER rm /skydns/ictu/$PROJECT/$INSTANCE/{{service}}
 
 {{/each}}

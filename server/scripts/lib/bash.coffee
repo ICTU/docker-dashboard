@@ -24,6 +24,8 @@ Meteor.startup ->
         acc = "#{right}".replace /"/g, '\\"'
         "#{left}#{attrPrefix}\"#{acc}\" "
       , ""
+    mapDocker: ->
+      @mapDocker or @map_docker
 
     stringify: EJSON.stringify
 
