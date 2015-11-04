@@ -28,6 +28,7 @@ fastclick@1.0.3
 fortawesome:fontawesome@4.4.0
 fourseven:scss@3.2.0
 froatsnook:request@2.64.0
+gadicohen:prism@1.0.4
 geojson-utils@1.0.3
 gwendall:session-json@0.1.7
 hiukim:slack-client@1.0.4

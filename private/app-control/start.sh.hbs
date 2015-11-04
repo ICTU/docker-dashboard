@@ -132,6 +132,8 @@ docker run -d \
 #
 # Start the ssh container
 #
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Enabling SSH for service {{service}}"
+docker pull jeroenpeeters/docker-ssh
 docker run -d --name $DOCKERSSHDNAME \
 -e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
@@ -139,6 +141,7 @@ docker run -d --name $DOCKERSSHDNAME \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -v $(which docker):/usr/bin/docker \
 jeroenpeeters/docker-ssh
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/sshPort "22" > /dev/null
 {{/if}}
 
 #
