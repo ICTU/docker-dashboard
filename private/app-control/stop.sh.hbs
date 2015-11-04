@@ -15,7 +15,7 @@ etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "stopping"
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS"
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
 
-{{#each services}}
+{{#each reverse services}}
   DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
   DOCKERNETNAME="net-$DOCKERNAME"
   DOCKERSSHDNAME="sshd-$DOCKERNAME"

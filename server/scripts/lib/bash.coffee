@@ -27,6 +27,8 @@ Meteor.startup ->
     mapDocker: ->
       @mapDocker or @map_docker
 
+    reverse: (arr) -> arr.reverse()
+
     stringify: EJSON.stringify
 
   Template.startApp.helpers helpers
