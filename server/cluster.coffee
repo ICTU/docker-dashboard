@@ -78,11 +78,11 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
     ""
 
   saveApp: (name, version, definition) ->
-    Etcd.set "apps/#{Settings.findOne().project}/#{name}/#{version}", definition
+    EtcdClient.set "apps/#{Settings.findOne().project}/#{name}/#{version}", definition
     ""
 
   deleteApp: (name, version) ->
-    Etcd.delete "apps/#{Settings.findOne().project}/#{name}/#{version}"
+    EtcdClient.delete "apps/#{Settings.findOne().project}/#{name}/#{version}"
     ""
 
   execService: (opts) ->

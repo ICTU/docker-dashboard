@@ -29,4 +29,6 @@ Meteor.startup ->
           cb null, objects
         else cb error, null
 
-  @Etcd = etcd Settings.findOne().etcd
+  @EtcdClient = etcd Settings.findOne().etcd
+  Settings.find().observeChanges
+    changed: -> @EtcdClient = etcd Settings.findOne().etcd
