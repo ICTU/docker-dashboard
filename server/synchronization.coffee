@@ -13,9 +13,8 @@ toApp = (node) ->
 
 @sync = (callback)->
   try
-    Etcd.discover "apps/#{Settings.findOne().project}", (err, nodes) ->
+    EtcdClient.discover "apps/#{Settings.findOne().project}", (err, nodes) ->
       apps = if nodes then (toApp node for node in nodes) else []
-      #console.log '@@@@@@@@@@', apps, '@@@@@@@@@@@@@@@@@'
       Apps.updateCollection apps
 
       objects = []
@@ -38,7 +37,7 @@ toApp = (node) ->
     console.log "Error while trying to read #{baseKey}!"
     callback "Error while trying to read #{baseKey}!"
 
-  Etcd.discover "instances/#{Settings.findOne().project}", (err, nodes) ->
+  EtcdClient.discover "instances/#{Settings.findOne().project}", (err, nodes) ->
     objects = {}
     if nodes
       for n in nodes
