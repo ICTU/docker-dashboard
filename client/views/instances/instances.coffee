@@ -52,6 +52,10 @@ Template.instances.events
     console.log 'clicked on showLogs', @logs
     activeLogs.set @logs
 
+Template.instances.onCreated ->
+  new Clipboard '.copy-to-clipboard a',
+    target: (trigger) -> trigger.parentNode.nextElementSibling
+
 Template.logsModal.helpers
   logs: -> activeLogs.get()
 

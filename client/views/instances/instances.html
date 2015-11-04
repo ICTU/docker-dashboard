@@ -127,6 +127,7 @@
                         <tr><th scope="row">Container Name</th><td>{{data.dockerContainerName}}</td></tr>
                         {{#with data.sshPort}}
                         <tr><th scope="row">SSH</th><td>
+                        <div class="copy-to-clipboard"><a href="#">copy to clipboard</a></div>
 {{#prism language="bash" class="code-toolbar" port=this hostname=../data.hostname}}
 ssh -p {{port}} {{hostname}}
 {{/prism}}
