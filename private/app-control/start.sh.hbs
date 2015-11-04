@@ -79,7 +79,6 @@ docker rm $DOCKERSSHDNAME 2>/dev/null
 #
 {{#each volumes}}
 mkdir -p {{../../dataDir}}/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
-chmod a+rw {{../../dataDir}}/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
 {{/each}}
 #
 # Prepare the network
