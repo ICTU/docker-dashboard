@@ -26,7 +26,9 @@ createContext = (doc, ctx) ->
   ctx
 
 resolveParams = (appDef, params)->
-  appDef = appDef.replace "{{#{key}}}", value for key, value of params
+  for key, value of params
+    rex = new RegExp "\{\{#{key}\}\}", 'g'
+    appDef = appDef.replace rex, value
   appDef
 
 findAppDef = (name, version) ->
