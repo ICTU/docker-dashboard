@@ -21,13 +21,23 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
   console.log stdout, stderr
   cb && cb()
 
+pickAgent = ->
+  #round robin
+  settings = Settings.findOne()
+  agents = settings.agentUrl
+  agent = agents.shift()
+  agents.push agent
+  Settings.update _id: settings._id,
+    $set: agentUrl: agents
+  agent
+
 @Cluster =
   startApp: (app, version, instance, parameters, options = {}) ->
     options = _.extend {"dataDir": Settings.findOne().dataDir}, options
     dir = "#{Settings.findOne().project}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.findOne().project}."
 
-    options.agentUrl = if options?.targetHost then "http://#{options.targetHost}" else Random.choice Settings.findOne().agentUrl
+    options.agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
     callOpts =
       responseType: "buffer"
       data:
