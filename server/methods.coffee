@@ -1,4 +1,13 @@
-Meteor.methods
+log = logger.bunyan.createLogger name:'method-invocation'
+
+loggedMethod = (name, f) -> ->
+  log.info method: name, arguments: arguments, client: @connection.clientAddress
+  f.apply @, arguments
+
+logInvocation = (methods) ->
+  _.object ([name, loggedMethod(name, func)] for name, func of methods)
+
+Meteor.methods logInvocation
   startApp: Cluster.startApp
   stopInstance: Cluster.stopInstance
   clearInstance: Cluster.clearInstance

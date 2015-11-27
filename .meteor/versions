@@ -18,6 +18,7 @@ boilerplate-generator@1.0.3
 callback-hook@1.0.3
 check@1.0.5
 coffeescript@1.0.6
+cosmos:browserify@0.3.0
 dburles:collection-helpers@1.0.3
 dburles:mongo-collection-instances@0.3.4
 ddp@1.1.0
@@ -71,6 +72,7 @@ msavin:mongol@1.1.5
 npm-bcrypt@0.7.8_2
 npm-container@1.0.0
 observe-sequence@1.0.6
+ongoworks:bunyan-logger@2.5.0
 ordered-dict@1.0.3
 pntbr:js-yaml-client@0.0.1
 random@1.0.3
