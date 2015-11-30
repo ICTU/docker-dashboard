@@ -20,6 +20,10 @@ Meteor.startup ->
       path: '/api/v1/stop-app/:name'
       action: ->
         check(@params.name, String)
-        Cluster.stopInstance @params.name
-        @response.writeHead 200, 'Content-Type': 'text/plain'
-        @response.end "#{@params.name} instance is scheduled for destruction."
+        if Instances.findOne(name: @params.name)
+          Cluster.stopInstance @params.name
+          @response.writeHead 200, 'Content-Type': 'text/plain'
+          @response.end "#{@params.name} instance is scheduled for destruction."
+        else
+          @response.writeHead 404, 'Content-Type': 'application/json'
+          @response.end '{"message": "Instance not found"}'."
