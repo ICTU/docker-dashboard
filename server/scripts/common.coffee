@@ -1,7 +1,7 @@
 toTopsortArray = (doc, services) ->
   arr = []
   for service in services
-    for x in _.without(_.union(doc[service].links, doc[service]['volumes-from']), undefined)
+    for x in _.without(_.union(doc[service]?.links, doc[service]?['volumes-from']), undefined)
       arr.push [service, x]
   arr
 

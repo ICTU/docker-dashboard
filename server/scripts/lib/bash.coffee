@@ -8,7 +8,8 @@ Meteor.startup ->
     dockervolumes: ->
       parentCtx = Template.parentData(1)
       @volumes?.reduce (prev, volume) =>
-        if volume.indexOf(':') > -1 then "-v #{volume} "
+        if volume.indexOf(':') > -1
+          "#{prev}-v #{volume} "
         else
           "#{prev}-v #{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{volume}:#{volume} "
       , ""

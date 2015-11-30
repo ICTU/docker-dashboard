@@ -26,4 +26,4 @@ Meteor.startup ->
           @response.end "#{@params.name} instance is scheduled for destruction."
         else
           @response.writeHead 404, 'Content-Type': 'application/json'
-          @response.end '{"message": "Instance not found"}'."
+          @response.end '{"message": "Instance not found"}'
