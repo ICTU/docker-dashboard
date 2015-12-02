@@ -16,7 +16,8 @@ Meteor.startup ->
 
     volumesfrom: ->
       parentCtx = Template.parentData(1)
-      @service['volumes-from']?.reduce (prev, volume) ->
+      volumesFrom = @['volumes-from'] or @['volumes_from']
+      volumesFrom?.reduce (prev, volume) ->
         "#{prev}--volumes-from #{volume}-#{parentCtx.project}-#{parentCtx.instance} "
       , ""
 
