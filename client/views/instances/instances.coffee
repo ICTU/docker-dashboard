@@ -49,8 +49,11 @@ Template.instances.events
     Random.id(), 'height=347,width=596'
   'click #reset': -> Session.set 'queryName', null
   'click .showLogs': ->
-    console.log 'clicked on showLogs', @logs
     activeLogs.set @logs
+  'click .showContainerLogs': ->
+    console.log 'clicked showContainerLogs', @data.dockerContainerId
+    Meteor.call 'getLog', @data.dockerContainerId, (err, data) ->
+      console.log 'log -> ', err, data
 
 Template.instances.onCreated ->
   new Clipboard '.copy-to-clipboard a',

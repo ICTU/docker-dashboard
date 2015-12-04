@@ -68,3 +68,9 @@ Meteor.startup ->
       path: '/status'
       data: ->
         services: Services.find()
+
+    @route 'logs',
+      layoutTemplate: null
+      path: '/logs/:containerId'
+      data: ->
+        containerId: @params.containerId

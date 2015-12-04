@@ -1,0 +1,33 @@
+<template name="logs">
+  <div id="logViewer">
+  {{#if isLoading}}
+    <div class="logLine text">Loading logs for container with ID {{containerId}}</div>
+  {{else}}
+    {{#if hasLogLines}}
+      {{> logTable}}
+    {{else}}
+      <div class="logLine text">No logs found for container with ID {{containerId}}</div>
+    {{/if}}
+  {{/if}}
+  </div>
+</template>
+
+
+<template name="logTable">
+  <table>
+  {{#each logLines}}
+    {{#with formattedLogLine}}
+    {{#if log}}
+      <tr class="logLine">
+      <td class="date">{{date}}</td>
+      <td class="text">{{log}}</td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="2">{{this}}</td>
+      </tr>
+    {{/if}}
+    {{/with}}
+  {{/each}}
+  </table>
+</template>

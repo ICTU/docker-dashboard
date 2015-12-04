@@ -133,6 +133,12 @@ ssh -p {{port}} {{hostname}}
 {{/prism}}
                         </td></tr>
                         {{/with}}
+                        {{#if data.dockerContainerId}}
+                        <tr>
+                          <td>Logs</td>
+                          <td><a target="_blank" href="{{pathFor route='logs' containerId=data.dockerContainerId}}" class="showContainerLogsOld">Show Logs</a></td>
+                        </tr>
+                        {{/if}}
                       </tbody>
                     </table>
                     {{/each}}

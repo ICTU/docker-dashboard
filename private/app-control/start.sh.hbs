@@ -153,12 +153,14 @@ hostname="{{service}}.$INSTANCE.$PROJECT.ictu"
 myip=$(docker exec $DOCKERNETNAME ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
 ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}} | grep -o -G '[0-9]*')
 hostIp=$(ifconfig $NORMALNIC | grep 'inet ' | awk '{ print $2 }')
+cid=$(docker inspect -f '{{{literal '{{.Id}}'}}}' $DOCKERNAME)
 
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ip "$myip" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostname "$hostname" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ports "${ports/\n/ }" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostIp "$hostIp" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerName "$DOCKERNAME" > /dev/null
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerId "$cid" > /dev/null
 #
 # Create DNS entry
 #

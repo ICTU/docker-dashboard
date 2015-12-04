@@ -38,3 +38,22 @@ Meteor.methods logInvocation
       date: new Date()
       text: text
       direction: 'sent'
+
+  getLog: (cid) ->
+    cid = cid[0...12]
+    q =
+      query:
+        filtered:
+          query:
+            bool:
+              should: [query_string: query: cid]
+      sort:['@timestamp': order: 'desc']
+      size: 500
+
+    result = HTTP.post 'http://logstash.iqt.ictu:9200/_search',
+      data: q
+
+    if result.data and result.data.hits and hits = result.data.hits.hits
+      hits.map (item) -> item._source.message
+    else
+      result
