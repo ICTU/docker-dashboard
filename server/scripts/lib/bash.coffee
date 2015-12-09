@@ -9,7 +9,10 @@ Meteor.startup ->
       parentCtx = Template.parentData(1)
       @volumes?.reduce (prev, volume) =>
         if volume.indexOf(':') > -1
-          "#{prev}-v #{volume} "
+          if volume.indexOf(':do_not_persist', this.length - ':do_not_persist'.length) isnt -1
+            "-v #{volume.substr(0,volume.indexOf(':do_not_persist'))}"
+          else
+            "#{prev}-v #{volume} "
         else
           "#{prev}-v #{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{volume}:#{volume} "
       , ""
