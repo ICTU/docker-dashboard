@@ -18,6 +18,8 @@ Settings.attachSchema new SimpleSchema
   project: type: String
   etcd: type: String
   etcdBaseUrl: type: String
+  syslogUrl: type: String
+  elasticSearchUrl: type: String
   dataDir: type: String
   agentUrl: type: [String]
   ssh: type: SshSchema
@@ -39,6 +41,8 @@ Meteor.startup ->
         project: settings?.project or 'undef'
         etcd: settings?.etcd or 'http://iqtservices.isd.org:4001/v2/keys/'
         etcdBaseUrl: settings?.etcdBaseUrl or 'http://iqtservices.isd.org:4001'
+        syslogUrl: settings?.syslogUrl or 'udp://logstash:5454'
+        elasticSearchUrl: settings?.elasticSearchUrl or 'http://elasticsearch:9200'
         dataDir: settings?.dataDir or '/local/data'
         agentUrl:
           if aurl

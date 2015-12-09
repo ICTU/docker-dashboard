@@ -29,6 +29,8 @@ Meteor.startup ->
     mapDocker: ->
       @mapDocker or @map_docker
 
+    syslogUrl: -> Settings.findOne().syslogUrl
+
     reverse: (arr) -> arr.reverse()
 
     stringify: EJSON.stringify

@@ -117,7 +117,7 @@ etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Act
 docker run -d \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
---log-driver=syslog --log-opt syslog-address=udp://logstash.iqt.ictu:5454 \
+--log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
 --log-opt tag="$DOCKERNAME" \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes}} \

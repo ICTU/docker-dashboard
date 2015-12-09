@@ -1,6 +1,3 @@
-Template.registerHelper 'isAdminBoard', -> Settings.findOne()?.isAdmin
-Template.registerHelper 'hasLocalAppstore', -> not Settings.findOne()?.remoteAppstoreUrl
-
 Template['base-layout'].helpers
   user: -> Meteor.user().emails[0].address
   statusColor: -> if Services.findOne(isUp:false) then 'red' else 'green'

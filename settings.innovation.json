@@ -2,6 +2,8 @@
   "project": "innovation",
   "etcd": "http://docker1.rni.org:4001/v2/keys/",
   "etcdBaseUrl": "http://docker1.rni.org:4001",
+  "syslogUrl": "udp://10.25.85.10:5454",
+  "elasticSearchUrl": "http://logstash.iqt.ictu:9200",
   "coreos": {
     "ssh": "ssh core@10.19.88.24",
   },
