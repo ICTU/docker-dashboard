@@ -50,7 +50,7 @@ Meteor.methods logInvocation
       sort:['@timestamp': order: 'desc']
       size: 500
 
-    result = HTTP.post 'http://logstash.iqt.ictu:9200/_search',
+    result = HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
       data: q
 
     if result.data and result.data.hits and hits = result.data.hits.hits
