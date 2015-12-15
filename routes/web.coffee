@@ -72,3 +72,10 @@ Meteor.startup ->
       path: '/logs/:containerId'
       data: ->
         containerId: @params.containerId
+
+    @route 'instanceLogs',
+      layoutTemplate: null
+      template: 'logs'
+      path: '/logs/instance/:instanceId'
+      data: ->
+        instanceId: @params.instanceId

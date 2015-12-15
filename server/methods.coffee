@@ -54,6 +54,29 @@ Meteor.methods logInvocation
       data: q
 
     if result.data and result.data.hits and hits = result.data.hits.hits
-      hits.map (item) -> item._source.message
+      hits.map (item) ->
+        date: item._source['@timestamp']
+        message: item._source.message
+    else
+      result
+
+  getInstanceLog: (id) ->
+    instance = Instances.findOne _id: id
+    q =
+      query:
+        filtered:
+          query:
+            bool:
+              should: [query_string: query: instance.meta.id]
+      sort:['@timestamp': order: 'desc']
+      size: 500
+
+    result = HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
+      data: q
+
+    if result.data and result.data.hits and hits = result.data.hits.hits
+      hits.map (item) ->
+        date: item._source['@timestamp']
+        message: item._source.message
     else
       result

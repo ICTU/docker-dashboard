@@ -1,11 +1,16 @@
+
 if [ "$(whoami)" != "root" ]; then
 	echo "Start script should be executed with root privileges."
 	exit 1
 fi
 
-function echo_json {
-	echo {\"$1\": \"$2\"}
-}
+syslogProto=`echo '{{syslogUrl}}' | grep -oE '(^[a-z]+):' | grep -oE '[a-z]+'`
+syslogHost=`echo '{{syslogUrl}}' | grep -oE '(//.+):' | cut -c3-  | rev | cut -c2- | rev`
+syslogPort=`echo '{{syslogUrl}}' | grep -oE '(:[0-9]+)' | cut -c2-`
+
+ID="$(cat /proc/sys/kernel/random/uuid)"
+
+exec 1> >(awk -v id=$ID '{ print id, "=>", $0; fflush(); }' | ncat $syslogHost --$syslogProto $syslogPort) 2>{{{literal '&'}}}1
 
 #
 # GENERAL STATE CLEANUP AND CONFIGURATION
@@ -37,9 +42,7 @@ etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/parameters '{{stringi
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
 etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/agentUrl "{{agentUrl}}" > /dev/null
-
-#echo_json "state" "loading"
-
+etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/id "$ID" > /dev/null
 
 # PULL ALL IMAGES
 
