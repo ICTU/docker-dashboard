@@ -1,18 +1,3 @@
-exec = Npm.require('child_process').exec
-ssh = (cmd, options, callback) ->
-  cmd = JSON.stringify cmd
-  console.log options, Settings.findOne().isAdmin
-  console.log 'command on the docker host ->', cmd
-  if options.targetHost
-    cmd = JSON.stringify "ssh core@#{options.targetHost} #{cmd}"
-  else
-    cmd = JSON.stringify "#{Settings.findOne().coreos.ssh} #{cmd}"
-  console.log 'ssh command ->', cmd
-  command = "#{Settings.findOne().ssh.proxy} #{cmd}"
-  console.log 'ssh proxy command ->', command
-  exec command, callback
-ssh2 = Meteor.npmRequire('ssh2-connect')
-fs = Npm.require 'fs'
 str2stream = Meteor.npmRequire 'string-to-stream'
 JSONStream = Meteor.npmRequire 'JSONStream'
 
@@ -61,20 +46,15 @@ pickAgent = ->
   stopInstance: (instanceName) ->
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.findOne().project}."
     instance = Instances.findOne name: instanceName
-    if agentUrl = instance.meta.agentUrl
-      console.log "Agent URL is #{agentUrl}. Sending a POST request to stop the applicaiton."
-      callOpts =
-        responseType: "buffer"
-        data:
-          dir: "#{Settings.findOne().project}-#{instanceName}"
+    console.log "Agent URL is #{agentUrl}. Sending a POST request to stop the applicaiton."
+    callOpts =
+      responseType: "buffer"
+      data:
+        dir: "#{Settings.findOne().project}-#{instanceName}"
 
-      HTTP.post "#{agentUrl}/app/stop", callOpts, (err, result) ->
-        console.log "Sent request to stop instance. Response from the agent is #{result.content}"
-        console.log err if err
-    else
-      console.log "Agent URL for this application was not found. Trying to stop via ssh."
-      options = targetHost: _.chain(instance.services).toArray().first().value().hostIp
-      ssh "sudo bash #{Settings.findOne().project}-#{instanceName}/stop.sh" , options, loggingHandler -> sync()
+    HTTP.post "#{agentUrl}/app/stop", callOpts, (err, result) ->
+      console.log "Sent request to stop instance. Response from the agent is #{result.content}"
+      console.log err if err
     ""
 
   clearInstance: (project, instance) ->
@@ -94,9 +74,3 @@ pickAgent = ->
   deleteApp: (name, version) ->
     EtcdClient.delete "apps/#{Settings.findOne().project}/#{name}/#{version}"
     ""
-
-  execService: (opts) ->
-    console.log opts
-    ssh2 host: opts.data.hostIp, username: 'core', (err, session) =>
-      session.exec "docker exec -it #{opts.data.dockerContainerName} bash", (err, result) ->
-        console.log err, result
