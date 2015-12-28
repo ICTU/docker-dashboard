@@ -46,6 +46,7 @@ pickAgent = ->
   stopInstance: (instanceName) ->
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.findOne().project}."
     instance = Instances.findOne name: instanceName
+    agentUrl = instance.meta.agentUrl
     console.log "Agent URL is #{agentUrl}. Sending a POST request to stop the applicaiton."
     callOpts =
       responseType: "buffer"
