@@ -17,7 +17,7 @@ pickAgent = ->
   agent
 
 @Cluster =
-  startApp: (app, version, instance, parameters, options = {}) ->
+startApp: (app, version, instance, parameters, options = {}) ->
     options = _.extend {"dataDir": Settings.findOne().dataDir}, options
     dir = "#{Settings.findOne().project}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.findOne().project}."
@@ -33,12 +33,8 @@ pickAgent = ->
     console.log "Sending request to #{options.agentUrl}"
 
     HTTP.post "#{options.agentUrl}/app/install-and-run", callOpts, (err, result) ->
-      console.log "Sent request to start instance. Response from the agent is"
+      console.log "Sent request to start instance. Response from the agent is", result.content.toString()
       console.log err if err
-      s = JSONStream.parse()
-      s.on 'data', (data) -> console.log 'data', data
-      s.on 'error', (err) -> console.log 'err', err
-      str2stream("#{result.content}").pipe(s)
       Instances.update {name: instance, application: app},
         $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
