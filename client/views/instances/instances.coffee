@@ -32,7 +32,7 @@ Template.instances.helpers
     protocol = determineProtocol port
     if @services?.www?.hostname
       "#{protocol}://#{@services?.www?.hostname}:#{port}"
-  params: -> key: k, value: v for k, v of @parameters if @parameters
+  params: -> key: k, value: v for k, v of @parameters when k isnt 'tags' if @parameters
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2
   isSearching: -> Session.get('queryName')?.length

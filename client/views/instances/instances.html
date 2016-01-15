@@ -97,18 +97,27 @@
                       </li>
                     </ul>
 
-                    {{#with meta}}
                     <table class="table table-condensed">
                       <tbody>
+                      {{#with meta}}
                         <tr><th scope="row" style="width:250px;">Application name</th><td>{{appName}}</td></tr>
                         <tr><th scope="row">Application version</th><td>{{appVersion}}</td></tr>
                         <tr><th scope="row">State</th><td>{{stateDescription}}</td></tr>
                         {{#if isAdminBoard}}
                         <tr><th scope="row">Agent URL</th><td>{{agentUrl}}</td></tr>
                         {{/if}}
+                      {{/with}}
+                      {{#if params}}
+                        <tr><th scope="row">Parameters</th>
+                          <td>
+                            {{#each params}}
+                            <strong>{{key}}</strong>: {{value}}<br/>
+                            {{/each}}
+                          </td>
+                        </tr>
+                      {{/if}}
                       </tbody>
                     </table>
-                    {{/with}}
 
                     {{#each services}}
                     <h5>
