@@ -94,6 +94,7 @@ links="$links--link net-{{this}}-$PROJECT-$INSTANCE:{{this}} "
 docker run --privileged \
 --name $DOCKERNETNAME \
 -h {{service}}.{{../instance}}.{{../project}}.ictu \
+{{attribute "extra_hosts" "--add-host="}} \
 $links \
 -dti jeroenpeeters/public-networking:latest \
 bash -c "/opt/bin/pipework --wait -i eth1;dhclient -v eth1;bash" > /dev/null
