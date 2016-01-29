@@ -17,7 +17,7 @@ pickAgent = ->
   agent
 
 @Cluster =
-startApp: (app, version, instance, parameters, options = {}) ->
+  startApp: (app, version, instance, parameters, options = {}) ->
     options = _.extend {"dataDir": Settings.findOne().dataDir}, options
     dir = "#{Settings.findOne().project}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.findOne().project}."

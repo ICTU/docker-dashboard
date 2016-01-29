@@ -17,18 +17,24 @@ Meteor.startup ->
 
     discover: (key, cb) ->
       @get "#{key}", (error, result) ->
-        objects = []
-        discover_ = (node) ->
-          node?.nodes?.map (n) =>
-            if n.value
-              objects.push n
-            else if n
-              discover_ n
-        if result?.data?.node
-          discover_(result.data.node)
-          cb null, objects
-        else cb error, null
+        if error
+          console.error error
+          cb error, null
+        else
+          objects = []
+          discover_ = (node) ->
+            node?.nodes?.map (n) =>
+              if n.value
+                objects.push n
+              else if n
+                discover_ n
+          if result?.data?.node
+            discover_(result.data.node)
+            cb null, objects
+          else cb error, null
 
-  @EtcdClient = etcd Settings.findOne().etcd
-  Settings.find().observeChanges
-    changed: -> @EtcdClient = etcd Settings.findOne().etcd
+  @EtcdClient =
+    delete: (key) ->
+      etcd(Settings.findOne().etcd).discover key
+    discover: (key, cb) ->
+      etcd(Settings.findOne().etcd).discover key, cb

@@ -2,6 +2,9 @@ Meteor.startup ->
   clean()
   sync()
 
+  Settings.find().observe
+    changed: sync
+
 clean = ->
   ApplicationDefs.remove {}
 
@@ -11,14 +14,18 @@ toApp = (node) ->
 
 @sync = (callback)->
   syncWithBaseKey = (baseKey, handler) ->
-    recursiveUrl = "#{baseKey}/#{Settings.findOne().project}?recursive=true"
-    getData = -> EtcdClient.discover recursiveUrl, handler
-    waitForChange = ->
-      EtcdClient.discover "#{recursiveUrl}&wait=true", (err, nodes) ->
+    getData = ->
+      recursiveUrl = "#{baseKey}/#{Settings.findOne().project}?recursive=true"
+      waitForChange = ->
+        EtcdClient.discover "#{recursiveUrl}&wait=true", (err, nodes) ->
+          console.log "etcd changes reported for #{baseKey}", nodes.length
+          getData()
+      EtcdClient.discover recursiveUrl, (err, nodes) ->
+        console.log "getting data from etcd for #{baseKey}"
+        console.log 'nodes retrieved:', nodes.length
         waitForChange()
-        getData()
+        handler err, nodes
     getData()
-    waitForChange()
 
   try
     syncWithBaseKey "apps", (err, nodes) ->
@@ -39,7 +46,6 @@ toApp = (node) ->
             tags: Helper.extractTags n.value
 
       ApplicationDefs.updateCollection objects
-      callback() if callback
 
     syncWithBaseKey "instances", (err, nodes) ->
       objects = {}
@@ -64,6 +70,8 @@ toApp = (node) ->
 
       Instances.updateCollection (value for key, value of objects)
 
+    callback?()
+
   catch
-    console.log "Error while trying to read #{baseKey}!"
-    callback "Error while trying to read #{baseKey}!"
+    console.error "Error while trying to read #{baseKey}!"
+    sync() # go back to syncing
