@@ -2,9 +2,6 @@ Meteor.startup ->
   etcd = (endpoint) ->
     endpoint = endpoint[...-1] if endpoint[-1..] is "/" # remove the trailing / if there is one
 
-    get: (key) ->
-      HTTP.get "#{endpoint}/#{key}"
-
     get: (key, callback) ->
       HTTP.get "#{endpoint}/#{key}", callback
 
@@ -12,6 +9,8 @@ Meteor.startup ->
       HTTP.put "#{endpoint}/#{key}",
         params:
           value: value
+
+    wait: (key, cb) -> @discover "#{key}&wait=true", cb
 
     delete: (key) -> HTTP.del "#{endpoint}/#{key}"
 
@@ -34,7 +33,9 @@ Meteor.startup ->
           else cb error, null
 
   @EtcdClient =
+    wait: (key, cb) ->
+      etcd(Settings.findOne().etcd).wait key, cb
     delete: (key) ->
-      etcd(Settings.findOne().etcd).discover key
+      etcd(Settings.findOne().etcd).delete key
     discover: (key, cb) ->
       etcd(Settings.findOne().etcd).discover key, cb

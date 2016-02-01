@@ -1,9 +1,19 @@
-Meteor.startup ->
-  clean()
-  sync()
+currentProject = null
 
-  Settings.find().observe
-    changed: sync
+Meteor.startup ->
+  startSync = (doc) ->
+    currentProject = doc.project
+    # clean()
+    sync()
+
+  Settings.find {},
+    fields:
+      project: 1
+      etcd: 1
+      etcdBaseUrl: 1
+  .observe
+    added: startSync
+    changed: startSync
 
 clean = ->
   ApplicationDefs.remove {}
@@ -15,16 +25,18 @@ toApp = (node) ->
 @sync = (callback)->
   syncWithBaseKey = (baseKey, handler) ->
     getData = ->
-      recursiveUrl = "#{baseKey}/#{Settings.findOne().project}?recursive=true"
-      waitForChange = ->
-        EtcdClient.discover "#{recursiveUrl}&wait=true", (err, nodes) ->
-          console.log "etcd changes reported for #{baseKey}", nodes.length
-          getData()
-      EtcdClient.discover recursiveUrl, (err, nodes) ->
-        console.log "getting data from etcd for #{baseKey}"
-        console.log 'nodes retrieved:', nodes.length
-        waitForChange()
-        handler err, nodes
+      proj = Settings.findOne().project
+      if proj is currentProject # a hack to stop prveious waits; meteor HTTP does not expose the request object, can't abort
+        recursiveUrl = "#{baseKey}/#{proj}?recursive=true"
+        waitForChange = ->
+          EtcdClient.wait recursiveUrl, (err, nodes) ->
+            console.log "etcd changes reported for #{baseKey}", nodes?.length
+            getData()
+        EtcdClient.discover recursiveUrl, (err, nodes) ->
+          console.log "getting data from etcd for #{baseKey}"
+          console.log 'nodes retrieved:', nodes?.length
+          waitForChange()
+          handler err, nodes
     getData()
 
   try
