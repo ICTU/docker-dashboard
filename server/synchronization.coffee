@@ -30,9 +30,11 @@ toApp = (node) ->
         recursiveUrl = "#{baseKey}/#{proj}?recursive=true"
         waitForChange = ->
           EtcdClient.wait recursiveUrl, (err, nodes) ->
+            console.error err if err
             console.log "etcd changes reported for #{baseKey}", nodes?.length
             getData()
         EtcdClient.discover recursiveUrl, (err, nodes) ->
+          console.error err if err
           console.log "getting data from etcd for #{baseKey}"
           console.log 'nodes retrieved:', nodes?.length
           waitForChange()
