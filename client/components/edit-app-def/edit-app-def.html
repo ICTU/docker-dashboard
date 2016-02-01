@@ -63,7 +63,7 @@
 
       www:
           image: my.private.registry:5000/web-app:latest
-          opts: -m 1024 m
+          mem_limit: 1024 m
           volumes:
               - /folder/in/container/to/persist
               - /another/folder/to/persist
@@ -75,7 +75,6 @@
 
       db:
           image: my.private.registry:5000/db:latest
-          opts: --entrypoint="/command/to/execute"
     </pre>
 
     <p>
@@ -96,12 +95,6 @@
       <li><strong>volumes</strong>: specify in a list the full path of the files or directory to persist on the docker host</li>
       <li><strong>env</strong>: specify in a list the environment variables that need to be injected in the service</li>
       <li><strong>expose</strong>: specify the port to expose to linked services</li>
-      <li><strong>opts</strong>: specify docker specific run-time options. For a complete list of the options click <a href="https://docs.docker.com/reference/commandline/run/">here</a></li>
     </ul>
-
-    <p>
-      <strong>Note</strong>: The following docker run-time options '--volume=[]', '--link=[]', '--env=[]' should not be used in the 'opts' service attribute.<br>
-      Instead you should use the service attributes 'volumes', 'links', 'env' as these are augmented versions of the docker run-time options and is required by the dashboard.
-    </p>
   </div>
 </template>
