@@ -33,6 +33,8 @@ Meteor.startup ->
           else cb error, null
 
   @EtcdClient =
+    set: (key, value) ->
+      etcd(Settings.findOne().etcd).set key, value
     wait: (key, cb) ->
       etcd(Settings.findOne().etcd).wait key, cb
     delete: (key) ->
