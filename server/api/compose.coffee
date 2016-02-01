@@ -11,7 +11,6 @@ Meteor.startup ->
         version: @params.version
       services = _.omit(YAML.safeLoad(app.def), ['name', 'version', 'description', 'pic'])
       for srv, attrs of services
-        delete services[srv].opts
         if attrs.volumes
           for v, i in attrs.volumes
             services[srv].volumes[i] = v + ":/tmp#{v}"

@@ -126,7 +126,6 @@ docker run -d \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes}} \
 {{volumesfrom}} \
-{{opts}} \
 {{attribute "expose" "--expose="}} \
 {{#if privileged}}--privileged{{/if}} \
 {{#if user}}-u {{user}}{{/if}} \
