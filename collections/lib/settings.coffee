@@ -11,6 +11,7 @@ Settings.attachSchema new SimpleSchema
   syslogUrl: type: String
   elasticSearchUrl: type: String
   dataDir: type: String
+  sharedDataDir: type: String
   agentUrl: type: [String]
   isAdmin: type: Boolean
   remoteAppstoreUrl:
@@ -31,6 +32,7 @@ Meteor.startup ->
         syslogUrl: settings?.syslogUrl or 'udp://logstash:5454'
         elasticSearchUrl: settings?.elasticSearchUrl or 'http://elasticsearch:9200'
         dataDir: settings?.dataDir or '/local/data'
+        sharedDataDir: settings?.sharedDataDir or '/mnt/data'
         agentUrl:
           if aurl
             if aurl.constructor is Array then aurl else [aurl]
