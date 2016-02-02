@@ -17,7 +17,7 @@ Meteor.startup ->
 
     discover: (key, cb) ->
       @get "#{key}", (error, result) ->
-        if error
+        if error or not result?.data?.node
           console.error error
           cb error, null
         else
@@ -28,10 +28,8 @@ Meteor.startup ->
                 objects.push n
               else if n
                 discover_ n
-          if result?.data?.node
-            discover_(result.data.node)
-            cb null, objects
-          else cb error, null
+          discover_(result.data.node)
+          cb null, objects
 
   @EtcdClient =
     delete: (key) ->

@@ -29,6 +29,8 @@ toApp = (node) ->
 
   try
     syncWithBaseKey "apps", (err, nodes) ->
+      throw new Error if err
+
       apps = if nodes then (toApp node for node in nodes) else []
       Apps.updateCollection apps
 
@@ -48,6 +50,8 @@ toApp = (node) ->
       ApplicationDefs.updateCollection objects
 
     syncWithBaseKey "instances", (err, nodes) ->
+      throw new Error if err
+
       objects = {}
       if nodes
         for n in nodes
