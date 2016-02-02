@@ -10,11 +10,14 @@ Meteor.startup ->
       @volumes?.reduce (prev, volume) =>
         parsed = volume.match /^((\/[^:]+)|(\/[^:]+):(\/[^:]+))(:ro|:rw)?(:shared|:do_not_persist)?$/
         if parsed
-          [all, ignore, simplePath, ignore, mappedPath, permissions, options] = parsed
-          vol = mappedPath or simplePath
-          mapping = "#{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{vol}:#{vol}"
-          if options is ':do_not_persist' then mapping = vol
-          if options is ':shared' then mapping = "#{Settings.findOne().sharedDataDir}/#{parentCtx.project}#{vol}:#{vol}"
+          [all, ignore, simplePath, mappedPathExt, mappedPathInt, permissions, options] = parsed
+          mapping = "#{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{simplePath}:#{simplePath}"
+          if mappedPathExt
+            if options is ':shared'
+              mapping = "#{Settings.findOne().sharedDataDir}/#{parentCtx.project}#{mappedPathExt}:#{mappedPathInt}"
+            else
+              mapping = "#{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{mappedPathExt}:#{mappedPathInt}"
+          if options is ':do_not_persist' then mapping = simplePath or mappedPathInt
           "#{prev}-v #{mapping}#{permissions or ''} "
         else
           console.error "Invalid volume mapping: #{volume}"
