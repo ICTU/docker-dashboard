@@ -8,13 +8,17 @@ Meteor.startup ->
     dockervolumes: ->
       parentCtx = Template.parentData(1)
       @volumes?.reduce (prev, volume) =>
-        if volume.indexOf(':') > -1
-          if volume.indexOf(':do_not_persist', this.length - ':do_not_persist'.length) isnt -1
-            "-v #{volume.substr(0,volume.indexOf(':do_not_persist'))}"
-          else
-            "#{prev}-v #{volume} "
+        parsed = volume.match /^((\/[^:]+)|(\/[^:]+):(\/[^:]+))(:ro|:rw)?(:shared|:do_not_persist)?$/
+        if parsed
+          [all, ignore, simplePath, ignore, mappedPath, permissions, options] = parsed
+          vol = mappedPath or simplePath
+          mapping = "#{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{vol}:#{vol}"
+          if options is ':do_not_persist' then mapping = vol
+          if options is ':shared' then mapping = "#{Settings.findOne().sharedDataDir}/#{parentCtx.project}#{vol}:#{vol}"
+          "#{prev}-v #{mapping}#{permissions or ''} "
         else
-          "#{prev}-v #{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{volume}:#{volume} "
+          console.error "Invalid volume mapping: #{volume}"
+          prev
       , ""
 
     volumesfrom: ->
