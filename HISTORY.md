@@ -1,3 +1,6 @@
+### 2.14.1
+- Added support for explicit volume mapping with no sharing.
+
 ### 2.14.0
 - Removed support for mapping volumes to a destination outside of the project data dirs (IQT-644).
 - Added support for **:shared** option when mapping volumes.
