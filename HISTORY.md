@@ -1,3 +1,6 @@
+### 2.15.0
+- Added CRUD api operations for app defs (IQT-702).
+
 ### 2.14.1
 - Added support for explicit volume mapping with no sharing.
 
