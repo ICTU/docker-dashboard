@@ -68,6 +68,8 @@ pickAgent = ->
     EtcdClient.set "apps/#{Settings.findOne().project}/#{name}/#{version}", definition
     ""
 
-  deleteApp: (name, version) ->
-    EtcdClient.delete "apps/#{Settings.findOne().project}/#{name}/#{version}"
-    ""
+  retrieveApp: (name, version) ->
+    ApplicationDefs.find({name: "#{name}", version: "#{version}"}, {fields: {"def":1, "_id":0}}).map (app) -> app.def
+
+  deleteApp: (name, version, cb) ->
+    EtcdClient.delete "apps/#{Settings.findOne().project}/#{name}/#{version}", cb

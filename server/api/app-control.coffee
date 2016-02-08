@@ -1,4 +1,5 @@
 Meteor.startup ->
+
   Router.map ->
     @route 'app-control/start',
       where: 'server'

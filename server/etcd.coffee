@@ -12,7 +12,7 @@ Meteor.startup ->
 
     wait: (key, cb) -> @discover "#{key}&wait=true", cb
 
-    delete: (key) -> HTTP.del "#{endpoint}/#{key}"
+    delete: (key, cb) -> HTTP.del "#{endpoint}/#{key}", cb
 
     discover: (key, cb) ->
       @get "#{key}", (error, result) ->
@@ -37,7 +37,7 @@ Meteor.startup ->
       etcd(Settings.findOne().etcd).set key, value
     wait: (key, cb) ->
       etcd(Settings.findOne().etcd).wait key, cb
-    delete: (key) ->
-      etcd(Settings.findOne().etcd).delete key
+    delete: (key, cb) ->
+      etcd(Settings.findOne().etcd).delete key, cb
     discover: (key, cb) ->
       etcd(Settings.findOne().etcd).discover key, cb
