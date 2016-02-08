@@ -60,8 +60,8 @@ Template.appActions.events
       targetVlan: Session.get 'targetVlan'
     tpl.$('li.open').removeClass('open')
     Meteor.call 'startApp', @name, @version, name, parameters, options
-  'click .remove-app': (event, tpl) ->
-    Meteor.call 'deleteApp', @name, @version
+  'click .remove-app': (event, tpl, cb) ->
+    Meteor.call 'deleteApp', @name, @version, cb
 
 
 val = (tpl, selector) -> tpl.$("#{selector}").val()
