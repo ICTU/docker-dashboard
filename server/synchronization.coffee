@@ -29,9 +29,10 @@ toApp = (node) ->
       if proj is currentProject # a hack to stop prveious waits; meteor HTTP does not expose the request object, can't abort
         recursiveUrl = "#{baseKey}/#{proj}?recursive=true"
         waitForChange = ->
-          EtcdClient.wait recursiveUrl, (err, nodes) ->
+          EtcdClient.wait recursiveUrl, (err, result) ->
             console.error err if err
-            console.log "etcd changes reported for #{baseKey}", nodes?.length
+            console.log "etcd changes reported for #{baseKey}:"
+            console.log result?.data
             getData()
         EtcdClient.discover recursiveUrl, (err, nodes) ->
           console.error err if err

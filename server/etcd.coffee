@@ -10,7 +10,7 @@ Meteor.startup ->
         params:
           value: value
 
-    wait: (key, cb) -> @discover "#{key}&wait=true", cb
+    wait: (key, cb) -> @get "#{key}&wait=true", cb
 
     delete: (key, cb) -> HTTP.del "#{endpoint}/#{key}", cb
 
@@ -30,7 +30,7 @@ Meteor.startup ->
           if result?.data?.node
             discover_(result.data.node)
             cb null, objects
-          else cb error, null
+          else cb "ETCD: Unexpected result format #{EJSON.stringify result, null, 4}", null
 
   @EtcdClient =
     set: (key, value) ->
