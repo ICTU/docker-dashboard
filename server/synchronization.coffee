@@ -22,7 +22,7 @@ toApp = (node) ->
   [ignore..., keyBase, project, appName, version] = node.key?.split('/')
   {project: project, name: appName, key: node.key?.split('/')[0..-2].join '/'}
 
-@sync = (callback)->
+@sync = (callback) ->
   syncWithBaseKey = (baseKey, handler) ->
     getData = ->
       proj = Settings.findOne().project
@@ -32,7 +32,7 @@ toApp = (node) ->
           EtcdClient.wait recursiveUrl, (err, result) ->
             console.error err if err
             console.log "etcd changes reported for #{baseKey}:"
-            console.log result?.data
+            console.log result
             getData()
         EtcdClient.discover recursiveUrl, (err, nodes) ->
           console.error err if err

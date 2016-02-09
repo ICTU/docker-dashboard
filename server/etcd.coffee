@@ -1,16 +1,18 @@
 Meteor.startup ->
+  Etcd2 = Meteor.npmRequire 'node-etcd'
+  etcd2 = new Etcd2 'etcd1.isd.ictu','4001'
+
   etcd = (endpoint) ->
     endpoint = endpoint[...-1] if endpoint[-1..] is "/" # remove the trailing / if there is one
 
     get: (key, callback) ->
-      HTTP.get "#{endpoint}/#{key}", callback
+      etcd2.get "#{key}", callback
 
     set: (key, value) ->
-      HTTP.put "#{endpoint}/#{key}",
-        params:
-          value: value
+      etcd2.set "#{key}", value
 
-    wait: (key, cb) -> @get "#{key}&wait=true", cb
+    wait: (key, cb) ->
+      etcd2.watch key, cb
 
     delete: (key, cb) -> HTTP.del "#{endpoint}/#{key}", cb
 
@@ -27,8 +29,8 @@ Meteor.startup ->
                 objects.push n
               else if n
                 discover_ n
-          if result?.data?.node
-            discover_(result.data.node)
+          if result?.node
+            discover_(result.node)
             cb null, objects
           else cb "ETCD: Unexpected result format #{EJSON.stringify result, null, 4}", null
 
@@ -36,8 +38,8 @@ Meteor.startup ->
     set: (key, value) ->
       etcd(Settings.findOne().etcd).set key, value
     wait: (key, cb) ->
-      etcd(Settings.findOne().etcd).wait key, cb
+      etcd(Settings.findOne().etcd).wait key, Meteor.bindEnvironment(cb)
     delete: (key, cb) ->
-      etcd(Settings.findOne().etcd).delete key, cb
+      etcd(Settings.findOne().etcd).delete key, Meteor.bindEnvironment(cb)
     discover: (key, cb) ->
-      etcd(Settings.findOne().etcd).discover key, cb
+      etcd(Settings.findOne().etcd).discover key, Meteor.bindEnvironment(cb)
