@@ -16,7 +16,7 @@ Meteor.startup ->
 
     discover: (key, cb) ->
       @get "#{key}", (error, result) ->
-        if error
+        if error or not result?.data?.node
           console.error error
           cb error, null
         else
