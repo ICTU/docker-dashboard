@@ -24,8 +24,9 @@ toApp = (node) ->
 
 @sync = (callback) ->
   syncWithBaseKey = (baseKey, handler) ->
-    reqToken = undefined
+
     getData = ->
+      reqToken = null
       proj = Settings.findOne().project
       if proj is currentProject # a hack to stop prveious waits; meteor HTTP does not expose the request object, can't abort
         recursiveUrl = "#{baseKey}/#{proj}?recursive=true"
