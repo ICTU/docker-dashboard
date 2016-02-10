@@ -24,21 +24,24 @@ toApp = (node) ->
 
 @sync = (callback) ->
   syncWithBaseKey = (baseKey, handler) ->
-    tokenRequest = null
+    reqToken = undefined
     getData = ->
       proj = Settings.findOne().project
       if proj is currentProject # a hack to stop prveious waits; meteor HTTP does not expose the request object, can't abort
         recursiveUrl = "#{baseKey}/#{proj}?recursive=true"
         waitForChange = ->
-          if tokenRequest
-            tokenRequest.abort()
-            console.log "Previous watch request for #{baseKey} aborted: #{tokenRequest.req._multipart.boundary}"
-          tokenRequest = EtcdClient.wait recursiveUrl, (err, result) ->
+          if reqToken and not reqToken.isAborted()
+            reqToken.abort()
+            console.log "Previous watch request for #{baseKey} aborted: #{reqToken.req._multipart.boundary}"
+          reqToken = EtcdClient.wait recursiveUrl, (err, result) ->
             console.error err if err
-            console.log "Etcd changes reported for #{baseKey}:"
-            console.log result
+            if result
+              console.log "Etcd changes reported for #{baseKey}:"
+              console.log result
+            else
+              console.log "Watch request for #{baseKey} timed out: #{reqToken.req._multipart.boundary}"
             getData()
-          console.log "New watch request for #{baseKey}: #{tokenRequest.req._multipart.boundary}"
+          console.log "New watch request for #{baseKey}: #{reqToken.req._multipart.boundary}"
         EtcdClient.discover recursiveUrl, (err, nodes) ->
           console.error err if err
           console.log "Getting data from etcd for #{baseKey}"
