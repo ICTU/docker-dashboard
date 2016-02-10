@@ -12,7 +12,14 @@ Meteor.methods logInvocation
   stopInstance: Cluster.stopInstance
   clearInstance: Cluster.clearInstance
   saveApp: Cluster.saveApp
-  deleteApp: Cluster.deleteApp
+  
+  deleteApp: (app, version) ->
+    endpoint = Settings.findOne().etcd
+    endpoint = endpoint[...-1] if endpoint[-1..] is "/"
+    console.log "#{endpoint}/apps/#{Settings.findOne().project}/#{app}/#{version}"
+    HTTP.del "#{endpoint}/apps/#{Settings.findOne().project}/#{app}/#{version}", (err, res) ->
+      console.error err if err
+
   execService: Cluster.execService
   saveAppInStore: (parsed, raw) ->
     AppStore.upsert {name: parsed.name, version: parsed.version}, _.extend(parsed, def: raw)
