@@ -1,24 +1,24 @@
 Meteor.startup ->
-  Etcd2 = Meteor.npmRequire 'node-etcd'
-  etcd2 = new Etcd2 'etcd1.isd.ictu','4001'
+  Etcd = Meteor.npmRequire 'node-etcd'
 
   etcd = (endpoint) ->
-    endpoint = endpoint[...-1] if endpoint[-1..] is "/" # remove the trailing / if there is one
+    parsedEndpoint = endpoint.match /^(.*):\/\/([A-Za-z0-9\-\.]+):([0-9]+)?(.*)$/
+    [all, protocol, host, port, uri] = parsedEndpoint
 
-    get: (key, callback) ->
-      etcd2.get "#{key}", callback
+    client = new Etcd "#{host}","#{port}"
 
-    set: (key, value) ->
-      etcd2.set "#{key}", value
+    get: (key, cb) -> client.get "#{key}", cb
 
-    wait: (key, cb) ->
-      etcd2.watch key, cb
+    set: (key, value) -> client.set "#{key}", value
 
-    delete: (key, cb) -> HTTP.del "#{endpoint}/#{key}", cb
+    wait: (key, cb) -> client.watch "#{key}", cb
+
+    delete: (key, cb) -> client.del "#{key}", cb
 
     discover: (key, cb) ->
       @get "#{key}", (error, result) ->
-        if error or not result?.data?.node
+        if error or not result?.node
+          console.error "Error while trying to get data ->"
           console.error error
           cb error, null
         else
