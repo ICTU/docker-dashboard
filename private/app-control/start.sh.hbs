@@ -34,26 +34,26 @@ vlan=$(curl --silent $ETCD_CLUSTER/v2/keys/networking/{{project}}/vlan | jq -r '
 TOTAL_STEPS=$((({{total}}*3)+2))
 STEP=1
 
-etcdctl --peers $ETCD_CLUSTER rm $ETCD_INSTANCE_KEY --recursive 2>/dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "loading" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appName "{{appName}}" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appVersion "{{appVersion}}" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/parameters '{{stringify params}}' > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/agentUrl "{{agentUrl}}" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/id "$ID" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER rm $ETCD_INSTANCE_KEY --recursive 2>/dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "loading" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appName "{{appName}}" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appVersion "{{appVersion}}" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/parameters '{{stringify params}}' > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/agentUrl "{{agentUrl}}" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/id "$ID" > /dev/null
 
 # PULL ALL IMAGES
 
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "pulling" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "pulling" > /dev/null
 {{#each services}}
 echo "Pulling image {{image}}..."
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Pulling image {{image}}" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Pulling image {{image}}" > /dev/null
 docker pull {{image}} > /dev/nul
 echo "Done pulling image {{image}}"
 STEP=$((STEP+1))
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
 {{/each}}
 
 # ACTIVATE ALL SERVICES
@@ -64,8 +64,8 @@ DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
 DOCKERNETNAME="net-$DOCKERNAME"
 DOCKERSSHDNAME="sshd-$DOCKERNAME"
 
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "activating" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Preparing network for {{service}}" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "activating" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Preparing network for {{service}}" > /dev/null
 echo "Preparing network for service {{service}}"
 
 #
@@ -112,17 +112,17 @@ while [ 1 ]; do
   fi
 done
 STEP=$((STEP+1))
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
 
 #
 # Start the service container
 #
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Activating service {{service}}"
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Activating service {{service}}"
 docker run -d \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
 --log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
---log-opt tag="$DOCKERNAME" \
+--log-opt syslog-tag="$DOCKERNAME" \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes}} \
 {{volumesfrom}} \
@@ -137,7 +137,7 @@ docker run -d \
 #
 # Start the ssh container
 #
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Enabling SSH for service {{service}}"
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Enabling SSH for service {{service}}"
 docker pull jeroenpeeters/docker-ssh
 docker run -d --name $DOCKERSSHDNAME \
 -e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
@@ -146,7 +146,7 @@ docker run -d --name $DOCKERSSHDNAME \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -v $(which docker):/usr/bin/docker \
 jeroenpeeters/docker-ssh
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/sshPort "22" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/sshPort "22" > /dev/null
 {{/if}}
 
 #
@@ -158,12 +158,12 @@ ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts
 hostIp=$(ifconfig $NORMALNIC | grep 'inet ' | awk '{ print $2 }')
 cid=$(docker inspect -f '{{{literal '{{.Id}}'}}}' $DOCKERNAME)
 
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ip "$myip" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostname "$hostname" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ports "${ports/\n/ }" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostIp "$hostIp" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerName "$DOCKERNAME" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerId "$cid" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ip "$myip" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostname "$hostname" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ports "${ports/\n/ }" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostIp "$hostIp" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerName "$DOCKERNAME" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerId "$cid" > /dev/null
 #
 # Create DNS entry
 #
@@ -174,13 +174,13 @@ curl --silent -XPUT $ETCD_CLUSTER/v2/keys/skydns/ictu/{{../project}}/{{../instan
 route add -host $myip docker0
 
 STEP=$((STEP+1))
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
 {{/each}}
 
 
 STEP=$((STEP+1))
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Checking application health"
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Checking application health"
 {{#each services}}
 DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
 DOCKERNETNAME="net-$DOCKERNAME"
@@ -198,7 +198,7 @@ fi
 
 sleep 2
 
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "active" > /dev/null
-etcdctl --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Active" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "active" > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Active" > /dev/null
 
 echo "Application started"

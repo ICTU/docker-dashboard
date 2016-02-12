@@ -1,3 +1,7 @@
+### 2.15.4
+- Added --no-sync option to all etcdctl calls because v2.2.0 and higher by default tries to sync to a cluster
+- Passing --syslog-tag instead of --log-tag because --log-tag is not implemeted in docker1.8.
+
 ### 2.15.0
 - Added CRUD api operations for app defs (IQT-702).
 
