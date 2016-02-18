@@ -2,6 +2,7 @@ Template['base-layout'].helpers
   user: -> Meteor.user().emails[0].address
   statusColor: -> if Services.findOne(isUp:false) then 'red' else 'green'
   session: (sessVar) -> Session.get sessVar
+  projectName: -> Settings.findOne()?.project.toUpperCase()
   appVersion: -> version
 
 Template['base-layout'].events
