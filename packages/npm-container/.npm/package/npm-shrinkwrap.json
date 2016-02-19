@@ -21,7 +21,7 @@
           "version": "2.60.0",
           "dependencies": {
             "bl": {
-              "version": "1.0.2",
+              "version": "1.0.3",
               "dependencies": {
                 "readable-stream": {
                   "version": "2.0.5",
@@ -69,10 +69,10 @@
               "version": "5.0.1"
             },
             "mime-types": {
-              "version": "2.1.9",
+              "version": "2.1.10",
               "dependencies": {
                 "mime-db": {
-                  "version": "1.21.0"
+                  "version": "1.22.0"
                 }
               }
             },
@@ -184,7 +184,7 @@
                   }
                 },
                 "is-my-json-valid": {
-                  "version": "2.12.4",
+                  "version": "2.13.0",
                   "dependencies": {
                     "generate-function": {
                       "version": "2.0.0"
@@ -229,7 +229,7 @@
           "version": "1.0.33",
           "dependencies": {
             "core-util-is": {
-              "version": "1.0.1"
+              "version": "1.0.2"
             },
             "isarray": {
               "version": "0.0.1"
@@ -243,16 +243,13 @@
           }
         },
         "ssh2-streams": {
-          "version": "0.0.18",
+          "version": "0.0.21",
           "dependencies": {
             "streamsearch": {
               "version": "0.1.2"
             },
             "asn1": {
               "version": "0.2.3"
-            },
-            "jsbn": {
-              "version": "0.0.0"
             }
           }
         }

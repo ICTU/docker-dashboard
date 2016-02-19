@@ -3,7 +3,6 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-platform
 coffeescript
 http
 zimme:iron-router-active
@@ -12,7 +11,6 @@ msavin:mongol
 meteorhacks:npm
 
 
-npm-container
 twbs:bootstrap
 fortawesome:fontawesome
 jparker:crypto-md5
@@ -40,3 +38,20 @@ froatsnook:request
 gadicohen:prism
 zenorocha:clipboard
 ongoworks:bunyan-logger
+standard-minifiers
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+jquery
+tracker
+logging
+reload
+random
+ejson
+spacebars
+check
+
+
+npm-container
