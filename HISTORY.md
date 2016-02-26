@@ -1,3 +1,6 @@
+### 2.16.2
+- Updated meteor and packages.
+
 ### 2.16.1
 - Using meteorhacks/meteord:onbuild as a base for the docker image.
 
