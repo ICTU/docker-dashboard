@@ -1,3 +1,6 @@
+### 2.16.1
+- Using meteorhacks/meteord:onbuild as a base for the docker image.
+
 ### 2.16.0
 - Adding a dns suffix to the net container for as per IQT-881. This will allow for bidirectional "linking" between containers.
 
