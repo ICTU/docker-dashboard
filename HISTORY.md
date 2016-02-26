@@ -1,3 +1,6 @@
+### 2.16.0
+- Adding a dns suffix to the net container for as per IQT-881. This will allow for bidirectional "linking" between containers.
+
 ### 2.15.4
 - Added --no-sync option to all etcdctl calls because v2.2.0 and higher by default tries to sync to a cluster
 - Passing --syslog-tag instead of --log-tag because --log-tag is not implemeted in docker1.8.
