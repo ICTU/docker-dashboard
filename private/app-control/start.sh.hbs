@@ -93,6 +93,7 @@ links="$links--link net-{{this}}-$PROJECT-$INSTANCE:{{this}} "
 
 docker run --privileged \
 --name $DOCKERNETNAME \
+--dns-search={{../instance}}.{{../project}}.ictu \
 -h {{service}}.{{../instance}}.{{../project}}.ictu \
 {{attribute "extra_hosts" "--add-host="}} \
 $links \
