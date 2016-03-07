@@ -1,3 +1,6 @@
+### 2.16.3
+- Reduced etcd sync logging, because it was filling up the logs.
+
 ### 2.16.2
 - Updated meteor and packages.
 

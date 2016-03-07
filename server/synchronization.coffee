@@ -33,20 +33,11 @@ toApp = (node) ->
         waitForChange = ->
           if reqToken and not reqToken.isAborted()
             reqToken.abort()
-            console.log "Previous watch request for #{baseKey} aborted: #{reqToken.req._multipart.boundary}"
           reqToken = EtcdClient.wait recursiveUrl, (err, result) ->
             console.error err if err
-            if result
-              console.log "Etcd changes reported for #{baseKey}:"
-              console.log result
-            else
-              console.log "Watch request for #{baseKey} timed out: #{reqToken.req._multipart.boundary}"
             getData()
-          console.log "New watch request for #{baseKey}: #{reqToken.req._multipart.boundary}"
         EtcdClient.discover recursiveUrl, (err, nodes) ->
           console.error err if err
-          console.log "Getting data from etcd for #{baseKey}"
-          console.log 'Nodes retrieved:', nodes?.length
           waitForChange()
           handler err, nodes
     getData()
