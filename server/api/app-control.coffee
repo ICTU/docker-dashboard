@@ -7,7 +7,7 @@ Meteor.startup ->
     .post ->
       check([@params.app, @params.version, @request.body.instance], [String])
       @response.writeHead 200, 'Content-Type': 'text/plain'
-      @response.end Scripts.bash.start(@params.app, @params.version, @request.body.instance, {}, @request.body.params)
+      @response.end Scripts.bash.start(@params.app, @params.version, @request.body.instance, @request.body.options, @request.body.params)
 
     @route 'app-control/stop',
       where: 'server'
