@@ -91,19 +91,18 @@ links=""
 links="$links--link net-{{this}}-$PROJECT-$INSTANCE:{{this}} "
 {{/each}}
 
-docker run --privileged \
+docker run \
+--restart=unless-stopped \
 --name $DOCKERNETNAME \
+--net=none \
 --dns-search={{../instance}}.{{../project}}.ictu \
 -h {{service}}.{{../instance}}.{{../project}}.ictu \
 {{attribute "extra_hosts" "--add-host="}} \
-$links \
--dti jeroenpeeters/public-networking:latest \
-bash -c "/opt/bin/pipework --wait -i eth1;dhclient -v eth1;bash" > /dev/null
-
-sudo /opt/bin/pipework $NIC $DOCKERNETNAME 0/0 @$vlan > /dev/null
+-e pipework_cmd="${NIC} -i eth0 @CONTAINER_NAME@ dhclient @${vlan}" \
+-d www.docker-registry.isd.ictu:5000/pipes:latest
 
 while [ 1 ]; do
-  pubip=$(docker exec $DOCKERNETNAME ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}');
+  pubip=$(docker exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}');
   if [[ $pubip ]]; then
     echo "ip=$pubip"
     break;
@@ -120,6 +119,7 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$
 #
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Activating service {{service}}"
 docker run -d \
+--restart=unless-stopped \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
 --log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
@@ -141,6 +141,7 @@ docker run -d \
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Enabling SSH for service {{service}}"
 docker pull jeroenpeeters/docker-ssh
 docker run -d --name $DOCKERSSHDNAME \
+--restart=unless-stopped \
 -e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
 --net="container:$DOCKERNETNAME" \
@@ -154,7 +155,7 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/sshPo
 # Publish info about the container to etcd
 #
 hostname="{{service}}.$INSTANCE.$PROJECT.ictu"
-myip=$(docker exec $DOCKERNETNAME ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
+myip=$(docker exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
 ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}} | grep -o -G '[0-9]*')
 hostIp=$(ifconfig $NORMALNIC | grep 'inet ' | awk '{ print $2 }')
 cid=$(docker inspect -f '{{{literal '{{.Id}}'}}}' $DOCKERNAME)
@@ -172,7 +173,7 @@ curl --silent -XPUT $ETCD_CLUSTER/v2/keys/skydns/ictu/{{../project}}/{{../instan
 #
 # Add local route
 #
-route add -host $myip docker0
+#route add -host $myip docker0
 
 STEP=$((STEP+1))
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
