@@ -3,7 +3,7 @@
   <div id="top-nav" class="navbar navbar-inverse navbar-fixed-top">
     {{#if hellobar}}
     <div id='hellobar'>
-      <p class='hellobar-text'>{{hellobar}}</p>
+      <p class='hellobar-text'>{{{hellobar}}}</p>
     </div>
     {{/if}}
     <div class="container">
@@ -71,6 +71,7 @@
   {{> sAlert}}
 
   <div class="content-container">
+    {{#if hellobar}}<div class="hellobar-container-padding"></div>{{/if}}
     {{> yield}}
   </div>
 
