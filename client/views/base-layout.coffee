@@ -4,6 +4,7 @@ Template['base-layout'].helpers
   session: (sessVar) -> Session.get sessVar
   projectName: -> Settings.findOne()?.project.toUpperCase()
   appVersion: -> version
+  hellobar: -> "A test hellobar <a>Button or Link</a>"
 
 Template['base-layout'].events
   'click #messagesMenuItem': ->
