@@ -165,6 +165,10 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ports
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostIp "$hostIp" > /dev/null
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerName "$DOCKERNAME" > /dev/null
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerId "$cid" > /dev/null
+
+{{#if endpoint}}
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/endpoint {{endpoint}} > /dev/null
+{{/if}}
 #
 # Create DNS entry
 #

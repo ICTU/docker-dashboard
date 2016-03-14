@@ -128,7 +128,17 @@
                     </h5>
                     <table class="table table-condensed">
                       <tbody>
-                        <tr><th scope="row" style="width:250px;">FQDN</th><td>{{data.hostname}}</td></tr>
+                        <tr>
+                          <th scope="row" style="width:250px;">FQDN</th>
+                          <td>
+                            {{#if data.endpoint}}
+                            <a href="http://{{data.hostname}}{{data.endpoint}}">{{data.hostname}}</a>
+                            {{else}}
+                            {{data.hostname}}
+                            {{/if}}
+                          </td>
+                        </tr>
+
                         <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr>
                         {{#if isAdminBoard}}
                         <tr><th scope="row">Host IP</th><td>{{data.hostIp}}</td></tr>
