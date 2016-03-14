@@ -1,3 +1,4 @@
+set -x
 
 if [ "$(whoami)" != "root" ]; then
 	echo "Start script should be executed with root privileges."
@@ -10,10 +11,10 @@ syslogPort=`echo '{{syslogUrl}}' | grep -oE '(:[0-9]+)' | cut -c2-`
 
 ID="$(cat /proc/sys/kernel/random/uuid)"
 
-exec 1> >(awk -v id=$ID '{ print id, "=>", $0; fflush(); }' | ncat $syslogHost --$syslogProto $syslogPort) 2>{{{literal '&'}}}1
+exec 1> >(awk -v id=$ID '{ print id, "=>", $0; fflush(); }' | nc $syslogHost --$syslogProto $syslogPort) 2>{{{literal '&'}}}1
 
 #
-# GENERAL STATE CLEANUP AND CONFIGURATION
+# GENERAL STATE CLEANUP AND CONFIGURATION+
 #
 # Root data directory is {{dataDir}}
 #
@@ -22,8 +23,6 @@ APPNAME="{{appName}}"
 INSTANCE="{{instance}}"
 ETCD_CLUSTER="{{etcdCluster}}"
 ETCD_INSTANCE_KEY="/instances/$PROJECT/$APPNAME/$INSTANCE"
-NIC=$(/usr/bin/ifconfig | /usr/bin/grep -v PROMISC | /usr/bin/pcregrep -o1 '(ens[0-9]+):')
-NORMALNIC=$(/usr/bin/ifconfig |  /usr/bin/grep -w -B1 inet | /usr/bin/pcregrep -o1 '(ens[0-9]+):');
 
 {{#if vlan}}
 vlan="{{vlan}}"
@@ -98,7 +97,7 @@ docker run \
 --dns-search={{../instance}}.{{../project}}.ictu \
 -h {{service}}.{{../instance}}.{{../project}}.ictu \
 {{attribute "extra_hosts" "--add-host="}} \
--e pipework_cmd="${NIC} -i eth0 @CONTAINER_NAME@ dhclient @${vlan}" \
+-e pipework_cmd="@VLT_NIC@ -i eth0 @CONTAINER_NAME@ dhclient @${vlan}" \
 -d www.docker-registry.isd.ictu:5000/pipes:latest
 
 while [ 1 ]; do
@@ -156,24 +155,18 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/sshPo
 #
 hostname="{{service}}.$INSTANCE.$PROJECT.ictu"
 myip=$(docker exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
-ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}} | grep -o -G '[0-9]*')
-hostIp=$(ifconfig $NORMALNIC | grep 'inet ' | awk '{ print $2 }')
+ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}} | grep -o '[0-9]*')
 cid=$(docker inspect -f '{{{literal '{{.Id}}'}}}' $DOCKERNAME)
 
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ip "$myip" > /dev/null
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostname "$hostname" > /dev/null
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ports "${ports/\n/ }" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostIp "$hostIp" > /dev/null
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerName "$DOCKERNAME" > /dev/null
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerId "$cid" > /dev/null
 #
 # Create DNS entry
 #
 curl --silent -XPUT $ETCD_CLUSTER/v2/keys/skydns/ictu/{{../project}}/{{../instance}}/{{service}} -d value={\"host\":\"$myip\"} > /dev/null
-#
-# Add local route
-#
-#route add -host $myip docker0
 
 STEP=$((STEP+1))
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
@@ -186,12 +179,12 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescri
 {{#each services}}
 DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
 DOCKERNETNAME="net-$DOCKERNAME"
-if [ "$(docker ps | /usr/bin/pcregrep '\s'$DOCKERNAME)" ]; then
+if [ "$(docker ps | /usr/bin/grep '\s'$DOCKERNAME)" ]; then
 	echo "SUCCESS: $DOCKERNAME is running";
 else
 	echo "FAILURE: $DOCKERNAME is not running";
 fi
-if [ "$(docker ps | /usr/bin/pcregrep '\s'$DOCKERNETNAME)" ]; then
+if [ "$(docker ps | /usr/bin/grep '\s'$DOCKERNETNAME)" ]; then
 	echo "SUCCESS: network for $DOCKERNAME is running";
 else
 	echo "FAILURE: network for $DOCKERNAME is not running";
