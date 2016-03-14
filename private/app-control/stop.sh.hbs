@@ -25,7 +25,6 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$
   STEP=$((STEP+1))
   etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
 
-  route del -host $myip docker0
   docker stop -t 5 $DOCKERNETNAME
   docker rm $DOCKERNETNAME
 
