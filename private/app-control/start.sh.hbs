@@ -11,7 +11,7 @@ syslogPort=`echo '{{syslogUrl}}' | grep -oE '(:[0-9]+)' | cut -c2-`
 
 ID="$(cat /proc/sys/kernel/random/uuid)"
 
-exec 1> >(awk -v id=$ID '{ print id, "=>", $0; fflush(); }' | nc $syslogHost --$syslogProto $syslogPort) 2>{{{literal '&'}}}1
+exec 1> >(awk -v id=$ID '{ print id, "=>", $0; fflush(); }' | ncat $syslogHost --$syslogProto $syslogPort) 2>{{{literal '&'}}}1
 
 #
 # GENERAL STATE CLEANUP AND CONFIGURATION+
