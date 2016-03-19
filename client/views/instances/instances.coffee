@@ -17,6 +17,7 @@ Template.instances.helpers
       'collapse-down'
     else
       'exclamation-sign'
+  isDashboard: -> @meta.appName == "dashboard"
   showProgressbar: -> "#{@meta.state}".match /loading|activating|pulling|stopping/
   totalSteps: -> @meta.totalSteps
   progress: -> @meta.progress
@@ -54,6 +55,15 @@ Template.instances.events
     console.log 'clicked showContainerLogs', @data.dockerContainerId
     Meteor.call 'getLog', @data.dockerContainerId, (err, data) ->
       console.log 'log -> ', err, data
+  'submit #hellobar-message-form': (e, tpl) ->
+    e.preventDefault()
+    message = tpl.$(".hellobar-message").val()
+    Meteor.call 'setHellobarMessage', @name, message, (err, data) ->
+      if not err
+        sAlert.success "Successfully Updated Hellobar Message!"
+      else
+        sAlert.error "Coudn't Set Hellobar Message!"
+          
 
 Template.instances.onCreated ->
   new Clipboard '.copy-to-clipboard a',
