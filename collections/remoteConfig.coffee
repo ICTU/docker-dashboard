@@ -1,8 +1,4 @@
 @RemoteConfig = new Mongo.Collection 'RemoteConfig'
-RemoteConfig.allow
-  insert: -> true
-  update: -> true
-  remove: -> true
 
 Meteor.startup ->
   if Meteor.server
