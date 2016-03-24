@@ -98,7 +98,7 @@ docker run \
 -h {{service}}.{{../instance}}.{{../project}}.ictu \
 {{attribute "extra_hosts" "--add-host="}} \
 -e pipework_cmd="@VLT_NIC@ -i eth0 @CONTAINER_NAME@ dhclient @${vlan}" \
--d www.docker-registry.isd.ictu:5000/pipes:latest
+-d www.docker-registry.isd.ictu:5000/pipes:1
 
 while [ 1 ]; do
   pubip=$(docker exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}');
