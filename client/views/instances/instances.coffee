@@ -29,7 +29,7 @@ Template.instances.helpers
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
     port = findWebPort @services?.www
-    endpoint = @services?.www?.endpoint or port
+    endpoint = @services?.www?.endpoint or ":" + port
     protocol = determineProtocol port
     if @services?.www?.hostname
       "#{protocol}://#{@services?.www?.hostname}#{endpoint}"
