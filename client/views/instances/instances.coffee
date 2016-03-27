@@ -28,9 +28,8 @@ Template.instances.helpers
       (parseInt(@meta.progress)/parseInt(@meta.totalSteps))*100
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
-    port = findWebPort @services?.www
-    endpoint = @services?.www?.endpoint or ":" + port
-    protocol = determineProtocol port
+    endpoint = @services?.www?.endpoint or ":" + findWebPort @services?.www
+    protocol = @services?.www?.protocol or determineProtocol port
     if @services?.www?.hostname
       "#{protocol}://#{@services?.www?.hostname}#{endpoint}"
   params: -> key: k, value: v for k, v of @parameters when k isnt 'tags' if @parameters

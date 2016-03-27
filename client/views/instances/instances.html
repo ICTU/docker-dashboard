@@ -132,7 +132,7 @@
                           <th scope="row" style="width:250px;">FQDN</th>
                           <td>
                             {{#if data.endpoint}}
-                            <a href="http://{{data.hostname}}{{data.endpoint}}">{{data.hostname}}</a>
+                            <a href="{{#if data.protocol}}{{data.protocol}}{{else}}http{{/if}}://{{data.hostname}}{{data.endpoint}}">{{data.hostname}}</a>
                             {{else}}
                             {{data.hostname}}
                             {{/if}}
