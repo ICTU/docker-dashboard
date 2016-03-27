@@ -170,7 +170,7 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/docke
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/endpoint {{endpoint}} > /dev/null
 {{/if}}
 {{#if protocol}}
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/endpoint {{protocol}} > /dev/null
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/protocol {{protocol}} > /dev/null
 {{/if}}
 #
 # Create DNS entry
