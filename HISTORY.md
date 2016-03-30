@@ -1,3 +1,6 @@
+### 2.16.4
+- Fixed the 'new App' template to be properly yaml-formatted. 
+
 ### 2.16.3
 - Reduced etcd sync logging, because it was filling up the logs.
 
