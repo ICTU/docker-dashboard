@@ -11,6 +11,7 @@ Meteor.methods logInvocation
   startApp: Cluster.startApp
   stopInstance: Cluster.stopInstance
   clearInstance: Cluster.clearInstance
+  setHellobarMessage: Cluster.setHellobarMessage
   saveApp: Cluster.saveApp
   
   deleteApp: (app, version) ->
