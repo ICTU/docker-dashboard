@@ -28,18 +28,10 @@
 <template name="logTable">
   <table>
   {{#each logLines}}
-    {{#with formattedLogLine}}
-    {{#if log}}
-      <tr class="logLine">
-      <td class="date">{{date}}</td>
-      <td class="text">{{log}}</td>
-      </tr>
-    {{else}}
-      <tr class="logLine">
-        <td colspan="2" class="text">{{this}}</td>
-      </tr>
-    {{/if}}
-    {{/with}}
+  <div>
+    <strong style="color: yellow;">{{date}}</strong>
+    <span style="color: white;">{{message}}</span>
+  </div>
   {{/each}}
   </table>
 </template>
