@@ -123,7 +123,8 @@ docker run -d \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
 --log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
---log-opt syslog-tag="$DOCKERNAME" \
+--log-opt tag="$DOCKERNAME" \
+--log-opt tag="{{|.ID}}" \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes}} \
 {{volumesfrom}} \
