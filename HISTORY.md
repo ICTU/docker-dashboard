@@ -1,3 +1,6 @@
+### 2.17.1
+- Fixed regression in logging and added image name and container name to the log tags.
+
 ### 2.17.0
 - Add hellobar. Dashboard is admin mode is able to set hellobar message for other normal dashboards.
 - Manually define service's web address protocol.
@@ -9,7 +12,7 @@
 - Update instance's www link if there is a custom endpoint definition for www service.
 
 ### 2.16.4
-- Fixed the 'new App' template to be properly yaml-formatted. 
+- Fixed the 'new App' template to be properly yaml-formatted.
 
 ### 2.16.3
 - Reduced etcd sync logging, because it was filling up the logs.
