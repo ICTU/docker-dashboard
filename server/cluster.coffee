@@ -39,6 +39,23 @@ pickAgent = ->
         $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
 
+
+  setHellobarMessage: (instanceName, message) ->
+    asyncFunc = (instanceName, message, callback) ->
+      instance = Instances.findOne name: instanceName
+      HTTP.put "http://www.#{instanceName}.#{Settings.findOne().project}.ictu/api/v1/hellobar/", params: value: message, (err, result) ->
+        if not err and result and result.statusCode == 200
+          EtcdClient.set "instances/#{Settings.findOne().project}/#{instance.meta.appName}/#{instance.name}/meta_/hellobar", message
+          callback null,result
+        else
+          console.log err
+          callback err, result
+    
+    syncFunc = Meteor.wrapAsync asyncFunc
+    syncFunc instanceName, message
+      
+
+
   stopInstance: (instanceName) ->
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.findOne().project}."
     instance = Instances.findOne name: instanceName

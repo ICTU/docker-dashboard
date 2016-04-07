@@ -4,6 +4,14 @@ Template['base-layout'].helpers
   session: (sessVar) -> Session.get sessVar
   projectName: -> Settings.findOne()?.project.toUpperCase()
   appVersion: -> version
+  hellobar: ->
+    message = RemoteConfig.findOne()?.hellobarMessage
+    sAlert.config
+      offset: if message and message.length then 70 else 20
+    if message and message.length
+      message
+    else
+      null
 
 Template['base-layout'].events
   'click #messagesMenuItem': ->

@@ -122,7 +122,7 @@ docker run -d \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
 --log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
---log-opt syslog-tag="$DOCKERNAME" \
+--log-opt syslog-tag="{{|.ImageName}}/{{|.Name}}/{{|.ID}}" \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes}} \
 {{volumesfrom}} \
@@ -163,6 +163,13 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostn
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ports "${ports/\n/ }" > /dev/null
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerName "$DOCKERNAME" > /dev/null
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerId "$cid" > /dev/null
+
+{{#if endpoint}}
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/endpoint {{endpoint}} > /dev/null
+{{/if}}
+{{#if protocol}}
+etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/protocol {{protocol}} > /dev/null
+{{/if}}
 #
 # Create DNS entry
 #

@@ -1,3 +1,16 @@
+### 2.17.0
+- Add hellobar. Dashboard is admin mode is able to set hellobar message for other normal dashboards.
+- Manually define service's web address protocol.
+- update instance's www link if there is a custom protocol definition available.
+
+### 2.16.5
+- Manually define service's web address endpoint.
+- Add a link to service's FQDN if there is a custom endpoint definition for it.
+- Update instance's www link if there is a custom endpoint definition for www service.
+
+### 2.16.4
+- Fixed the 'new App' template to be properly yaml-formatted. 
+
 ### 2.16.3
 - Reduced etcd sync logging, because it was filling up the logs.
 

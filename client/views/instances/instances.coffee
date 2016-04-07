@@ -17,6 +17,7 @@ Template.instances.helpers
       'collapse-down'
     else
       'exclamation-sign'
+  isDashboard: -> @meta.appName == "dashboard"
   showProgressbar: -> "#{@meta.state}".match /loading|activating|pulling|stopping/
   totalSteps: -> @meta.totalSteps
   progress: -> @meta.progress
@@ -29,9 +30,10 @@ Template.instances.helpers
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
     port = findWebPort @services?.www
-    protocol = determineProtocol port
+    endpoint = @services?.www?.endpoint or ":" + port
+    protocol = @services?.www?.protocol or determineProtocol port
     if @services?.www?.hostname
-      "#{protocol}://#{@services?.www?.hostname}:#{port}"
+      "#{protocol}://#{@services?.www?.hostname}#{endpoint}"
   params: -> key: k, value: v for k, v of @parameters when k isnt 'tags' if @parameters
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2
@@ -54,6 +56,15 @@ Template.instances.events
     console.log 'clicked showContainerLogs', @data.dockerContainerId
     Meteor.call 'getLog', @data.dockerContainerId, (err, data) ->
       console.log 'log -> ', err, data
+  'submit #hellobar-message-form': (e, tpl) ->
+    e.preventDefault()
+    message = tpl.$(".hellobar-message").val()
+    Meteor.call 'setHellobarMessage', @name, message, (err, data) ->
+      if not err
+        sAlert.success "Successfully Updated Hellobar Message!"
+      else
+        sAlert.error "Coudn't Set Hellobar Message!"
+          
 
 Template.instances.onCreated ->
   new Clipboard '.copy-to-clipboard a',

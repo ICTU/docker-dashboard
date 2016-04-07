@@ -1,3 +1,60 @@
 .content-container {
-  padding-top: 50px;
+  padding-top: 50px;  
+}
+
+
+
+#hellobar{
+  background:#eb593c;
+  width:100%;
+  text-align:center;
+  color:#fff;
+  padding:2px;
+  overflow:hidden;
+  height:40px;
+  z-index:2000;
+  font-family:Georgia;
+  font-size:14px;
+  line-height:40px;
+  position:relative;
+  top:0;
+  left:0;
+  border-bottom:3px solid rgb(255,255,255);
+  box-shadow:0 1px 5px rgba(0,0,0,.7)
+}
+
+
+.hellobar-container-padding
+{
+  width: 100%;
+  height: 40px;
+  margin:0px 3px 0px 0px;
+}
+
+#hellobar a{
+  -webkit-box-shadow:rgba(0,0,0,0.278431) 1px 1px 3px;
+  background:#333;
+  border-bottom-left-radius:4px;
+  border-bottom-right-radius:4px;
+  border-top-left-radius:4px;
+  border-top-right-radius:4px;
+  border:none;
+  box-shadow:rgba(0,0,0,0.278431) 1px 1px 3px;
+  color:white;
+  cursor:pointer;
+  font-size:0.854em;
+  margin:0px 0px 0px 0px;
+  outline:none;
+  padding:2px 10px 1px;
+  position:relative;
+  text-decoration:initial
+}
+
+#hellobar a:hover{
+  cursor:pointer;
+  background:#444
+}
+
+#hellobar a:active{
+  top:1px
 }

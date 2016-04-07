@@ -24,11 +24,3 @@ Template.logs.onDestroyed ->
 
 Template.logTable.helpers
   logLines: -> Session.get "log#{@containerId or @instanceId}"
-  formattedLogLine: ->
-    if match = @message.match /<\d{2}>(\d{4}-\d{2}-[\d]{2}T[\d]{2}:[\d]{2}:[\d]{2}Z).+docker\/\w{12}\[\d+\]: (.+)/
-      [all, date, log] = match
-      date: @date, log: log
-    else if match = @message.match /\w+\s=> (.+)/
-      [all, log] = match
-      date: @date, log: log
-    else @
