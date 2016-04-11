@@ -157,7 +157,6 @@
 
                         <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr>
                         <tr><th scope="row">Ports</th><td>{{data.ports}}</td></tr>
-                        <tr><th scope="row">Port Mapping</th><td>{{data.portMapping}}</td></tr>
                         <tr><th scope="row">Container Name</th><td>{{data.dockerContainerName}}</td></tr>
                         {{#with data.sshPort}}
                         <tr><th scope="row">SSH</th><td>
@@ -169,7 +168,7 @@ ssh -p {{port}} {{hostname}}
                         {{/with}}
                         {{#if data.dockerContainerId}}
                         <tr>
-                          <td>Logs</td>
+                          <th scope="row">Logs</th>
                           <td><a target="_blank" href="{{pathFor route='logs' containerId=data.dockerContainerId}}" class="showContainerLogsOld">Show Logs</a></td>
                         </tr>
                         {{/if}}

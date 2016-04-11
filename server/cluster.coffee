@@ -1,6 +1,3 @@
-str2stream = Meteor.npmRequire 'string-to-stream'
-JSONStream = Meteor.npmRequire 'JSONStream'
-
 loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
   console.log(error) if error
   console.log stdout, stderr
@@ -18,11 +15,19 @@ pickAgent = ->
 
 @Cluster =
   startApp: (app, version, instance, parameters, options = {}) ->
+    project = Settings.findOne().project
     options = _.extend {"dataDir": Settings.findOne().dataDir}, options
     dir = "#{Settings.findOne().project}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.findOne().project}."
 
-    options.agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
+    agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
+    Instances.upsert {project: project, name: instance}, $set:
+      key: "#{project}/#{app}/#{instance}"
+      parameters: parameters
+      meta:
+        appName: app
+        appVersion: version
+        agentUrl: agentUrl
     callOpts =
       responseType: "buffer"
       data:
@@ -32,7 +37,7 @@ pickAgent = ->
 
     console.log "Sending request to #{options.agentUrl}"
 
-    HTTP.post "#{options.agentUrl}/app/install-and-run", callOpts, (err, result) ->
+    HTTP.post "#{agentUrl}/app/install-and-run", callOpts, (err, result) ->
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
       console.log err if err
       Instances.update {name: instance, application: app},
@@ -50,10 +55,10 @@ pickAgent = ->
         else
           console.log err
           callback err, result
-    
+
     syncFunc = Meteor.wrapAsync asyncFunc
     syncFunc instanceName, message
-      
+
 
 
   stopInstance: (instanceName) ->
