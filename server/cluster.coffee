@@ -78,12 +78,12 @@ pickAgent = ->
 
   clearInstance: (project, instance) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
-    inst = Instances.findOne project: project, name: instance
-    console.log "#{Settings.findOne().etcd}instances/#{project}/#{inst.application}/#{instance}?recursive=true"
-    HTTP.del "#{Settings.findOne().etcd}instances/#{project}/#{inst.application}/#{instance}?recursive=true", {}, (error, result) ->
-      console.log(error) if error
-      console.log "Cluster.clearInstance completed -> #{project}, #{instance}"
-      sync()
+    Instances.remove project: project, name: instance
+    # console.log "#{Settings.findOne().etcd}instances/#{project}/#{inst.application}/#{instance}?recursive=true"
+    # HTTP.del "#{Settings.findOne().etcd}instances/#{project}/#{inst.application}/#{instance}?recursive=true", {}, (error, result) ->
+    #   console.log(error) if error
+    #   console.log "Cluster.clearInstance completed -> #{project}, #{instance}"
+    #   sync()
     ""
 
   saveApp: (name, version, definition) ->
