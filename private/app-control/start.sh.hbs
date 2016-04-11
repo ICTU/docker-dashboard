@@ -33,7 +33,7 @@ TOTAL_STEPS=$((({{total}}*3)+2))
 STEP=1
 
 
-DASHBOARD_URL=http://5e6fa60a.ngrok.io/api/v1/state/$INSTANCE
+DASHBOARD_URL={{dashboardUrl}}/api/v1/state/$INSTANCE
 
 
 curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
@@ -47,11 +47,11 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 
 
 # PULL ALL IMAGES
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"state\": \"pulling\" \
-	} \
-}"
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
+	"meta": {
+		"state": "pulling"
+	}
+}'
 
 {{#each services}}
 echo "Pulling image {{image}}..."
@@ -118,6 +118,12 @@ docker run \
 --net=none \
 --dns-search={{../instance}}.{{../project}}.ictu \
 -h {{service}}.{{../instance}}.{{../project}}.ictu \
+--label ictu.dashboard.url=http://7e9f6dc0.ngrok.io \
+--label ictu.project={{../project}} \
+--label ictu.application.name={{../appName}} \
+--label ictu.instance.name={{../instance}} \
+--label ictu.service.name={{service}} \
+--label ictu.container.type=net \
 {{attribute "extra_hosts" "--add-host="}} \
 -e pipework_cmd="@VLT_NIC@ -i eth0 @CONTAINER_NAME@ dhclient @${vlan}" \
 -d www.docker-registry.isd.ictu:5000/pipes:1
@@ -142,11 +148,9 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 #
 # Start the service container
 #
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"stateDescription\": \"Activating service {{service}}\" \
-	} \
-}"
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
+	"meta": {"stateDescription": "Activating service {{service}}"}
+}'
 
 docker run -d \
 --restart=unless-stopped \
@@ -154,6 +158,12 @@ docker run -d \
 --net="container:$DOCKERNETNAME" \
 --log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
 --log-opt syslog-tag="{{|.ImageName}}/{{|.Name}}/{{|.ID}}" \
+--label ictu.dashboard.url=http://7e9f6dc0.ngrok.io \
+--label ictu.project={{../project}} \
+--label ictu.application.name={{../appName}} \
+--label ictu.instance.name={{../instance}} \
+--label ictu.service.name={{service}} \
+--label ictu.container.type=service \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes}} \
 {{volumesfrom}} \
@@ -168,11 +178,11 @@ docker run -d \
 #
 # Start the ssh container
 #
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"stateDescription\": \"Enabling SSH for service {{service}}\" \
-	} \
-}"
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
+	"meta": {
+		"stateDescription": "Enabling SSH for service {{service}}"
+	}
+}'
 
 docker pull jeroenpeeters/docker-ssh
 docker run -d --name $DOCKERSSHDNAME \
@@ -180,16 +190,22 @@ docker run -d --name $DOCKERSSHDNAME \
 -e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
 --net="container:$DOCKERNETNAME" \
+--label ictu.dashboard.url=http://7e9f6dc0.ngrok.io \
+--label ictu.project={{../project}} \
+--label ictu.application.name={{../appName}} \
+--label ictu.instance.name={{../instance}} \
+--label ictu.service.name={{service}} \
+--label ictu.container.type=ssh \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -v $(which docker):/usr/bin/docker \
 jeroenpeeters/docker-ssh
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"services\": { \
-			\"{{service}}\": { \
-				\"sshPort\": 22 \
-			} \
-		} \
-}"
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
+	"services": {
+			"{{service}}": {
+				"sshPort": 22
+			}
+		}
+}'
 {{/if}}
 
 #

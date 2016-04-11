@@ -166,6 +166,7 @@ ssh -p {{port}} {{hostname}}
 {{/prism}}
                         </td></tr>
                         {{/with}}
+                        <tr><th scope="row">State</th><td>{{data.state}}</td></tr>
                         {{#if data.dockerContainerId}}
                         <tr>
                           <th scope="row">Logs</th>
