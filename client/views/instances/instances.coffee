@@ -1,5 +1,13 @@
 activeLogs = new ReactiveVar null
 
+isStateOk = (instance) ->
+  if instance.meta.state is 'active'
+    for i, service of instance.services
+      return false if service?.state and service.state isnt 'running'
+    true
+  else
+    false
+
 Template.instances.helpers
   instances: ->
     if Session.get('queryName')?.length
@@ -7,7 +15,7 @@ Template.instances.helpers
     else
       Instances.find {}, sort: key: 1
   activityIcon: ->
-    if @meta.state is 'active'
+    if isStateOk(@)
       'ok-sign'
     else if "#{@meta.state}".match /loading|activating/
       'play-circle'

@@ -13,7 +13,7 @@ DASHBOARD_URL={{dashboardUrl}}/api/v1/state/$INSTANCE
 
 curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 	\"meta\": { \
-		\"state\": \"stopping\", \
+		\"state\": \"destroying\", \
 		\"totalSteps\": \"$TOTAL_STEPS\", \
 		\"progress\": \"$STEP\" \
 	} \
@@ -27,7 +27,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
   myip=$(docker exec $DOCKERNETNAME ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
   curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
   	\"meta\": { \
-  		\"stateDescription\": \"Stopping network for {{service}}\" \
+  		\"stateDescription\": \"Destroying network for {{service}}\" \
   	} \
   }"
 
@@ -38,12 +38,11 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
     } \
   }"
 
-  docker stop -t 5 $DOCKERNETNAME
   docker rm $DOCKERNETNAME
 
   curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
     \"meta\": { \
-      \"stateDescription\": \"Stopping service {{service}}\", \
+      \"stateDescription\": \"Destroying service {{service}}\", \
       \"progress\": \"$STEP\" \
     } \
   }"
@@ -53,9 +52,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
       \"progress\": \"$STEP\" \
     } \
   }"
-  docker stop -t 10 $DOCKERSSHDNAME
   docker rm $DOCKERSSHDNAME
-  docker stop -t 30 $DOCKERNAME
   docker rm $DOCKERNAME
 
 {{/each}}
