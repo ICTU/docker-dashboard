@@ -25,7 +25,7 @@ Meteor.startup ->
         check(@params.name, String)
         instance = Instances.findOne(project: Settings.findOne().project, name: @params.name) or {}
         updatedInstance = lodash.merge instance, @request.body
-        Instances.upsert {project: Settings.findOne().project, name: @params.name}, {$set: _.omit(updatedInstance, '_id')}, (err, result) =>
+        Instances.update {project: Settings.findOne().project, name: @params.name}, {$set: _.omit(updatedInstance, '_id')}, (err, result) =>
           console.log err, result
           if err or not result
             @response.writeHead 404, 'Content-Type': 'application/json'
