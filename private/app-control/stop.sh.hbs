@@ -6,14 +6,18 @@ fi
 PROJECT="{{project}}"
 APPNAME="{{appName}}"
 INSTANCE="{{instance}}"
-ETCD_CLUSTER="{{etcdCluster}}"
-ETCD_INSTANCE_KEY="/instances/$PROJECT/$APPNAME/$INSTANCE"
 TOTAL_STEPS=$((({{total}}*2)+1))
 STEP=0
 
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "stopping"
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS"
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
+DASHBOARD_URL=http://5e6fa60a.ngrok.io/api/v1/state/$INSTANCE
+
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"state\": \"stopping\", \
+		\"totalSteps\": \"$TOTAL_STEPS\", \
+		\"progress\": \"$STEP\" \
+	} \
+}"
 
 {{#each reverse services}}
   DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
@@ -21,24 +25,39 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$
   DOCKERSSHDNAME="sshd-$DOCKERNAME"
 
   myip=$(docker exec $DOCKERNETNAME ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
-  etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Stopping network for {{service}}"
+  curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+  	\"meta\": { \
+  		\"stateDescription\": \"Stopping network for {{service}}\" \
+  	} \
+  }"
+
   STEP=$((STEP+1))
-  etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+  curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+    \"meta\": { \
+      \"progress\": \"$STEP\" \
+    } \
+  }"
 
   docker stop -t 5 $DOCKERNETNAME
   docker rm $DOCKERNETNAME
 
-  etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Stopping service {{service}}"
-  etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP"
+  curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+    \"meta\": { \
+      \"stateDescription\": \"Stopping service {{service}}\", \
+      \"progress\": \"$STEP\" \
+    } \
+  }"
   STEP=$((STEP+1))
-  etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+  curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+    \"meta\": { \
+      \"progress\": \"$STEP\" \
+    } \
+  }"
   docker stop -t 10 $DOCKERSSHDNAME
   docker rm $DOCKERSSHDNAME
   docker stop -t 30 $DOCKERNAME
   docker rm $DOCKERNAME
 
-  etcdctl --no-sync --peers $ETCD_CLUSTER rm /skydns/ictu/$PROJECT/$INSTANCE/{{service}}
-
 {{/each}}
 
-etcdctl --no-sync --peers $ETCD_CLUSTER rm $ETCD_INSTANCE_KEY --recursive
+curl -XDELETE -sS $DASHBOARD_URL

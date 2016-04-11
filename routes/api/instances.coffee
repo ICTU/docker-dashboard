@@ -23,11 +23,23 @@ Meteor.startup ->
           @response.end '{"message": "Instance not found"}'
     .put ->
         check(@params.name, String)
-        Instances.update {project: Settings.findOne().project, name: @params.name}, {$set: 'meta.state': @request.body.state}, (err, result) =>
+        instance = Instances.findOne(project: Settings.findOne().project, name: @params.name) or {}
+        updatedInstance = lodash.merge instance, @request.body
+        Instances.upsert {project: Settings.findOne().project, name: @params.name}, {$set: _.omit(updatedInstance, '_id')}, (err, result) =>
           console.log err, result
           if err or not result
             @response.writeHead 404, 'Content-Type': 'application/json'
             @response.end '{"message": "Instance not found"}'
           else
             @response.writeHead 200, 'Content-Type': 'application/json'
-            @response.end "#{@params.name} state changed to #{@request.body.state}"
+            @response.end "#{@params.name} state changed to #{updatedInstance}"
+    .delete ->
+        check(@params.name, String)
+        Instances.remove {project: Settings.findOne().project, name: @params.name}, (err, result) =>
+          console.log err, result
+          if err or not result
+            @response.writeHead 404, 'Content-Type': 'application/json'
+            @response.end '{"message": "Instance not found"}'
+          else
+            @response.writeHead 200, 'Content-Type': 'application/json'
+            @response.end "#{@params.name} removed"

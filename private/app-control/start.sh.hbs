@@ -22,7 +22,6 @@ PROJECT="{{project}}"
 APPNAME="{{appName}}"
 INSTANCE="{{instance}}"
 ETCD_CLUSTER="{{etcdCluster}}"
-ETCD_INSTANCE_KEY="/instances/$PROJECT/$APPNAME/$INSTANCE"
 
 {{#if vlan}}
 vlan="{{vlan}}"
@@ -33,26 +32,44 @@ vlan=$(curl --silent $ETCD_CLUSTER/v2/keys/networking/{{project}}/vlan | jq -r '
 TOTAL_STEPS=$((({{total}}*3)+2))
 STEP=1
 
-etcdctl --no-sync --peers $ETCD_CLUSTER rm $ETCD_INSTANCE_KEY --recursive 2>/dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "loading" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appName "{{appName}}" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/appVersion "{{appVersion}}" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/parameters '{{stringify params}}' > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/totalSteps "$TOTAL_STEPS" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/agentUrl "{{agentUrl}}" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/id "$ID" > /dev/null
+
+DASHBOARD_URL=http://5e6fa60a.ngrok.io/api/v1/state/$INSTANCE
+
+
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"state\": \"loading\", \
+		\"totalSteps\": \"$TOTAL_STEPS\", \
+		\"progress\": \"$STEP\", \
+		\"id\": \"$ID\" \
+	} \
+}"
+
 
 # PULL ALL IMAGES
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"state\": \"pulling\" \
+	} \
+}"
 
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "pulling" > /dev/null
 {{#each services}}
 echo "Pulling image {{image}}..."
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Pulling image {{image}}" > /dev/null
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"stateDescription\": \"Pulling image {{image}}\" \
+	} \
+}"
+
 docker pull {{image}} > /dev/nul
 echo "Done pulling image {{image}}"
 STEP=$((STEP+1))
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"progress\": \"$STEP\" \
+	} \
+}"
+
 {{/each}}
 
 # ACTIVATE ALL SERVICES
@@ -63,8 +80,13 @@ DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
 DOCKERNETNAME="net-$DOCKERNAME"
 DOCKERSSHDNAME="sshd-$DOCKERNAME"
 
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "activating" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Preparing network for {{service}}" > /dev/null
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"state\": \"activating\", \
+		\"stateDescription\": \"Preparing network for {{service}}\" \
+	} \
+}"
+
 echo "Preparing network for service {{service}}"
 
 #
@@ -111,12 +133,21 @@ while [ 1 ]; do
   fi
 done
 STEP=$((STEP+1))
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"progress\": \"$STEP\" \
+	} \
+}"
 
 #
 # Start the service container
 #
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Activating service {{service}}"
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"stateDescription\": \"Activating service {{service}}\" \
+	} \
+}"
+
 docker run -d \
 --restart=always \
 --name $DOCKERNAME \
@@ -137,7 +168,12 @@ docker run -d \
 #
 # Start the ssh container
 #
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Enabling SSH for service {{service}}"
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"stateDescription\": \"Enabling SSH for service {{service}}\" \
+	} \
+}"
+
 docker pull jeroenpeeters/docker-ssh
 docker run -d --name $DOCKERSSHDNAME \
 --restart=always \
@@ -146,42 +182,71 @@ docker run -d --name $DOCKERSSHDNAME \
 --net="container:$DOCKERNETNAME" \
 -v /var/run/docker.sock:/var/run/docker.sock \
 jeroenpeeters/docker-ssh
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/sshPort "22" > /dev/null
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"services\": { \
+			\"{{service}}\": { \
+				\"sshPort\": 22 \
+			} \
+		} \
+}"
 {{/if}}
 
 #
-# Publish info about the container to etcd
+# Publish info about the container
 #
 hostname="{{service}}.$INSTANCE.$PROJECT.ictu"
 myip=$(docker exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
-ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}} | grep -o '[0-9]*')
+ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}})
 cid=$(docker inspect -f '{{{literal '{{.Id}}'}}}' $DOCKERNAME)
 
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ip "$myip" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/hostname "$hostname" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/ports "${ports/\n/ }" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerName "$DOCKERNAME" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/dockerContainerId "$cid" > /dev/null
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"services\": { \
+			\"{{service}}\": { \
+				\"ip\": \"$myip\", \
+				\"hostname\": \"$hostname\", \
+				\"ports\": \"$ports\", \
+				\"dockerContainerName\": \"$DOCKERNAME\", \
+				\"dockerContainerId\": \"$cid\" \
+			} \
+		} \
+}"
+
 
 {{#if endpoint}}
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/endpoint {{endpoint}} > /dev/null
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"services\": { \
+			\"{{service}}\": { \
+				\"endpoint\": \"{{endpoint}}\" \
+			} \
+		} \
+}"
 {{/if}}
 {{#if protocol}}
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/protocol {{protocol}} > /dev/null
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"services\": { \
+			\"{{service}}\": { \
+				\"protocol\": \"{{protocol}}\" \
+			} \
+		} \
+}"
 {{/if}}
-#
-# Create DNS entry
-#
-curl --silent -XPUT $ETCD_CLUSTER/v2/keys/skydns/ictu/{{../project}}/{{../instance}}/{{service}} -d value={\"host\":\"$myip\"} > /dev/null
 
 STEP=$((STEP+1))
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"progress\": \"$STEP\" \
+	} \
+}"
 {{/each}}
 
 
 STEP=$((STEP+1))
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$STEP" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Checking application health"
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"progress\": \"$STEP\", \
+		\"stateDescription\": \"Checking application health\" \
+	} \
+}"
 {{#each services}}
 DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
 DOCKERNETNAME="net-$DOCKERNAME"
@@ -199,7 +264,11 @@ fi
 
 sleep 2
 
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/state "active" > /dev/null
-etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Active" > /dev/null
+curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+	\"meta\": { \
+		\"state\": \"active\", \
+		\"stateDescription\": \"Active\" \
+	} \
+}"
 
 echo "Application started"

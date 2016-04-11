@@ -64,7 +64,7 @@ Template.instances.events
         sAlert.success "Successfully Updated Hellobar Message!"
       else
         sAlert.error "Coudn't Set Hellobar Message!"
-          
+
 
 Template.instances.onCreated ->
   new Clipboard '.copy-to-clipboard a',
@@ -78,7 +78,7 @@ HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
 
 findWebPort = (service) ->
   p = 80
-  service?.ports?.split(/\s+/).forEach (port) ->
+  service?.ports?.replace(/[^\d|\s]/g, '').split(/\s+/).forEach (port) ->
     if port in HTTPS_PORTS.concat(HTTP_PORTS) then p = port
   p
 
