@@ -1,3 +1,6 @@
+### 3.0.0
+- Networking based on plumber and pipes.
+
 ### 2.17.1
 - Fixed regression in logging and added image name and container name to the log tags.
 
