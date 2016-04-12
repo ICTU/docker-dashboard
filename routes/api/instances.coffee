@@ -26,13 +26,13 @@ Meteor.startup ->
         instance = Instances.findOne(project: Settings.findOne().project, name: @params.name) or {}
         updatedInstance = lodash.merge instance, @request.body
         Instances.update {project: Settings.findOne().project, name: @params.name}, {$set: _.omit(updatedInstance, '_id')}, (err, result) =>
-          console.log err, result
+          console.error err if err
           if err or not result
             @response.writeHead 404, 'Content-Type': 'application/json'
             @response.end '{"message": "Instance not found"}'
           else
             @response.writeHead 200, 'Content-Type': 'application/json'
-            @response.end "#{@params.name} state changed to #{updatedInstance}"
+            @response.end "Instance '#{@params.name}' has been updated"
     .delete ->
         check(@params.name, String)
         Instances.remove {project: Settings.findOne().project, name: @params.name}, (err, result) =>
