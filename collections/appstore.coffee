@@ -1,7 +1,7 @@
 Meteor.startup ->
   connectToAppStore = =>
     if Settings.findOne()?.remoteAppstoreUrl
-      console.log 'has appstore', Settings.findOne()?.remoteAppstoreUrl
+      # console.log 'has appstore', Settings.findOne()?.remoteAppstoreUrl
       central = DDP.connect Settings.findOne().remoteAppstoreUrl
       @AppStore = new Mongo.Collection 'appstore',
         connection: central

@@ -63,10 +63,10 @@
                             <a title="Set Hellobar Message" class="dropdown-toggle" data-toggle="dropdown">
                               <i class="glyphicon glyphicon-comment"></i>
                             </a>
-                            <form role="form" id="hellobar-message-form" class="dropdown-menu dropdown-menu-left" style="padding:1em">
+                            <form role="form" id="hellobar-message-form" class="dropdown-menu dropdown-menu-left" style="padding:1em" data-url="http://www.{{this.name}}.infra.ictu">
                                 <div class="form-group" style="width:35em">
                                   <label>Message</label>
-                                  <input type="text" value="{{meta.hellobar}}" class="form-control hellobar-message" name="hellobar-message" />
+                                  <input type="text" id="hellobar-input-{{this.name}}" value="{{meta.hellobar}}" class="form-control hellobar-message" name="hellobar-message" />
                                 </div>
                                 <button type="submit" class="hellobar-message-submit btn btn-mini btn-primary pull-right">Update</button>
                             </form>

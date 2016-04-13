@@ -58,13 +58,16 @@ Template.instances.events
       console.log 'log -> ', err, data
   'submit #hellobar-message-form': (e, tpl) ->
     e.preventDefault()
-    message = tpl.$(".hellobar-message").val()
-    Meteor.call 'setHellobarMessage', @name, message, (err, data) ->
-      if not err
-        sAlert.success "Successfully Updated Hellobar Message!"
-      else
-        sAlert.error "Coudn't Set Hellobar Message!"
-          
+    message = $("#hellobar-input-#{@name}").val()
+    url = $(e.target).data().url
+    apiUrl = "#{url}/api/v1/hellobar" 
+
+    HTTP.put apiUrl, '{ "value": "{{message}}"}', (error, result) -> 
+      if error 
+        sAlert.error "Unable to set notification message!"
+        console.log "error", error 
+      else 
+        console.log result 
 
 Template.instances.onCreated ->
   new Clipboard '.copy-to-clipboard a',
