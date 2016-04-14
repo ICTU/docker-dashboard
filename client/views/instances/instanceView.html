@@ -46,6 +46,7 @@
               </li>
               {{/if}}
           {{/if}}
+          {{#if isAuthenticated}}
           <li class="btn-group">
             <a title="Logs" target="_blank" href="{{pathFor route='instanceLogs' instanceId=_id}}">
               <i class="glyphicon glyphicon-list-alt"></i>
@@ -84,6 +85,7 @@
             </form>
 
           </li>
+          {{/if}}
         </ul>
 
         <table class="table table-condensed">

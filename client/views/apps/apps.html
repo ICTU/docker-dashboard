@@ -14,10 +14,12 @@
   <div id="content-row" class="row">
     <div id="page-menu" class="col-md-3">
       <ul class="nav nav-stacked">
+        {{#if isAuthenticated}}
         {{#with appDefTemplate}}
         <li><a title="New App" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-plus"></i> New App</a></li>
         {{/with}}
         <hr>
+        {{/if}}
         {{#each allTags}}
         <li><a title="{{this}}" class="filterByTag" href="#"><i class="glyphicon glyphicon-zoom-in"></i> {{this}}</a></li>
         {{/each}}
@@ -54,7 +56,9 @@
                       </div>
                     </td>
                     <td style="width: 100px;">
+                      {{#if isAuthenticated}}
                       {{> appActions}}
+                      {{/if}}
                     </td>
                   </tr>
                   {{/each}}

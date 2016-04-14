@@ -40,6 +40,9 @@ Settings.schema = new SimpleSchema
       type: 'hidden'
   agentUrl: type: [String]
   isAdmin: type: Boolean
+  userAccountsEnabled:
+    type: Boolean
+    optional: true
   remoteAppstoreUrl:
     type: String
     optional: true
@@ -68,4 +71,5 @@ Meteor.startup ->
         else
           ['http://agent']
       isAdmin: settings?.admin or settings?.public?.admin or false
+      userAccountsEnabled: settings?.userAccountsEnabled or false
       remoteAppstoreUrl: settings?.remoteAppstoreUrl or settings?.public?.remoteAppstoreUrl or ''

@@ -1,17 +1,68 @@
 <template name="config">
-<div class="container settings">
-  <div class="row">
+  <div class="container settings">
+    <div class="row">
       <div class="col-sm-12">
         <div class="row">
           <div class="col-md-11"><h1 class="pageTitle"><i class="glyphicon glyphicon-wrench">
             </i> Configuration</h1>
-            <div>
-              {{> quickForm collection="Settings.collection" doc=settings id="updateSettingsForm" type=formType}}
-            </div>
+            {{>generalSettings}}
+            {{#if isInRole 'admin'}}
+            {{>userSettings}}
+            {{/if}}
           </div>
         </div>
-        <hr>
       </div>
+    </div>
   </div>
-</div>
+</template>
+
+<template name="generalSettings">
+  <div class="panel panel-primary">
+    <div class="panel-heading"><h3 class="panel-title">GENERAL</h3></div>
+    <div class="panel-body">
+      {{> quickForm collection="Settings.collection" doc=settings id="updateSettingsForm" type=formType}}
+    </div>
+  </div>
+</template>
+
+<template name="userSettings">
+  <div class="panel panel-primary">
+    <div class="panel-heading"><h3 class="panel-title">USERS</h3></div>
+    <div class="panel-body">
+      <div>
+        <table id="table-permissions" class="table">
+          <thead>{{>roleNames}}</thead>
+          <tbody>{{>registeredUsers}}</tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="roleNames">
+  <tr>
+    <th>user</th>
+    {{#each role in roles}}
+      <th>{{role.name}}</th>
+    {{/each}}
+  </tr>
+</template>
+
+<template name="registeredUsers">
+  {{#each user in users}}
+    <tr>
+      <td class="user-id">{{user.username}}</td>
+      {{#with user}}
+        {{#each role in roles}}
+          {{#with role}}
+            {{> registeredRoles}}
+          {{/with}}
+        {{/each}}
+      {{/with}}
+    </tr>
+  {{/each}}
+</template>
+
+<template name="registeredRoles">
+  <td><input class="perm-{{role.name}}" type="checkbox" checked={{hasRole}}></td>
 </template>

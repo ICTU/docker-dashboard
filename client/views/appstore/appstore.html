@@ -28,6 +28,7 @@
                   <p>
                     {{description}}
                   </p>
+                  {{#if isAuthenticated}}
                   <div class="btn-group">
                     <a title="View" href="#" data-toggle="modal" data-target="#viewbox-{{hash}}">
                       <i class="glyphicon glyphicon-zoom-in"></i>
@@ -46,6 +47,7 @@
                         <button type="button" class="btn-install-app btn btn-mini btn-danger pull-right">Yes!</button>
                     </form>
                   </div>
+                  {{/if}}
                   {{#if hasLocalAppstore}}
                   <button type="button" class="btn btn-link pull-right btn-edit-app" data-toggle="modal" data-target="#editbox-{{hash}}">Edit</button>
                   <button type="button" class="btn btn-link pull-right btn-remove-app">Remove</button>

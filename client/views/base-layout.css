@@ -1,8 +1,12 @@
 .content-container {
-  padding-top: 50px;  
+  padding-top: 50px;
 }
 
-
+.avatar {
+border-radius: 50%;
+-moz-border-radius: 50%;
+-webkit-border-radius: 50%;
+}
 
 #hellobar{
   background:#eb593c;

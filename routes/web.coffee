@@ -28,6 +28,10 @@ Meteor.startup ->
 
     @route 'config',
       path: '/config'
+      subscriptions: -> [
+        Meteor.subscribe 'thaRoles'
+        Meteor.subscribe 'thaUsers'
+      ]
 
     @route 'apps',
       path: '/apps'
