@@ -91,7 +91,7 @@ links="$links--link net-{{this}}-$PROJECT-$INSTANCE:{{this}} "
 {{/each}}
 
 docker run \
---restart=unless-stopped \
+--restart=always \
 --name $DOCKERNETNAME \
 --net=none \
 --dns-search={{../instance}}.{{../project}}.ictu \
@@ -118,7 +118,7 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/progress "$
 #
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Activating service {{service}}"
 docker run -d \
---restart=unless-stopped \
+--restart=always \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
 --log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
@@ -140,8 +140,8 @@ docker run -d \
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescription "Enabling SSH for service {{service}}"
 docker pull jeroenpeeters/docker-ssh
 docker run -d --name $DOCKERSSHDNAME \
---restart=unless-stopped \
--e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
+--restart=always \
+-e CONTAINER=$DOCKERNAME -e AUTH_MECHANISMs=noAuth \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
 --net="container:$DOCKERNETNAME" \
 -v /var/run/docker.sock:/var/run/docker.sock \
