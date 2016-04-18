@@ -1,3 +1,6 @@
+### 3.0.1
+- Configurable Slack Auth Token.
+
 ### 3.0.0
 - Networking based on plumber and pipes.
 
