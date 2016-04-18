@@ -1,7 +1,7 @@
 log = logger.bunyan.createLogger name:'method-invocation'
 
 loggedMethod = (name, f) -> ->
-  log.info method: name, arguments: arguments, client: @connection.clientAddress
+  log.info method: name, arguments: arguments, client: @connection.clientAddress, user: Meteor.user().username
   f.apply @, arguments
 
 logInvocation = (methods) ->
