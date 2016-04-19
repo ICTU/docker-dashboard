@@ -1,6 +1,6 @@
 Meteor.startup =>
   authUrl = 'https://slack.com/api/rtm.start'
-  authToken = 'xoxb-5125952660-xvSsHj7FcbQUSocm4xtEdzLt'
+  authToken = Meteor.settings?.slack?.authToken
   autoReconnect = true
   autoMark = false
   slack = new Slack(authToken, autoReconnect, autoMark)
