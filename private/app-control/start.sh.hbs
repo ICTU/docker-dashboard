@@ -141,7 +141,7 @@ etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/meta_/stateDescri
 docker pull jeroenpeeters/docker-ssh
 docker run -d --name $DOCKERSSHDNAME \
 --restart=always \
--e CONTAINER=$DOCKERNAME -e AUTH_MECHANISMs=noAuth \
+-e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
 --net="container:$DOCKERNETNAME" \
 -v /var/run/docker.sock:/var/run/docker.sock \
