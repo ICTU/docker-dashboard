@@ -113,7 +113,7 @@ links="$links--link net-{{this}}-$PROJECT-$INSTANCE:{{this}} "
 {{/each}}
 
 docker run \
---restart=unless-stopped \
+--restart=always \
 --name $DOCKERNETNAME \
 --net=none \
 --dns-search={{../instance}}.{{../project}}.ictu \
@@ -153,7 +153,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
 }'
 
 docker run -d \
---restart=unless-stopped \
+--restart=always \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
 --log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
@@ -186,7 +186,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
 
 docker pull jeroenpeeters/docker-ssh
 docker run -d --name $DOCKERSSHDNAME \
---restart=unless-stopped \
+--restart=always \
 -e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
 --net="container:$DOCKERNETNAME" \
@@ -197,7 +197,6 @@ docker run -d --name $DOCKERSSHDNAME \
 --label ictu/service/name={{service}} \
 --label ictu/container/type=ssh \
 -v /var/run/docker.sock:/var/run/docker.sock \
--v $(which docker):/usr/bin/docker \
 jeroenpeeters/docker-ssh
 curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
 	"services": {
