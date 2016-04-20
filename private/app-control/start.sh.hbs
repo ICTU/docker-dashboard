@@ -145,7 +145,6 @@ docker run -d --name $DOCKERSSHDNAME \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
 --net="container:$DOCKERNETNAME" \
 -v /var/run/docker.sock:/var/run/docker.sock \
--v $(which docker):/usr/bin/docker \
 jeroenpeeters/docker-ssh
 etcdctl --no-sync --peers $ETCD_CLUSTER set $ETCD_INSTANCE_KEY/{{service}}/sshPort "22" > /dev/null
 {{/if}}
