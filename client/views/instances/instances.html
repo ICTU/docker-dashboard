@@ -167,6 +167,10 @@ ssh -p {{port}} {{hostname}}
                         </td></tr>
                         {{/with}}
                         <tr><th scope="row">State</th><td>{{data.state}}</td></tr>
+                        <tr><th scope="row">Network</th><td>{{data.net}}</td></tr>
+                        {{#with data.sshPort}}
+                        <tr><th scope="row">SSH</th><td>{{data.ssh}}</td></tr>
+                        {{/with}}
                         {{#if data.dockerContainerId}}
                         <tr>
                           <th scope="row">Logs</th>
