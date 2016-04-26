@@ -8,7 +8,6 @@ http
 zimme:iron-router-active
 
 msavin:mongol
-meteorhacks:npm
 
 
 twbs:bootstrap
@@ -53,7 +52,6 @@ spacebars
 check
 
 
-npm-container
 stevezhu:lodash
 standard-minifier-css
 standard-minifier-js

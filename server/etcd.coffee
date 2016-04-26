@@ -1,5 +1,5 @@
 Meteor.startup ->
-  Etcd = Meteor.npmRequire 'node-etcd'
+  Etcd = Npm.require 'node-etcd'
 
   etcd = (endpoint) ->
     parsedEndpoint = endpoint.match /^(.*):\/\/([A-Za-z0-9\-\.]+):([0-9]+)?(.*)$/
