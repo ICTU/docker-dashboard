@@ -1,5 +1,13 @@
 activeLogs = new ReactiveVar null
 
+isStateOk = (instance) ->
+  if instance.meta.state is 'active'
+    for i, service of instance.services
+      return false if service?.state and service.state isnt 'running'
+    true
+  else
+    false
+
 Template.instances.helpers
   instances: ->
     if Session.get('queryName')?.length
@@ -7,7 +15,7 @@ Template.instances.helpers
     else
       Instances.find {}, sort: key: 1
   activityIcon: ->
-    if @meta.state is 'active'
+    if isStateOk(@)
       'ok-sign'
     else if "#{@meta.state}".match /loading|activating/
       'play-circle'
@@ -64,7 +72,7 @@ Template.instances.events
         sAlert.success "Successfully Updated Hellobar Message!"
       else
         sAlert.error "Coudn't Set Hellobar Message!"
-          
+
 
 Template.instances.onCreated ->
   new Clipboard '.copy-to-clipboard a',
@@ -78,7 +86,7 @@ HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
 
 findWebPort = (service) ->
   p = 80
-  service?.ports?.split(/\s+/).forEach (port) ->
+  service?.ports?.replace(/[^\d|\s]/g, '').split(/\s+/).forEach (port) ->
     if port in HTTPS_PORTS.concat(HTTP_PORTS) then p = port
   p
 

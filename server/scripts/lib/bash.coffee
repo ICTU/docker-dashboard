@@ -45,5 +45,7 @@ Meteor.startup ->
 
     stringify: EJSON.stringify
 
+    dashboardUrl: -> process.env.ROOT_URL
+
   Template.startApp.helpers helpers
   Template.stopApp.helpers helpers
