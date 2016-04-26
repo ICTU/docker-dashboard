@@ -4,13 +4,10 @@
       <div class="col-sm-3">
         <h3><i class="glyphicon glyphicon-briefcase"></i> Toolbox</h3>
         <hr>
-
         <ul class="nav nav-stacked">
           <li><a href="{{pathFor 'apps'}}"><i class="glyphicon glyphicon-plus"></i> New Instance</a></li>
         </ul>
-
         <hr>
-
       </div>
 
       <div class="col-sm-9">
@@ -26,163 +23,7 @@
           <div class="col-md-12">
 
             {{#each instances}}
-            <div id="instancesPanel-{{this.name}}" class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title heading-flex-container">
-                  <span class="glyphicon glyphicon-{{activityIcon}}"></span>
-                  {{#if instanceLink}}
-                    <a href="{{instanceLink}}" class="instance-link" target="_blank">{{name}}</a>
-                  {{else}}
-                    <span style="padding-left:5px;" title="This application does not have a web UI.">{{name}}</span>
-                  {{/if}}
-                  <a data-toggle="collapse" data-target="#instancePanel-{{instanceHash}}"
-                     href="#instancePanel-{{name}}" class="collapsed toggle titleToggle">
-                  </a>
-                  {{#if showProgressbar}}
-                  <div class="progress">
-                    <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{progressPercentage}}%;">
-                      <span>{{meta.stateDescription}}</span>
-                    </div>
-                  </div>
-                  {{/if}}
-                  {{#with parameters.tags}}
-                  <div class="labelbox">
-                    {{#each this}}<span class="label label-default">{{this}}</span>{{/each}}
-                  </div>
-                  {{/with}}
-                  <a data-toggle="collapse" data-target="#instancePanel-{{instanceHash}}" href="#" class="collapsed toggle"></a>
-                </h4>
-
-              </div>
-              <div id="instancePanel-{{instanceHash}}" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    <ul class="nav nav-justified pull-right" style="margin-bottom:5px">
-                      {{#if isAdminBoard}}
-                        {{#if isDashboard}}
-                          <li class="btn-group">
-                            <a title="Set Hellobar Message" class="dropdown-toggle" data-toggle="dropdown">
-                              <i class="glyphicon glyphicon-comment"></i>
-                            </a>
-                            <form role="form" id="hellobar-message-form" class="dropdown-menu dropdown-menu-left" style="padding:1em">
-                                <div class="form-group" style="width:35em">
-                                  <label>Message</label>
-                                  <input type="text" value="{{meta.hellobar}}" class="form-control hellobar-message" name="hellobar-message" />
-                                </div>
-                                <button type="submit" class="hellobar-message-submit btn btn-mini btn-primary pull-right">Update</button>
-                            </form>
-                          </li>
-                          {{/if}}
-                      {{/if}}
-                      <li class="btn-group">
-                        <a title="Logs" target="_blank" href="{{pathFor route='instanceLogs' instanceId=_id}}">
-                          <i class="glyphicon glyphicon-list-alt"></i>
-                        </a>
-                        <!-- <a title="Logs" class="showLogs" href="#" data-toggle="modal" data-target="#logsModal">
-                          <i class="glyphicon glyphicon-list-alt"></i>
-                        </a> -->
-                      </li>
-                      <li class="btn-group">
-
-                        <a title="Stop" href="#" class="dropdown-toggle" data-toggle="dropdown">
-                          <i class="glyphicon glyphicon-stop"></i>
-                        </a>
-                        <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
-                            <div class="form-group" style="width:20em">
-                              Do you really want to stop this application?
-                            </div>
-                            <button type="button" class="stop-instance btn btn-mini btn-danger pull-right">Yes!</button>
-                        </form>
-
-                      </li>
-                      <li class="btn-group">
-
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                          <i class="glyphicon glyphicon-trash"></i>
-                        </a>
-                        <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
-                            <div class="form-group" style="width:20em">
-                              <div class="alert alert-warning" role="alert">
-                                <span class="label label-danger">Expert feature!</span> <br />
-                                Do you really want to clear the instance meta information?
-                              </div>
-
-                            </div>
-                            <button type="button" class="clear-instance btn btn-mini btn-danger pull-right">Yes!</button>
-                        </form>
-
-                      </li>
-                    </ul>
-
-                    <table class="table table-condensed">
-                      <tbody>
-                      {{#with meta}}
-                        <tr><th scope="row" style="width:250px;">Application name</th><td>{{appName}}</td></tr>
-                        <tr><th scope="row">Application version</th><td>{{appVersion}}</td></tr>
-                        <tr><th scope="row">State</th><td>{{stateDescription}}</td></tr>
-                        {{#if isAdminBoard}}
-                        <tr><th scope="row">Agent URL</th><td>{{agentUrl}}</td></tr>
-                        {{/if}}
-                      {{/with}}
-                      {{#if params}}
-                        <tr><th scope="row">Parameters</th>
-                          <td>
-                            {{#each params}}
-                            <strong>{{key}}</strong>: {{value}}<br/>
-                            {{/each}}
-                          </td>
-                        </tr>
-                      {{/if}}
-                      </tbody>
-                    </table>
-
-                    {{#each services}}
-                    <h5>
-                      {{name}}
-                      {{#with service=. instance=..}}
-                      <!-- <a href="#" class="open-terminal"><span class="glyphicon glyphicon-console" aria-hidden="true"></span>&nbsp;</a> -->
-                      {{/with}}
-                    </h5>
-                    <table class="table table-condensed">
-                      <tbody>
-                        <tr>
-                          <th scope="row" style="width:250px;">FQDN</th>
-                          <td>
-                            {{#if data.endpoint}}
-                            <a href="{{#if data.protocol}}{{data.protocol}}{{else}}http{{/if}}://{{data.hostname}}{{data.endpoint}}">{{data.hostname}}</a>
-                            {{else}}
-                            {{data.hostname}}
-                            {{/if}}
-                          </td>
-                        </tr>
-
-                        <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr>
-                        <tr><th scope="row">Ports</th><td>{{data.ports}}</td></tr>
-                        <tr><th scope="row">Container Name</th><td>{{data.dockerContainerName}}</td></tr>
-                        {{#with data.sshPort}}
-                        <tr><th scope="row">SSH</th><td>
-                        <div class="copy-to-clipboard"><a href="#">copy to clipboard</a></div>
-{{#prism language="bash" class="code-toolbar" port=this hostname=../data.hostname}}
-ssh -p {{port}} {{hostname}}
-{{/prism}}
-                        </td></tr>
-                        {{/with}}
-                        <tr><th scope="row">State</th><td>{{data.state}}</td></tr>
-                        <tr><th scope="row">Network</th><td>{{data.net}}</td></tr>
-                        {{#with data.sshPort}}
-                        <tr><th scope="row">SSH</th><td>{{data.ssh}}</td></tr>
-                        {{/with}}
-                        {{#if data.dockerContainerId}}
-                        <tr>
-                          <th scope="row">Logs</th>
-                          <td><a target="_blank" href="{{pathFor route='logs' containerId=data.dockerContainerId}}" class="showContainerLogsOld">Show Logs</a></td>
-                        </tr>
-                        {{/if}}
-                      </tbody>
-                    </table>
-                    {{/each}}
-                  </div>
-              </div>
-            </div>
+              {{> instanceView }}
             {{/each}}
 
             {{#if isSearching}}
@@ -198,25 +39,4 @@ ssh -p {{port}} {{hostname}}
 
   </div>
 </div>
-
-{{> logsModal }}
-</template>
-
-<template name="logsModal">
-  <div id="logsModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 99999999999;">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Log</h4>
-        </div>
-        <div class="modal-body">
-           <textarea class="form-control" rows="35">{{logs.bootstrapLog}}</textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
