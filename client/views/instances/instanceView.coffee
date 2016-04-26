@@ -1,5 +1,3 @@
-activeLogs = new ReactiveVar null
-
 isStateOk = (instance) ->
   if instance.meta.state is 'active'
     for i, service of instance.services
@@ -7,6 +5,21 @@ isStateOk = (instance) ->
     true
   else
     false
+
+HTTPS_PORTS = ['443', '8443']
+HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
+
+findWebPort = (service) ->
+  p = 80
+  service?.ports?.replace(/[^\d|\s]/g, '').split(/\s+/).forEach (port) ->
+    if port in HTTPS_PORTS.concat(HTTP_PORTS) then p = port
+  p
+
+determineProtocol = (port) ->
+  if port in HTTPS_PORTS
+    "https"
+  else
+    "http"
 
 Template.instanceView.helpers
   activityIcon: ->
@@ -66,21 +79,3 @@ Template.instanceView.events
 Template.instanceView.onCreated ->
   new Clipboard '.copy-to-clipboard a',
     target: (trigger) -> trigger.parentNode.nextElementSibling
-
-Template.logsModal.helpers
-  logs: -> activeLogs.get()
-
-HTTPS_PORTS = ['443', '8443']
-HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
-
-findWebPort = (service) ->
-  p = 80
-  service?.ports?.replace(/[^\d|\s]/g, '').split(/\s+/).forEach (port) ->
-    if port in HTTPS_PORTS.concat(HTTP_PORTS) then p = port
-  p
-
-determineProtocol = (port) ->
-  if port in HTTPS_PORTS
-    "https"
-  else
-    "http"
