@@ -38,7 +38,6 @@ froatsnook:request
 gadicohen:prism
 zenorocha:clipboard
 ongoworks:bunyan-logger
-standard-minifiers
 meteor-base
 mobile-experience
 mongo
@@ -56,3 +55,5 @@ check
 
 npm-container
 stevezhu:lodash
+standard-minifier-css
+standard-minifier-js
