@@ -4,3 +4,4 @@ node_modules
 settings.local.json
 settings.test.json
 settings.local.2x.json
+/settings.json
