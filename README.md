@@ -22,8 +22,7 @@ Create a configuration file in the root of the project: `settings.json`. Populat
           "authToken": "<slack_auth_token>"
         },
         "public": {
-            "remoteAppstoreUrl": "http://<remoteAppstoreUrl>"
-          }
+          "remoteAppstoreUrl": "http://<remoteAppstoreUrl>"
         }
     }
 
