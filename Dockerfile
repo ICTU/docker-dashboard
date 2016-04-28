@@ -1,3 +1,1 @@
-FROM meteorhacks/meteord:onbuild
-
-RUN npm install
+FROM jeroenpeeters/meteord:1.3.2.4
