@@ -74,8 +74,3 @@ Template.instanceView.events
         sAlert.success "Successfully Updated Hellobar Message!"
       else
         sAlert.error "Coudn't Set Hellobar Message!"
-
-
-Template.instanceView.onCreated ->
-  new Clipboard '.copy-to-clipboard a',
-    target: (trigger) -> trigger.parentNode.nextElementSibling
