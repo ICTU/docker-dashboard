@@ -1,4 +1,6 @@
 Template.index.helpers
+  projectName: -> Settings.findOne()?.project.toUpperCase()
+  appVersion: -> version
   appCount: -> Apps.find().count()
   instanceCount: -> Instances.find().count()
   activeInstanceCount: -> Instances.find('meta.state': 'active').count()

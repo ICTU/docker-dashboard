@@ -1,14 +1,15 @@
 <template name="base-layout">
   <!-- Header -->
-  <div id="top-nav" class="navbar navbar-inverse navbar-fixed-top">
+  <div id="top-nav" class="navbar navbar-default navbar-fixed-top"
+    style="box-shadow: 0px -10px 25px 1px #3A4862; background-color: white">
     {{#if hellobar}}
     <div id='hellobar'>
       <p class='hellobar-text'>{{{hellobar}}}</p>
     </div>
     {{/if}}
     <div class="container">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="/">Big Boat {{appVersion}} - {{projectName}}</a>
+      <div class="navbar-header" >
+        <a class="navbar-brand" style="margin-top: -10px;" href="/"><img title="Big Boat {{appVersion}} shipping for {{projectName}}" style="width: 95px;" src="/img/logo.png" /></a>
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
@@ -51,14 +52,14 @@
             </a>
           </li>
           {{/if}}
-          <!--li class="dropdown">
+          li class="dropdown">
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
               <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
             <ul id="g-account-menu" class="dropdown-menu" role="menu">
               <li><a href="#">My Profile</a></li>
               <li><a href="#"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
             </ul>
-          </li-->
+          </li
         </ul>
       </div>
     </div><!-- /container -->
