@@ -1,7 +1,7 @@
 isStateOk = (instance) ->
   if instance.meta.state is 'active'
     for i, service of instance.services
-      return false if service?.state and service.state isnt 'running'
+      return false unless service.dockerContainerInfo?.service?.State?.Running
     true
   else
     false
