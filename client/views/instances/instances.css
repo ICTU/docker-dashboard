@@ -73,3 +73,26 @@
    width: 100%;
    color: black;
 }
+
+.instances.container #page-menu {
+  position: fixed;
+  width: 300px;
+}
+
+.instances.container #searchbox-container {
+  position: fixed;
+  top: 50px;
+  z-index: 10;
+  background-color: white;
+  width: 1185px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid lightblue;
+}
+
+.instances.container #content-row {
+  margin-top: 75px;
+}
+
+.instances.container #instances-container {
+  margin-left: 300px
+}
