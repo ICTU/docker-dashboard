@@ -1,7 +1,10 @@
-Docker dashboard
+Big Boat
 ================
-Yet another docker dashboard, but better.
+Yet another docker dashboard, but bigger & better.
 
+![Instances screenshot](http://i.imgur.com/9KMTgDM.png)
+
+![Appstore screenshot](http://i.imgur.com/1Ibb9SY.png)
 
 ## Configuration
 
