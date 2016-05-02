@@ -27,3 +27,26 @@
 .apps.container .panel-title.heading-flex-container div span {
   margin-right:5px;
 }
+
+.apps.container #page-menu {
+  position: fixed;
+  width: 300px;
+}
+
+.apps.container #searchbox-container {
+  position: fixed;
+  top: 50px;
+  z-index: 10;
+  background-color: white;
+  width: 1185px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid lightblue;
+}
+
+.apps.container #content-row {
+  margin-top: 75px;
+}
+
+.apps.container #apps-container {
+  margin-left: 300px
+}
