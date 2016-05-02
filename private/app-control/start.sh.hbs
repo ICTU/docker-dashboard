@@ -125,12 +125,12 @@ docker run \
 --net=none \
 --dns-search={{../instance}}.{{../project}}.ictu \
 -h {{service}}.{{../instance}}.{{../project}}.ictu \
---label ictu/dashboard/url={{dashboardUrl}} \
---label ictu/project={{../project}} \
---label ictu/application/name={{../appName}} \
---label ictu/instance/name={{../instance}} \
---label ictu/service/name={{service}} \
---label ictu/container/type=net \
+--label bigboat/dashboard/url={{dashboardUrl}} \
+--label bigboat/project={{../project}} \
+--label bigboat/application/name={{../appName}} \
+--label bigboat/instance/name={{../instance}} \
+--label bigboat/service/name={{service}} \
+--label bigboat/container/type=net \
 {{attribute "extra_hosts" "--add-host="}} \
 -e pipework_cmd="@VLT_NIC@ -i eth0 @CONTAINER_NAME@ dhclient @${vlan}" \
 -d www.docker-registry.isd.ictu:5000/pipes:1
@@ -165,12 +165,12 @@ docker run -d \
 --net="container:$DOCKERNETNAME" \
 --log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
 --log-opt syslog-tag="{{|.ImageName}}/{{|.Name}}/{{|.ID}}" \
---label ictu/dashboard/url={{dashboardUrl}} \
---label ictu/project={{../project}} \
---label ictu/application/name={{../appName}} \
---label ictu/instance/name={{../instance}} \
---label ictu/service/name={{service}} \
---label ictu/container/type=service \
+--label bigboat/dashboard/url={{dashboardUrl}} \
+--label bigboat/project={{../project}} \
+--label bigboat/application/name={{../appName}} \
+--label bigboat/instance/name={{../instance}} \
+--label bigboat/service/name={{service}} \
+--label bigboat/container/type=service \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes}} \
 {{volumesfrom}} \
@@ -197,12 +197,12 @@ docker run -d --name $DOCKERSSHDNAME \
 -e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
 --net="container:$DOCKERNETNAME" \
---label ictu/dashboard/url={{dashboardUrl}} \
---label ictu/project={{../project}} \
---label ictu/application/name={{../appName}} \
---label ictu/instance/name={{../instance}} \
---label ictu/service/name={{service}} \
---label ictu/container/type=ssh \
+--label bigboat/dashboard/url={{dashboardUrl}} \
+--label bigboat/project={{../project}} \
+--label bigboat/application/name={{../appName}} \
+--label bigboat/instance/name={{../instance}} \
+--label bigboat/service/name={{service}} \
+--label bigboat/container/type=ssh \
 -v /var/run/docker.sock:/var/run/docker.sock \
 jeroenpeeters/docker-ssh
 curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
