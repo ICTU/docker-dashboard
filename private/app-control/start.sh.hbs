@@ -126,6 +126,7 @@ docker run \
 --dns-search={{../instance}}.{{../project}}.ictu \
 -h {{service}}.{{../instance}}.{{../project}}.ictu \
 --label bigboat/dashboard/url={{dashboardUrl}} \
+--label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
 --label bigboat/project={{../project}} \
 --label bigboat/application/name={{../appName}} \
 --label bigboat/instance/name={{../instance}} \
@@ -166,6 +167,7 @@ docker run -d \
 --log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
 --log-opt syslog-tag="{{|.ImageName}}/{{|.Name}}/{{|.ID}}" \
 --label bigboat/dashboard/url={{dashboardUrl}} \
+--label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
 --label bigboat/project={{../project}} \
 --label bigboat/application/name={{../appName}} \
 --label bigboat/instance/name={{../instance}} \
@@ -198,6 +200,7 @@ docker run -d --name $DOCKERSSHDNAME \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
 --net="container:$DOCKERNETNAME" \
 --label bigboat/dashboard/url={{dashboardUrl}} \
+--label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}}
 --label bigboat/project={{../project}} \
 --label bigboat/application/name={{../appName}} \
 --label bigboat/instance/name={{../instance}} \
