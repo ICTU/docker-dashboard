@@ -5,6 +5,7 @@
   </h5>
   <table class="table table-condensed">
     <tbody>
+      <tr><th scope="row">Created</th><td>{{createdSince}}</td></tr>
       <tr>
         <th scope="row" style="width:250px;">FQDN</th>
         <td>
@@ -15,10 +16,10 @@
           {{/if}}
         </td>
       </tr>
-
+      <tr><th scope="row">Container Name</th><td>{{data.dockerContainerName}}</td></tr>
       <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr>
       <tr><th scope="row">Ports</th><td>{{data.ports}}</td></tr>
-      <tr><th scope="row">Container Name</th><td>{{data.dockerContainerName}}</td></tr>
+
 
       {{#if hasSshSettings}}
       <tr><th scope="row">SSH</th><td>
