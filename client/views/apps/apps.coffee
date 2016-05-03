@@ -1,7 +1,7 @@
 appDefTemplate =
   name: 'appName'
   version: 'appVersion'
-  def: 'name: appName \nversion:appVersion'
+  def: 'name: appName\nversion: appVersion\n\nservice1:\n\timage: imagename:version'
 
 appSearch = ->
   filterObj = {}
