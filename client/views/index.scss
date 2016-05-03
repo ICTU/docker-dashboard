@@ -1,24 +1,46 @@
 .indexPage {
+  margin-top: 25px;
+
   .card {
     overflow: hidden;
     position: relative;
     border: 1px solid #CCC;
     border-radius: 8px;
-    text-align: center;
+    text-align: left;
     padding: 0;
     color: #ffffff;
   }
 
   .card .content {
-    font-size: 16px;
+    font-size: 24px;
     line-height: 10px;
     padding-bottom: 10px;
+    padding-left: 20px;
   }
 
-  .card h1 {
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 70px;
-    margin: 10px;
+  .card .header {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px;
+    margin-top: 30px;
+  }
+
+  .icon-container {
+    text-align: center;
+    padding-top: 40px;
+    height:120px;
+    width:35%;
+    float:left;
+    overflow:hidden;
+
+    i.material-icons {
+      font-size: 42px;
+    }
+  }
+  .icon-container.apps {
+    background-color: #001f3f
+  }
+  .icon-container.instances {
+    background-color: #0074D9;
   }
 }

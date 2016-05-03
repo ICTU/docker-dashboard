@@ -1,119 +1,94 @@
 <template name="index">
   <div class="container indexPage">
-    <div class="content-container">
+    <div class="row">
+      <div class="col-sm-6">
 
-      <div class="row">
-        <div class="col-sm-3">
-            <div class="card" style="background-color:#001f3f">
-              <a href="{{pathFor 'apps'}}" style="color: white;">
-                <div class="header">
-                    <h1>{{appCount}}</h1>
+        <div class="row">
+          <div class="col-sm-6">
+              <div class="card" style="background-color:white; border:none; box-shadow:0px 0px 21px 1px rgba(0,0,0,0.10);">
+                <div class="icon-container apps">
+                  <i class="material-icons">apps</i>
                 </div>
-                <div class="content">
-                    <p>Applications</p>
+                <a href="{{pathFor 'apps'}}" style="color:#001f3f; float:left;">
+                  <p class="header">Apps</p>
+                  <p class="content">{{appCount}}</p>
+                </a>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="card" style="background-color:white; border:none; box-shadow:0px 0px 21px 1px rgba(0,0,0,0.10);">
+                <div class="icon-container instances">
+                  <i class="material-icons">content_copy</i>
                 </div>
-              </a>
-            </div>
+                <a href="{{pathFor 'apps'}}" style="color:#0074D9; float:left;">
+                  <p class="header">Instances</p>
+                  <p class="content">{{instanceCount}}</p>
+                </a>
+              </div>
+          </div>
         </div>
 
-        <div class="col-sm-3">
-            <div class="card" style="background-color:#0074D9">
-              <a href="{{pathFor 'instances'}}" style="color: white;">
-                <div class="header">
-                    <h1>{{instanceCount}}</h1>
-                </div>
-                <div class="content">
-                    <p>Instances</p>
-                </div>
-              </a>
-            </div>
-        </div>
+        <div class="row" style="margin-top:25px;">
+          <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Tags</h3>
+              </div>
+              <div class="panel-body">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Tag</th>
+                      <th>Apps</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each tags}}
+                    <tr>
+                      <td><span class="label label-info">{{tag}}</span></td>
+                      <td>{{count}}</td>
+                      <td style="width:50px;">
+                        <ul class="nav nav-justified">
+                          <li class="btn-group">
 
-        <div class="col-sm-3">
-            <div class="card" style="background-color:#3D9970">
-                <div class="header">
-                    <h1>{{activeInstanceCount}}</h1>
-                </div>
-                <div class="content">
-                    <p>Active</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="card" style="background-color:#FF851B">
-                <div class="header">
-                    <h1>{{inactiveInstanceCount}}</h1>
-                </div>
-                <div class="content">
-                    <p>Inactive</p>
-                </div>
-            </div>
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:25px;">
-        <div class="col-md-6">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Tags</h3>
-            </div>
-            <div class="panel-body">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>Tag</th>
-                    <th>Apps</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {{#each tags}}
-                  <tr>
-                    <td><span class="label label-info">{{tag}}</span></td>
-                    <td>{{count}}</td>
-                    <td style="width:50px;">
-                      <ul class="nav nav-justified">
-                        <li class="btn-group">
-
-                          <a title="Start" href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicon glyphicon-refresh"></i>
-                          </a>
-                          <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em;">
-                            <div class="alert alert-warning" role="alert" style="width:300px;">
-                              <strong>Warning!</strong> Do you really want to restart all {{tag}} apps?
-                            </div>
-                            <button class="restart-tag btn tn-warning pull-right">Yes, make it so!</button>
-                          </form>
-                        </li>
-                      </ul>
-                    </td>
-                  </tr>
-                  {{/each}}
-                </tbody>
-              </table>
+                            <a title="Start" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                              <i class="glyphicon glyphicon-refresh"></i>
+                            </a>
+                            <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em;">
+                              <div class="alert alert-warning" role="alert" style="width:300px;">
+                                <strong>Warning!</strong> Do you really want to restart all {{tag}} apps?
+                              </div>
+                              <button class="restart-tag btn tn-warning pull-right">Yes, make it so!</button>
+                            </form>
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-md-6">
-          <h1 class="pageTitle">Big Boat {{appVersion}} for {{projectName}}</h1>
-          <hr>
-          <p>
-            <strong>master</strong>
-            <ul>
-              <li>Realtime container status updates</li>
-            </ul>
-
-            <strong>3.0</strong>
-            <ul>
-              <li>Improved container networking</li>
-            </ul>
-          </p>
-
-        </div>
-
       </div>
+      <div class="col-sm-6">
+        <h1 class="pageTitle">Big Boat {{appVersion}} for {{projectName}}</h1>
+        <hr>
+        <p>
+          <strong>master</strong>
+          <ul>
+            <li>Realtime container status updates</li>
+            <li>UI restyling</li>
+          </ul>
 
+          <strong>3.0</strong>
+          <ul>
+            <li>Improved container networking</li>
+          </ul>
+        </p>
+      </div>
     </div>
   </div>
 
