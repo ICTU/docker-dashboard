@@ -1,4 +1,5 @@
 <template name="apps">
+{{> editAppDefBox appDefTemplate}}
 <div class="apps container">
   <div class="row">
       <div class="col-sm-12">
@@ -21,7 +22,6 @@
         <li><a title="{{this}}" class="filterByTag" href="#"><i class="glyphicon glyphicon-zoom-in"></i> {{this}}</a></li>
         {{/each}}
       </ul>
-      {{> editAppDefBox appDefTemplate}}
     </div>
     <div id="apps-container" class="col-md-9">
       {{#each appNames}}
