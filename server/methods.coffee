@@ -13,7 +13,7 @@ Meteor.methods logInvocation
   clearInstance: Cluster.clearInstance
   setHellobarMessage: Cluster.setHellobarMessage
   saveApp: Cluster.saveApp
-  
+
   deleteApp: (app, version) ->
     endpoint = Settings.findOne().etcd
     endpoint = endpoint[...-1] if endpoint[-1..] is "/"
@@ -48,18 +48,19 @@ Meteor.methods logInvocation
       direction: 'sent'
 
   getLog: (cid) ->
-    cid = cid[0...12]
     q =
       query:
         filtered:
           query:
             bool:
-              should: [query_string: query: cid]
+              must: [term: 'docker.id': cid]
       sort:['@timestamp': order: 'desc']
       size: 500
 
     result = HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
       data: q
+
+    console.log '----', result
 
     if result.data and result.data.hits and hits = result.data.hits.hits
       hits.map (item) ->
@@ -81,10 +82,3 @@ Meteor.methods logInvocation
 
     result = HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
       data: q
-
-    if result.data and result.data.hits and hits = result.data.hits.hits
-      hits.map (item) ->
-        date: item._source['@timestamp']
-        message: item._source.message
-    else
-      result
