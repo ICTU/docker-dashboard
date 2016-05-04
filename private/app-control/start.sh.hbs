@@ -164,8 +164,6 @@ docker run -d \
 --restart=always \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
---log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
---log-opt syslog-tag="{{|.ImageName}}/{{|.Name}}/{{|.ID}}" \
 --label bigboat/dashboard/url={{dashboardUrl}} \
 --label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
 --label bigboat/project={{../project}} \
