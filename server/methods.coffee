@@ -71,14 +71,12 @@ Meteor.methods logInvocation
 
   getInstanceLog: (id) ->
     instance = Instances.findOne _id: id
-    q =
-      query:
-        filtered:
-          query:
-            bool:
-              should: [query_string: query: instance.meta.id]
-      sort:['@timestamp': order: 'desc']
-      size: 500
-
-    result = HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
-      data: q
+    HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
+      data:
+        query:
+          filtered:
+            query:
+              bool:
+                should: [query_string: query: instance.meta.id]
+        sort:['@timestamp': order: 'desc']
+        size: 500
