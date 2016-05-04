@@ -91,6 +91,7 @@ npm-mongo@1.4.43
 observe-sequence@1.0.11
 ongoworks:bunyan-logger@2.6.1
 ordered-dict@1.0.7
+percolate:migrations@0.9.8
 pntbr:js-yaml-client@0.0.1
 promise@0.6.7
 raix:eventemitter@0.1.3

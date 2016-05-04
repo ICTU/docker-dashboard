@@ -55,3 +55,4 @@ check
 stevezhu:lodash
 standard-minifier-css
 standard-minifier-js
+percolate:migrations
