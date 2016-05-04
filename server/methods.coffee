@@ -9,7 +9,13 @@ logInvocation = (methods) ->
 
 getLogs = (q) ->
   result = HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
-    data: q
+    data:
+      query:
+        filtered:
+          query:
+            bool: q
+      sort:['@timestamp': order: 'desc']
+      size: 500
 
   result = JSON.parse result.content
 
@@ -60,22 +66,8 @@ Meteor.methods logInvocation
       direction: 'sent'
 
   getLog: (cid) ->
-    getLogs
-      query:
-        filtered:
-          query:
-            bool:
-              must: [term: 'docker.id': cid]
-      sort:['@timestamp': order: 'desc']
-      size: 500
+    getLogs must: [term: 'docker.id': cid]
 
   getInstanceLog: (id) ->
     instance = Instances.findOne _id: id
-    getLogs
-      query:
-        filtered:
-          query:
-            bool:
-              should: [query_string: query: instance.meta.id]
-      sort:['@timestamp': order: 'desc']
-      size: 500
+    getLogs should: [query_string: query: instance.meta.id]
