@@ -13,13 +13,8 @@ Meteor.methods logInvocation
   clearInstance: Cluster.clearInstance
   setHellobarMessage: Cluster.setHellobarMessage
   saveApp: Cluster.saveApp
-  
-  deleteApp: (app, version) ->
-    endpoint = Settings.findOne().etcd
-    endpoint = endpoint[...-1] if endpoint[-1..] is "/"
-    console.log "#{endpoint}/apps/#{Settings.findOne().project}/#{app}/#{version}"
-    HTTP.del "#{endpoint}/apps/#{Settings.findOne().project}/#{app}/#{version}", (err, res) ->
-      console.error err if err
+
+  deleteApp: Cluster.deleteApp
 
   execService: Cluster.execService
   saveAppInStore: (parsed, raw) ->
