@@ -79,16 +79,12 @@ pickAgent = ->
   clearInstance: (project, instance) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
     Instances.remove project: project, name: instance
-    # console.log "#{Settings.findOne().etcd}instances/#{project}/#{inst.application}/#{instance}?recursive=true"
-    # HTTP.del "#{Settings.findOne().etcd}instances/#{project}/#{inst.application}/#{instance}?recursive=true", {}, (error, result) ->
-    #   console.log(error) if error
-    #   console.log "Cluster.clearInstance completed -> #{project}, #{instance}"
-    #   sync()
-    ""
 
   saveApp: (name, version, definition) ->
-    EtcdClient.set "apps/#{Settings.findOne().project}/#{name}/#{version}", definition
-    ""
+    ApplicationDefs.upsert {name: "#{name}", version: "#{version}"},
+      name: "#{name}"
+      version: "#{version}"
+      def: definition
 
   retrieveApp: (name, version) ->
     ApplicationDefs.find({name: "#{name}", version: "#{version}"}, {fields: {"def":1, "_id":0}}).map (app) -> app.def
