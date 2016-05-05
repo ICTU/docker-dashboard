@@ -3,16 +3,7 @@ currentProject = null
 Meteor.startup ->
   startSync = (doc) ->
     currentProject = doc.project
-    sync()
-
-  Settings.find {},
-    fields:
-      project: 1
-      etcd: 1
-      etcdBaseUrl: 1
-  .observe
-    added: startSync
-    changed: startSync
+    # sync()
 
 toApp = (node) ->
   [ignore..., keyBase, project, appName, version] = node.key?.split('/')
