@@ -35,7 +35,6 @@ resolveParams = (appDef, params)->
 
 findAppDef = (name, version) ->
   ApplicationDefs.findOne
-    project: Settings.findOne().project
     name: name
     version: version
 renderForNameAndVersion = (template) -> (name, version, instance, options, params) ->
