@@ -5,6 +5,11 @@ if [ "$(whoami)" != "root" ]; then
 	exit 1
 fi
 
+# Setup docker environment
+swarmLeader=$(etcdctl --peers=http://10.25.55.11:4001 get /docker/swarm/leader)
+dockerPath=$(which docker)
+DOCKER="$dockerPath -H $swarmLeader"
+
 syslogProto=`echo '{{syslogUrl}}' | grep -oE '(^[a-z]+):' | grep -oE '[a-z]+'`
 syslogHost=`echo '{{syslogUrl}}' | grep -oE '(//.+):' | cut -c3-  | rev | cut -c2- | rev`
 syslogPort=`echo '{{syslogUrl}}' | grep -oE '(:[0-9]+)' | cut -c2-`
@@ -61,7 +66,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 	} \
 }"
 
-docker pull {{image}}
+$DOCKER pull {{image}}
 
 echo "Done pulling image {{image}}"
 STEP=$((STEP+1))
@@ -93,12 +98,12 @@ echo "Preparing network for service {{service}}"
 #
 # Remove any left-behind instances
 #
-docker kill $DOCKERNETNAME 2>/dev/null
-docker rm $DOCKERNETNAME 2>/dev/null
-docker kill $DOCKERNAME 2>/dev/null
-docker rm $DOCKERNAME 2>/dev/null
-docker kill $DOCKERSSHDNAME 2>/dev/null
-docker rm $DOCKERSSHDNAME 2>/dev/null
+$DOCKER kill $DOCKERNETNAME 2>/dev/null
+$DOCKER rm $DOCKERNETNAME 2>/dev/null
+$DOCKER kill $DOCKERNAME 2>/dev/null
+$DOCKER rm $DOCKERNAME 2>/dev/null
+$DOCKER kill $DOCKERSSHDNAME 2>/dev/null
+$DOCKER rm $DOCKERSSHDNAME 2>/dev/null
 #
 # Prepare the volumes
 #
@@ -113,7 +118,7 @@ links=""
 links="$links--link net-{{this}}-$PROJECT-$INSTANCE:{{this}} "
 {{/each}}
 
-docker run \
+$DOCKER run \
 --restart=always \
 --name $DOCKERNETNAME \
 --net=none \
@@ -131,7 +136,7 @@ docker run \
 -d www.docker-registry.isd.ictu:5000/pipes:1
 
 while [ 1 ]; do
-  pubip=$(docker exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}');
+  pubip=$($DOCKER exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}');
   if [[ $pubip ]]; then
     echo "ip=$pubip"
     break;
@@ -154,7 +159,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
 	"meta": {"stateDescription": "Activating service {{service}}"}
 }'
 
-docker run -d \
+res=$($DOCKER run -d \
 --restart=always \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
@@ -173,7 +178,16 @@ docker run -d \
 {{#if user}}-u {{user}}{{/if}} \
 {{#if mem_limit}}-m {{mem_limit}}{{/if}} \
 {{{environmentAttributes}}} \
--v /etc/localtime:/etc/localtime:ro {{image}} {{#if command}}{{command}}{{/if}} > /dev/null
+-v /etc/localtime:/etc/localtime:ro {{image}} {{#if command}}{{command}}{{/if}} 2>{{{literal '&'}}}1)
+
+if [[ $? -ne 0 ]]; then
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+		\"meta\": { \
+			\"stateDescription\": \"$res\" \
+		} \
+	}"
+	exit 1
+fi
 
 {{#if enable_ssh}}
 #
@@ -185,8 +199,8 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
 	}
 }'
 
-docker pull jeroenpeeters/docker-ssh
-docker run -d --name $DOCKERSSHDNAME \
+$DOCKER pull jeroenpeeters/docker-ssh
+$DOCKER run -d --name $DOCKERSSHDNAME \
 --restart=always \
 -e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
@@ -213,9 +227,9 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
 # Publish info about the container
 #
 hostname="{{service}}.$INSTANCE.$PROJECT.ictu"
-myip=$(docker exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
-ports=$(docker inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}})
-cid=$(docker inspect -f '{{{literal '{{.Id}}'}}}' $DOCKERNAME)
+myip=$($DOCKER exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
+ports=$($DOCKER inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}})
+cid=$($DOCKER inspect -f '{{{literal '{{.Id}}'}}}' $DOCKERNAME)
 
 curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 	\"services\": { \
@@ -268,12 +282,12 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 {{#each services}}
 DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
 DOCKERNETNAME="net-$DOCKERNAME"
-if [ "$(docker ps | grep '\s'$DOCKERNAME)" ]; then
+if [ "$($DOCKER ps | grep '\s'$DOCKERNAME)" ]; then
 	echo "SUCCESS: $DOCKERNAME is running";
 else
 	echo "FAILURE: $DOCKERNAME is not running";
 fi
-if [ "$(docker ps | grep '\s'$DOCKERNETNAME)" ]; then
+if [ "$($DOCKER ps | grep '\s'$DOCKERNETNAME)" ]; then
 	echo "SUCCESS: network for $DOCKERNAME is running";
 else
 	echo "FAILURE: network for $DOCKERNAME is not running";
