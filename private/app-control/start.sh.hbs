@@ -83,17 +83,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 {{#each services}}
 
 DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
-DOCKERNETNAME="net-$DOCKERNAME"
 DOCKERSSHDNAME="sshd-$DOCKERNAME"
-
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"state\": \"activating\", \
-		\"stateDescription\": \"Preparing network for {{service}}\" \
-	} \
-}"
-
-echo "Preparing network for service {{service}}"
 
 #
 # Remove any left-behind instances
@@ -163,6 +153,7 @@ res=$($DOCKER run -d \
 --restart=always \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
+--hostname={{service}}.{{../instance}}.{{../project}}.ictu \
 --label bigboat/dashboard/url={{dashboardUrl}} \
 --label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
 --label bigboat/project={{../project}} \
