@@ -6,6 +6,9 @@
   <table class="table table-condensed">
     <tbody>
       <tr><th scope="row">Created</th><td>{{createdSince}}</td></tr>
+      {{#if isAdminBoard}}
+        <tr><th scope="row">Host</th><td>{{swarmNode}}</td></tr>
+      {{/if}}
       <tr>
         <th scope="row" style="width:250px;">FQDN</th>
         <td>
@@ -17,7 +20,7 @@
         </td>
       </tr>
       <tr><th scope="row">Container Name</th><td>{{data.dockerContainerName}}</td></tr>
-      <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr>
+      <tr><th scope="row">Container IP</th><td>{{containerIP}}</td></tr>
       <tr><th scope="row">Ports</th><td>{{data.ports}}</td></tr>
 
 
@@ -42,7 +45,6 @@ ssh -p {{port}} {{hostname}}
       {{/if}}
 
       <tr><th scope="row">State</th><td>{{data.dockerContainerInfo.service.State.Status}}</td></tr>
-      <tr><th scope="row">Network</th><td>{{data.dockerContainerInfo.net.State.Status}}</td></tr>
 
       {{#if data.dockerContainerId}}
       {{#if isAuthenticated}}
