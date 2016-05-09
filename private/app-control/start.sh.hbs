@@ -200,7 +200,7 @@ docker run -d --name $DOCKERSSHDNAME \
 -e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
 --net="container:$DOCKERNETNAME" \
 --label bigboat/dashboard/url={{dashboardUrl}} \
---label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}}
+--label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
 --label bigboat/project={{../project}} \
 --label bigboat/application/name={{../appName}} \
 --label bigboat/instance/name={{../instance}} \
