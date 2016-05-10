@@ -7,6 +7,25 @@ loggedMethod = (name, f) -> ->
 logInvocation = (methods) ->
   _.object ([name, loggedMethod(name, func)] for name, func of methods)
 
+getLogs = (q) ->
+  result = HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
+    data:
+      query:
+        filtered:
+          query:
+            bool: q
+      sort:['@timestamp': order: 'desc']
+      size: 500
+
+  result = JSON.parse result.content
+
+  if hits = result?.hits?.hits
+    hits.map (item) ->
+      date: item._source['@timestamp']
+      message: item._source.message
+  else
+    result
+
 Meteor.methods logInvocation
   startApp: Cluster.startApp
   stopInstance: Cluster.stopInstance
@@ -43,43 +62,8 @@ Meteor.methods logInvocation
       direction: 'sent'
 
   getLog: (cid) ->
-    cid = cid[0...12]
-    q =
-      query:
-        filtered:
-          query:
-            bool:
-              should: [query_string: query: cid]
-      sort:['@timestamp': order: 'desc']
-      size: 500
-
-    result = HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
-      data: q
-
-    if result.data and result.data.hits and hits = result.data.hits.hits
-      hits.map (item) ->
-        date: item._source['@timestamp']
-        message: item._source.message
-    else
-      result
+    getLogs must: [term: 'docker.id': cid]
 
   getInstanceLog: (id) ->
     instance = Instances.findOne _id: id
-    q =
-      query:
-        filtered:
-          query:
-            bool:
-              should: [query_string: query: instance.meta.id]
-      sort:['@timestamp': order: 'desc']
-      size: 500
-
-    result = HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
-      data: q
-
-    if result.data and result.data.hits and hits = result.data.hits.hits
-      hits.map (item) ->
-        date: item._source['@timestamp']
-        message: item._source.message
-    else
-      result
+    getLogs should: [query_string: query: instance.meta.id]

@@ -12,7 +12,8 @@ Template.logs.onRendered ->
     Meteor.call 'getLog', @data.containerId, (err, data) =>
       if err
         console.warn "Error while getting logs for #{@data.containerId}", err
-      else Session.set "log#{@data.containerId}", data
+      else
+        Session.set "log#{@data.containerId}", data
   if @data.instanceId
     Meteor.call 'getInstanceLog', @data.instanceId, (err, data) =>
       if err
