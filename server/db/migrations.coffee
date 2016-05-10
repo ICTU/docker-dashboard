@@ -3,17 +3,14 @@ syncWithBaseKey = (baseKey, handler) ->
   if proj
     recursiveUrl = "#{baseKey}/#{proj}?recursive=true"
     EtcdClient.discover recursiveUrl, (err, nodes) ->
-      if err
-        console.error err
-      else
-        handler err, nodes
+      handler err, nodes
 
 Migrations.add
-  version: 1,
-  name: 'Gets instance info from ETCD.',
+  version: 1
+  name: 'Gets instance info from ETCD.'
   up: ->
     syncWithBaseKey "instances", (err, nodes) ->
-      throw new Error err if err
+      console.error 'Error while syncing instances info, skipping...', err if err
 
       objects = {}
       if nodes
@@ -42,5 +39,33 @@ Migrations.add
 
       Instances.updateCollection (value for key, value of objects)
 
-Meteor.startup ->
-  Migrations.migrateTo('latest')
+Migrations.add
+  version: 2
+  name: 'Gets application definitions from ETCD.'
+  up: ->
+    toApp = (node) ->
+      [ignore..., keyBase, project, appName, version] = node.key?.split('/')
+      {project: project, name: appName, key: node.key?.split('/')[0..-2].join '/'}
+
+    syncWithBaseKey "apps", (err, nodes) ->
+      console.error 'Error while syncing apps info, skipping...', err if err
+
+      apps = if nodes then (toApp node for node in nodes) else []
+      Apps.updateCollection apps
+
+      objects = []
+      if nodes
+        for n in nodes
+          [ignore..., keyBase, project, appName, version] = n.key.split('/')
+
+          objects.push
+            key: n.key
+            project: project
+            name: appName
+            version: version
+            def: n.value
+            tags: Helper.extractTags n.value
+
+      ApplicationDefs.updateCollection objects
+
+Meteor.startup -> Migrations.migrateTo('latest')
