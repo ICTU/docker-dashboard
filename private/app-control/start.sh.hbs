@@ -5,13 +5,7 @@ if [ "$(whoami)" != "root" ]; then
 	exit 1
 fi
 
-syslogProto=`echo '{{syslogUrl}}' | grep -oE '(^[a-z]+):' | grep -oE '[a-z]+'`
-syslogHost=`echo '{{syslogUrl}}' | grep -oE '(//.+):' | cut -c3-  | rev | cut -c2- | rev`
-syslogPort=`echo '{{syslogUrl}}' | grep -oE '(:[0-9]+)' | cut -c2-`
-
 ID="$(cat /proc/sys/kernel/random/uuid)"
-
-exec 1> >(awk -v id=$ID '{ print id, "=>", $0; fflush(); }' | ncat $syslogHost --$syslogProto $syslogPort) 2>{{{literal '&'}}}1
 
 #
 # GENERAL STATE CLEANUP AND CONFIGURATION+
@@ -164,8 +158,6 @@ docker run -d \
 --restart=always \
 --name $DOCKERNAME \
 --net="container:$DOCKERNETNAME" \
---log-driver=syslog --log-opt syslog-address={{syslogUrl}} \
---log-opt syslog-tag="{{|.ImageName}}/{{|.Name}}/{{|.ID}}" \
 --label bigboat/dashboard/url={{dashboardUrl}} \
 --label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
 --label bigboat/project={{../project}} \
