@@ -1,3 +1,6 @@
+### master
+- Store apps and instances in mongo.
+
 ### 3.0.2
 - Changed docker restart policy to always.
 
