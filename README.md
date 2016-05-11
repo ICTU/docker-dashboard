@@ -31,3 +31,19 @@ Create a configuration file in the root of the project: `settings.json`. Populat
 
 ## Start dashboard
 `ROOT_URL=<root_url_of_app> meteor --settings settings.json`
+
+
+## API
+
+### Application definitions
+
+This api allows for [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations on the application definitions stored by the dashboard.
+
+__Endpoint__: /api/v1/appdef/:name/:version
+
+#### Create a new application definition
+
+The example shows how to create a new application definition _myNewApp_ with version _1.0_ from the application definition stored in _appdef.yaml_.
+
+    curl -H "Content-Type: text/plain" -X PUT --data-binary @appdef.yaml http://localhost:3000/api/v1/appdef/myNewApp/1.0
+    
