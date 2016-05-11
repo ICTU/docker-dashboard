@@ -45,9 +45,9 @@ __Endpoint__: /api/v1/appdef/:name/:version
 
 #### Retrieve an application definition
 
-An existing application definition can be retrieved with the _HTTP GET_ operation. It will return the complete application definition as text.
+An existing application definition can be retrieved with the _HTTP GET_ operation. It will return the complete application definition as [YAML](https://en.wikipedia.org/wiki/YAML) text.
 
-  curl http://localhost:3000/apy/v1/appdef/myApp/1.0
+    curl http://localhost:3000/apy/v1/appdef/myApp/1.0
 
 #### Create a new application definition
 
@@ -67,6 +67,6 @@ The example shows how to update an existing application definition. If the defin
 
 #### Delete an application definition
 
-An existing application definition can be deleted with the _HTTP DELETE_ operation. 
+An existing application definition can be deleted with the _HTTP DELETE_ operation.
 
     curl -X DELETE http://localhost:3000/api/v1/appdef/myNewApp/1.0
