@@ -69,4 +69,4 @@ The example shows how to update an existing application definition. If the defin
 
 An existing application definition can be deleted with the _HTTP DELETE_ operation.
 
-    curl -X DELETE http://localhost:3000/api/v1/appdef/myNewApp/1.0
+    curl -X DELETE http://BIG_BOAT/api/v1/appdef/myNewApp/1.0
