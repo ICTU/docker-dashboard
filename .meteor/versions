@@ -39,6 +39,7 @@ ecmascript@0.4.3
 ecmascript-runtime@0.2.10
 ejson@1.0.11
 email@1.0.12
+es5-shim@4.5.10
 fastclick@1.0.11
 fortawesome:fontawesome@4.5.0
 fourseven:scss@3.4.3
@@ -59,6 +60,7 @@ iron:location@1.0.11
 iron:middleware-stack@1.1.0
 iron:router@1.0.12
 iron:url@1.0.11
+jhartma:cjsx@2.4.1
 jparker:crypto-core@0.1.0
 jparker:crypto-md5@0.1.1
 jquery@1.11.8
@@ -97,6 +99,8 @@ promise@0.6.7
 raix:eventemitter@0.1.3
 random@1.0.9
 rate-limit@1.0.4
+react-meteor-data@0.2.9
+react-template-helper@0.2.9
 reactive-dict@1.1.7
 reactive-var@1.0.9
 reload@1.1.8
@@ -113,6 +117,7 @@ standard-minifier-js@1.0.6
 stevezhu:lodash@4.11.1
 templating@1.1.9
 templating-tools@1.0.4
+tmeasday:check-npm-versions@0.2.0
 tracker@1.0.13
 twbs:bootstrap@3.3.6
 udondan:yml@3.2.2_1

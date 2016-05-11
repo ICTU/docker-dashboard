@@ -1,3 +1,5 @@
+EventsList = require '/imports/ui/events.cjsx'
+
 Template['base-layout'].helpers
   user: -> Meteor.user().emails[0].address
   statusColor: -> if Services.findOne(isUp:false) then 'red' else 'green'
@@ -12,6 +14,7 @@ Template['base-layout'].helpers
       message
     else
       null
+  EventsList: -> EventsList
 
 Template['base-layout'].events
   'click #messagesMenuItem': ->
