@@ -1,4 +1,4 @@
-EventsList = require '/imports/ui/events.cjsx'
+{ EventsListView } = require '/imports/ui/events.cjsx'
 
 Template['base-layout'].helpers
   user: -> Meteor.user().emails[0].address
@@ -14,7 +14,7 @@ Template['base-layout'].helpers
       message
     else
       null
-  EventsList: -> EventsList
+  EventsListView: -> EventsListView
 
 Template['base-layout'].events
   'click #messagesMenuItem': ->

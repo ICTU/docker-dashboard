@@ -7,9 +7,9 @@ renderInstanceNotification = (e) ->
 
 renderAppDefNotification = (e) ->
   switch e.action
-    when 'added' then sAlert.success "Application #{e.info.name} was created."
-    when 'changed' then sAlert.info "Application #{e.info.name} was saved"
-    when 'removed' then sAlert.warning "Application #{e.info.name} was removed."
+    when 'added' then sAlert.success "Application #{e.info.name}:#{e.info.version} was created."
+    when 'changed' then sAlert.info "Application #{e.info.name}:#{e.info.version} was saved."
+    when 'removed' then sAlert.warning "Application #{e.info.name}:#{e.info.version} was removed."
 
 Meteor.startup ->
   # general sAlert configuration
@@ -28,9 +28,9 @@ Meteor.startup ->
     sAlert.info "<strong>New Chat Message</strong><br/><i>#{message.text}</i>"
 
   Meteor.subscribe 'events', ->
-    skip = true
+    starting = true
     Events.find().observe added: (e) ->
-      unless skip then switch e.subject
+      unless starting then switch e.subject
         when 'instance' then renderInstanceNotification e
         when 'appdef'   then renderAppDefNotification e
-    skip = false
+    starting = false

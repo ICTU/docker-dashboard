@@ -9,3 +9,27 @@ h1.pageTitle {
 h3 .material-icons {
   font-size: 30px;
 }
+
+.events-container {
+  z-index: 2147483000;
+  position: fixed;
+  height: 100%;
+  width: 370px;
+  bottom: 0;
+  right: 0;
+}
+
+.event {
+  float: left;
+  box-shadow: 0 1px 2px 0 rgba(234, 236, 238, 0.8);
+  background-color: white;
+  border-color: #dadee2;
+}
+.event {
+  .event-body {
+
+  }
+  .event-timestamp {
+
+  }
+}
