@@ -1,5 +1,8 @@
 [Big Boat](https://www.youtube.com/watch?v=avaSdC0QOUM)
 ================
+
+[![Build Status](https://circleci.com/gh/ICTU/docker-dashboard/tree/master.png?style=shield&circle-token=a0e2b87052d9590d25cfb3484460717eb53144ae)](https://circleci.com/gh/ICTU/docker-dashboard/tree/master)
+
 Yet another docker dashboard, but bigger & better.
 
 ![Instances screenshot](http://i.imgur.com/9KMTgDM.png)
