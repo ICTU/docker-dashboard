@@ -1,0 +1,23 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - pwd
+
+test:
+  override:
+    - pwd
+
+deployment:
+  hub:
+    tag: /^[0-9]+\.[0-9]+\.[0-9]+$/
+    commands:
+      - docker build -t ictu/docker-dashboard:${CIRCLE_TAG} .
+      - MAJOR_VERSION=${CIRCLE_TAG/.*}; docker tag ictu/docker-dashboard:${CIRCLE_TAG} ictu/docker-dashboard:${MAJOR_VERSION}
+      - MINOR_VERSION=${CIRCLE_TAG%.*}; docker tag ictu/docker-dashboard:${CIRCLE_TAG} ictu/docker-dashboard:${MINOR_VERSION}
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push ictu/docker-dashboard:${CIRCLE_TAG}
+      - docker push ictu/docker-dashboard:${MINOR_VERSION}
+      - docker push ictu/docker-dashboard:${MAJOR_VERSION}
