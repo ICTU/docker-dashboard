@@ -1,3 +1,5 @@
+{ EventsListView } = require '/imports/ui/events.cjsx'
+
 Template['base-layout'].helpers
   user: -> Meteor.user().emails[0].address
   statusColor: -> if Services.findOne(isUp:false) then 'red' else 'green'
@@ -12,10 +14,15 @@ Template['base-layout'].helpers
       message
     else
       null
+  EventsListView: -> EventsListView
+  _hack_getAccessToEventsListView: ->
+    tpl = Template.instance()
+    (reactComponent) =>
+      tpl.EventsListViewComponent = reactComponent
 
 Template['base-layout'].events
   'click #messagesMenuItem': ->
-    Chat.show()
+    Template.instance().EventsListViewComponent.toggle()
   'submit #super-user-form': (e, t) ->
     e.preventDefault()
     Session.set 'targetVlan', e.target.vlan.value

@@ -4,11 +4,11 @@ machine:
 
 dependencies:
   override:
-    - pwd
+    - echo "no install"
 
 test:
   override:
-    - pwd
+    - echo "no tests!"
 
 deployment:
   hub:

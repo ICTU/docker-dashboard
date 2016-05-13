@@ -12,25 +12,7 @@ Meteor.startup ->
       Meteor.subscribe 'services'
       Meteor.subscribe 'chatMessages'
       Meteor.subscribe 'latestNotice'
-      Meteor.subscribe 'instances', ->
-        Instances.find().observe
-          changed: (newDoc, oldDoc) ->
-            if newDoc?.meta?.state == 'active' && oldDoc?.meta.state != 'active'
-              sAlert.success "Instance #{newDoc.name} has become active"
-          removed: (doc) ->
-            sAlert.warning "Instance #{doc.name} has stopped", timeout: 'none' if InstanceMeta.notify
-          added: (doc) ->
-            sAlert.info "Instance #{doc.name} is starting..." if InstanceMeta.notify
-        InstanceMeta.notify = true
-      Meteor.subscribe 'applicationDefs', ->
-        ApplicationDefs.find().observe
-          changed: (doc) ->
-            sAlert.success "Application #{doc.name}:#{doc.version} was saved." if AppDefsMeta.notify
-          removed: (doc) ->
-            sAlert.warning "Application #{doc.name}:#{doc.version} was removed." if AppDefsMeta.notify
-          added: (doc) ->
-            sAlert.success "Application #{doc.name}:#{doc.version} was created." if AppDefsMeta.notify
-        AppDefsMeta.notify = true
+      Meteor.subscribe 'instances'
     ]
 
   Router.map ->
