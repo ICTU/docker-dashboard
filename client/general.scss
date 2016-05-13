@@ -17,19 +17,101 @@ h3 .material-icons {
   width: 370px;
   bottom: 0;
   right: 0;
-}
 
-.event {
-  float: left;
-  box-shadow: 0 1px 2px 0 rgba(234, 236, 238, 0.8);
-  background-color: white;
-  border-color: #dadee2;
-}
-.event {
-  .event-body {
+  .events-header {
+    z-index: 2147483000;
+    position: absolute;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+    background: white;
+    width: 100%;
+    height: 50px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 54px;
+    color: #465C66;
+    letter-spacing: 0.2px;
+    display: inline-block;
+    overflow: hidden;
+    text-align:center;
 
+    .events-title {
+      font-weight: 500;
+    }
+
+    .close-button {
+
+      position: absolute;
+      right: 20px;
+      top: 17px;
+
+      .close-button-icon {
+        background-image: url(https://js.intercomcdn.com/images/icon-close.png);
+        background-size: 13px 13px;
+        background-repeat: no-repeat;
+        width: 16px;
+        height: 16px;
+      }
+    }
   }
-  .event-timestamp {
 
+  .content-container {
+    background: rgba(250, 250, 251, 0.98);
+    border-left: 1px solid #dadee2;
+    position: absolute;
+    top: 0px;
+    left: -1px;
+    bottom: 0px;
+    width: 371px;
+
+    .content {
+      overflow-y: scroll;
+      height: 100%;
+      width: 100%;
+      padding: 10px;
+
+      .event {
+        margin-bottom: 15px;
+        .event-status-icon {
+
+        }
+        .event-body {
+          box-shadow: 0 1px 2px 0 rgba(234, 236, 238, 0.8);
+          background-color: white;
+          border-color: #dadee2;
+          font-size: 14px;
+          font-weight: 400;
+          color: #455A64;
+          line-height: 10px;
+          border-radius: 4px;
+          border-width: 1px;
+          border-style: solid;
+          position: relative;
+          max-width: 100%;
+          .event-status-icon {
+            position: absolute;
+            display: inline-block;
+            width: 45px;
+            top: 0px;
+            bottom: 0px;
+            color: white;
+            padding: 10px;
+            background-color: #BFDE82;
+          }
+          .event-message {
+            display: inline-block;
+            margin: 15px;
+            margin-left: 55px;
+            margin-bottom: 7px;
+          }
+        }
+        .event-timestamp {
+          font-size: 12px;
+          line-height: 20px;
+          color: #c9cbcf;
+          margin-left: 5px;
+        }
+      }
+
+    }
   }
 }
