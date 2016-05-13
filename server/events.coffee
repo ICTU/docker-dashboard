@@ -17,7 +17,7 @@ Instances.find().observe
     if newDoc?.meta?.state == 'active' && oldDoc?.meta.state != 'active'
       newSuccessEvent 'instance', 'started', name: newDoc.name unless starting
     if newDoc?.meta?.state == 'stopping' && oldDoc?.meta.state != 'stopping'
-      newWarningEvent 'instance', 'stopping', name: newDoc.name unless starting
+      newInfoEvent 'instance', 'stopping', name: newDoc.name unless starting
   removed:  (doc) -> newWarningEvent 'instance', 'stopped', name: doc.name unless starting
   added:    (doc) -> newInfoEvent 'instance', 'starting', name: doc.name unless starting
 
@@ -27,6 +27,6 @@ ApplicationDefs.find().observe
   removed: (doc) ->
     newWarningEvent 'appdef', 'removed', {name: doc.name, version: doc.version} unless starting
   added: (doc) ->
-    newInfoEvent 'appdef', 'added', {name: doc.name, version: doc.version} unless starting
+    newSuccessEvent 'appdef', 'added', {name: doc.name, version: doc.version} unless starting
 
 starting = false

@@ -42,7 +42,7 @@ h3 .material-icons {
 
       position: absolute;
       right: 20px;
-      top: 17px;
+      top: 20px;
 
       .close-button-icon {
         background-image: url(https://js.intercomcdn.com/images/icon-close.png);
@@ -94,14 +94,27 @@ h3 .material-icons {
             top: 0px;
             bottom: 0px;
             color: white;
-            padding: 10px;
+            padding-top: 12px;
+            text-align: center
+          }
+          .event-status-success {
             background-color: #BFDE82;
+          }
+          .event-status-warning {
+            background-color: #FBB560;
+          }
+          .event-status-failed {
+            background-color: #EE918F;
+          }
+          .event-status-info {
+            background-color: #599ABD;
           }
           .event-message {
             display: inline-block;
             margin: 15px;
             margin-left: 55px;
             margin-bottom: 7px;
+            line-height: 15px;
           }
         }
         .event-timestamp {

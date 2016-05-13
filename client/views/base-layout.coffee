@@ -15,10 +15,14 @@ Template['base-layout'].helpers
     else
       null
   EventsListView: -> EventsListView
+  _hack_getAccessToEventsListView: ->
+    tpl = Template.instance()
+    (reactComponent) =>
+      tpl.EventsListViewComponent = reactComponent
 
 Template['base-layout'].events
   'click #messagesMenuItem': ->
-    Chat.show()
+    Template.instance().EventsListViewComponent.toggle()
   'submit #super-user-form': (e, t) ->
     e.preventDefault()
     Session.set 'targetVlan', e.target.vlan.value
