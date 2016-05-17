@@ -1,3 +1,6 @@
+### 4.0.5
+- Simplified missing settings key handling.
+
 ### 4.0.4
 - Fixed multiple settings creation.
 
