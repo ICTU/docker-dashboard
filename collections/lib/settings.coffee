@@ -14,6 +14,11 @@ key = if Meteor.settings.key then {key: Meteor.settings.key} else {}
       console.warn "Settings.get() is deprecated. Please use Settings.get('field') or Settings.all() instead."
       settings or {}
   all: -> Settings.collection.findOne(key)
+  set: (field, value) ->
+    set = $set: {}
+    set.$set[field] = value
+    Settings.collection.update {key: key}, set, (err) ->
+      console.error err if err
   cursor: -> collection.find(key)
 
 Settings.collection.allow

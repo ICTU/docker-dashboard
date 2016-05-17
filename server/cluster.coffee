@@ -9,8 +9,7 @@ pickAgent = ->
   agents = settings.agentUrl
   agent = agents.shift()
   agents.push agent
-  Settings.update _id: settings._id,
-    $set: agentUrl: agents
+  Settings.set 'agentUrl', agents
   agent
 
 @Cluster =

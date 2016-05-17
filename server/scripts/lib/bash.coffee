@@ -14,7 +14,7 @@ Meteor.startup ->
           mapping = "#{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{simplePath}:#{simplePath}"
           if mappedPathExt
             if options is ':shared'
-              mapping = "#{Settings.get().sharedDataDir}/#{parentCtx.project}#{mappedPathExt}:#{mappedPathInt}"
+              mapping = "#{Settings.get('sharedDataDir')}/#{parentCtx.project}#{mappedPathExt}:#{mappedPathInt}"
             else
               mapping = "#{parentCtx.dataDir}/#{parentCtx.project}/#{parentCtx.instance}/#{@service}#{mappedPathExt}:#{mappedPathInt}"
           if options is ':do_not_persist' then mapping = simplePath or mappedPathInt
@@ -39,7 +39,7 @@ Meteor.startup ->
     mapDocker: ->
       @mapDocker or @map_docker
 
-    syslogUrl: -> Settings.get().syslogUrl
+    syslogUrl: -> Settings.get('syslogUrl')
 
     reverse: (arr) -> arr.reverse()
 

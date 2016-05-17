@@ -1,3 +1,6 @@
+### 4.0.3
+- Fixed settings update.
+
 ### 4.0.2
 - Settings now work with a single DB per project.
 - Version is visible in the document (and tab) title.
