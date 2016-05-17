@@ -1,5 +1,15 @@
-### master
+### 4.0.1
+- Display correct Big Boat version.
+- Display 4.0 changes on the landing page.
+
+### 4.0.0
 - Store apps and instances in mongo.
+- Renamed Cloud dashboard to Big Boat.
+- Realtime container status updates.
+- UI restyling.
+- Removed chat.
+- Added event history.
+- Simplified logging.
 
 ### 3.0.2
 - Changed docker restart policy to always.
