@@ -1,3 +1,7 @@
+### 4.0.2
+- Settings now work with a single DB per project.
+- Version is visible in the document (and tab) title.
+
 ### 4.0.1
 - Display correct Big Boat version.
 - Display 4.0 changes on the landing page.

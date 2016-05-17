@@ -1,10 +1,27 @@
-@Settings = new Mongo.Collection 'settings'
-Settings.allow
+collection = new Mongo.Collection 'settings'
+key = if Meteor.settings.key then {key: Meteor.settings.key} else {}
+
+@Settings =
+  collection: collection
+  get: (field) ->
+    settings = Settings.collection.findOne(key)
+    if field
+      s = settings?[field]
+      if s then s else
+        console.warn "'#{field}' setting is not defined, is this a typo?"
+        ''
+    else
+      console.warn "Settings.get() is deprecated. Please use Settings.get('field') or Settings.all() instead."
+      settings or {}
+  all: -> Settings.collection.findOne(key)
+  cursor: -> collection.find(key)
+
+Settings.collection.allow
   insert: -> true
   update: -> true
   remove: -> true
 
-Settings.attachSchema new SimpleSchema
+Settings.collection.attachSchema new SimpleSchema
   project: type: String
   etcd: type: String
   etcdBaseUrl: type: String
@@ -20,12 +37,12 @@ Settings.attachSchema new SimpleSchema
 
 Meteor.startup ->
   if Meteor.server
-    Meteor.publish null, -> Settings.find()
+    Meteor.publish null, -> Settings.cursor()
 
     settings = Meteor.settings
-    unless Settings.find().count()
+    unless Settings.collection.find().count()
       aurl = settings?.agentUrl
-      Settings.insert
+      Settings.collection.insert
         project: settings?.project or 'undef'
         etcd: settings?.etcd or 'http://etcd1.isd.ictu:4001/v2/keys/'
         etcdBaseUrl: settings?.etcdBaseUrl or 'http://etcd1.isd.ictu:4001'

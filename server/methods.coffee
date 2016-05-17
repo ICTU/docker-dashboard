@@ -8,7 +8,7 @@ logInvocation = (methods) ->
   _.object ([name, loggedMethod(name, func)] for name, func of methods)
 
 getLogs = (q) ->
-  result = HTTP.post "#{Settings.findOne().elasticSearchUrl}/_search",
+  result = HTTP.post "#{Settings.get().elasticSearchUrl}/_search",
     data:
       query:
         filtered:

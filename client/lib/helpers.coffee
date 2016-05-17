@@ -1,3 +1,3 @@
-Template.registerHelper 'settings', -> Settings.findOne()
-Template.registerHelper 'isAdminBoard', -> Settings.findOne()?.isAdmin
-Template.registerHelper 'hasLocalAppstore', -> not Settings.findOne()?.remoteAppstoreUrl
+Template.registerHelper 'settings', -> Settings.all()
+Template.registerHelper 'isAdminBoard', -> Settings.get('isAdmin')
+Template.registerHelper 'hasLocalAppstore', -> not Settings.get('remoteAppstoreUrl')

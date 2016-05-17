@@ -1,5 +1,5 @@
 syncWithBaseKey = (baseKey, handler) ->
-  proj = Settings.findOne().project
+  proj = Settings.get('project')
   if proj
     recursiveUrl = "#{baseKey}/#{proj}?recursive=true"
     EtcdClient.discover recursiveUrl, (err, nodes) ->

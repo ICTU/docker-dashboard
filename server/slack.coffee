@@ -7,7 +7,7 @@ Meteor.startup =>
   if authToken
     slack = new Slack(authToken, autoReconnect, autoMark)
 
-    channelName = Settings.findOne().project
+    channelName = Settings.get().project
     channelId = 0
     noticeChannelId = 0
 

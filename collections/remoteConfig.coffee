@@ -6,4 +6,4 @@ Meteor.startup ->
 
     unless RemoteConfig.find().count()
       RemoteConfig.insert
-        hellobarMessage: Settings.findOne()?.hellobarMessage or ''
+        hellobarMessage: Settings.get('hellobarMessage')

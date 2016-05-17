@@ -48,9 +48,9 @@ renderForInstanceName = (template) -> (instanceName) ->
 render = (template, appDef, instance, options, params = {}) ->
   resolved  = resolveParams(appDef.def, (if typeof params == 'object' then params else EJSON.parse params))
   ctx = createContext YAML.safeLoad(resolved),
-    project: Settings.findOne().project
+    project: Settings.get().project
     instance: instance
-    etcdCluster: Settings.findOne().etcdBaseUrl
+    etcdCluster: Settings.get().etcdBaseUrl
     vlan: options?.targetVlan
     dataDir: options?.dataDir
     agentUrl: options?.agentUrl
