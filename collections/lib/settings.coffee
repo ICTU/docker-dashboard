@@ -1,5 +1,5 @@
 collection = new Mongo.Collection 'settings'
-key = if Meteor.settings.key then {key: (Meteor.settings.key or 'default')} else {}
+key = key: (Meteor.settings.key or 'default')
 
 @Settings =
   collection: collection
