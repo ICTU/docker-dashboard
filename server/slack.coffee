@@ -13,31 +13,6 @@ Meteor.startup =>
 
     slack.on 'open', =>
       @channel = slack.getChannelByName(channelName)
-      console.log 'sjannel', channel
-      channel.postMessage {
-        "attachments": [
-            {
-                "fallback": "Required plain-text summary of the attachment.",
-                "color": "#36a64f",
-                "pretext": "Optional text that appears above the attachment block",
-                "author_name": "Bobby Tables",
-                "author_link": "http://flickr.com/bobby/",
-                "author_icon": "http://flickr.com/icons/bobby.jpg",
-                "title": "Slack API Documentation",
-                "title_link": "https://api.slack.com/",
-                "text": "Optional text that appears within the attachment",
-                "fields": [
-                    {
-                        "title": "Priority",
-                        "value": "High",
-                        "short": false
-                    }
-                ],
-                "image_url": "http://my-website.com/path/to/image.jpg",
-                "thumb_url": "http://example.com/path/to/thumb.png"
-            }
-        ]
-      }
       @noticeChannel = slack.getChannelByName 'dashboard-notice'
       noticeChannelId = noticeChannel?.id
       if channel
@@ -47,7 +22,7 @@ Meteor.startup =>
         console.log "Slack channel '#{channelName}' does not exist"
 
     slack.on 'message', Meteor.bindEnvironment (message) ->
-      Messages.insert processMessage(message) if message.channel in [channelId, noticeChannelId]
+      # Messages.insert processMessage(message) if message.channel in [channelId, noticeChannelId]
     slack.on 'error', Meteor.bindEnvironment (err) ->
       console.error 'Slack error:', err
 
@@ -68,3 +43,48 @@ Meteor.startup =>
       msg
 
     slack.login()
+
+  createInstanceEventSlackMessage = (doc) ->
+    msg = switch doc.action
+      when 'starting' then "Instance #{doc.info.name} is starting..."
+      when 'started'  then "Instance #{doc.info.name} has become active."
+      when 'stopping' then "Instance #{doc.info.name} is stopping..."
+      when 'stopped'  then "Instance #{doc.info.name} has stopped."
+
+    color = switch doc.type
+      when 'info' then "#599ABD"
+      when 'success'  then "#BFDE82"
+      when 'warning' then "#FBB560"
+
+    # "pretext": "Optional text that appears above the attachment block",
+    # "image_url": "http://my-website.com/path/to/image.jpg",
+    # "thumb_url": "http://example.com/path/to/thumb.png"
+    # "title": "Instance ",
+    # "title_link": "http://www.dashboard.innovation.ictu/instances",
+    "fallback": "msg",
+    "color": color,
+    "author_name": "Big Boat",
+    "author_link": Meteor.absoluteUrl(),
+    "author_icon": 'http://i.imgur.com/UpazEoU.png',
+    "text": msg,
+    "fields": [
+      "title": "Instance",
+      "value": doc.info.name,
+      "short": false
+    ,
+      "title": "Action",
+      "value": doc.action,
+      "short": false
+    ,
+      "title": "User",
+      "value": 'Anonymous',
+      "short": false
+    ]
+
+  starting = true
+  Events.find().observe added: (doc) =>
+    x = unless starting then switch doc.subject
+      when 'instance' then createInstanceEventSlackMessage doc
+      # when 'appdef' then createAppdefEventSlackMessage doc
+    if x then channel.postMessage attachments: [x]
+  starting = false
