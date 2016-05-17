@@ -1,5 +1,5 @@
 Template.index.helpers
-  projectName: -> Settings.findOne()?.project.toUpperCase()
+  projectName: -> Settings.get('project').toUpperCase()
   appVersion: -> version
   appCount: -> Apps.find().count()
   instanceCount: -> Instances.find().count()

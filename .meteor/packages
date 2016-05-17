@@ -61,3 +61,4 @@ percolate:migrations
 react-template-helper
 jhartma:cjsx
 react-meteor-data
+kadira:dochead

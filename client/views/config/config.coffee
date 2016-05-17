@@ -1,2 +1,2 @@
 Template.config.helpers
-  formType: -> if Settings.findOne().isAdmin then 'update' else 'readonly'
+  formType: -> if Settings.get('isAdmin') then 'update' else 'readonly'

@@ -35,10 +35,10 @@ etcd = (endpoint) ->
 
 @EtcdClient =
   set: (key, value) ->
-    etcd(Settings.findOne().etcd).set key, value
+    etcd(Settings.get('etcd')).set key, value
   wait: (key, cb) ->
-    etcd(Settings.findOne().etcd).wait key, Meteor.bindEnvironment(cb)
+    etcd(Settings.get('etcd')).wait key, Meteor.bindEnvironment(cb)
   delete: (key, cb) ->
-    etcd(Settings.findOne().etcd).delete key, Meteor.bindEnvironment(cb)
+    etcd(Settings.get('etcd')).delete key, Meteor.bindEnvironment(cb)
   discover: (key, cb) ->
-    etcd(Settings.findOne().etcd).discover key, Meteor.bindEnvironment(cb)
+    etcd(Settings.get('etcd')).discover key, Meteor.bindEnvironment(cb)

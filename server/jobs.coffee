@@ -4,10 +4,10 @@ Meteor.startup ->
 
   jobs = [
     name: 'ETCD'
-    url: Settings.findOne().etcd
+    url: Settings.get('etcd')
   ]
 
-  for agent in Settings.findOne().agentUrl
+  for agent in Settings.get('agentUrl')
     jobs.push
       name: "Agent #{agent}"
       url: "#{agent}/ping"

@@ -5,20 +5,19 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
 
 pickAgent = ->
   #round robin
-  settings = Settings.findOne()
+  settings = Settings.all()
   agents = settings.agentUrl
   agent = agents.shift()
   agents.push agent
-  Settings.update _id: settings._id,
-    $set: agentUrl: agents
+  Settings.set 'agentUrl', agents
   agent
 
 @Cluster =
   startApp: (app, version, instance, parameters, options = {}) ->
-    project = Settings.findOne().project
-    options = _.extend {"dataDir": Settings.findOne().dataDir}, options
-    dir = "#{Settings.findOne().project}-#{instance}"
-    console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.findOne().project}."
+    project = Settings.get('project')
+    options = _.extend {"dataDir": Settings.get('dataDir')}, options
+    dir = "#{Settings.get('project')}-#{instance}"
+    console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.get('project')}."
 
     agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
     Instances.upsert {project: project, name: instance}, $set:
@@ -48,9 +47,9 @@ pickAgent = ->
   setHellobarMessage: (instanceName, message) ->
     asyncFunc = (instanceName, message, callback) ->
       instance = Instances.findOne name: instanceName
-      HTTP.put "http://www.#{instanceName}.#{Settings.findOne().project}.ictu/api/v1/hellobar/", params: value: message, (err, result) ->
+      HTTP.put "http://www.#{instanceName}.#{Settings.get('project')}.ictu/api/v1/hellobar/", params: value: message, (err, result) ->
         if not err and result and result.statusCode == 200
-          EtcdClient.set "instances/#{Settings.findOne().project}/#{instance.meta.appName}/#{instance.name}/meta_/hellobar", message
+          EtcdClient.set "instances/#{Settings.get('project')}/#{instance.meta.appName}/#{instance.name}/meta_/hellobar", message
           callback null,result
         else
           console.log err
@@ -62,14 +61,14 @@ pickAgent = ->
 
 
   stopInstance: (instanceName) ->
-    console.log "Cluster.stopInstance #{instanceName} in project #{Settings.findOne().project}."
+    console.log "Cluster.stopInstance #{instanceName} in project #{Settings.get('project')}."
     instance = Instances.findOne name: instanceName
     agentUrl = instance.meta.agentUrl
     console.log "Agent URL is #{agentUrl}. Sending a POST request to stop the applicaiton."
     callOpts =
       responseType: "buffer"
       data:
-        dir: "#{Settings.findOne().project}-#{instanceName}"
+        dir: "#{Settings.get('project')}-#{instanceName}"
 
     HTTP.post "#{agentUrl}/app/stop", callOpts, (err, result) ->
       console.log "Sent request to stop instance. Response from the agent is #{result.content}"
