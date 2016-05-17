@@ -1,5 +1,5 @@
 collection = new Mongo.Collection 'settings'
-key = key: (Meteor.settings.key or 'default')
+key = key: (Meteor.settings.public?.key or 'default')
 
 @Settings =
   collection: collection
@@ -8,7 +8,7 @@ key = key: (Meteor.settings.key or 'default')
     if field
       s = settings?[field]
       if s then s else
-        console.warn "'#{field}' setting is not defined, is this a typo?"
+        console.warn new Error("'#{field}' setting is not defined, is this a typo?").stack
         ''
     else
       console.warn "Settings.get() is deprecated. Please use Settings.get('field') or Settings.all() instead."
@@ -49,7 +49,7 @@ Meteor.startup ->
     unless Settings.collection.findOne(key)
       aurl = settings?.agentUrl
       Settings.collection.insert
-        key: settings?.key or 'default'
+        key: settings?.public?.key or 'default'
         project: settings?.project or 'undef'
         etcd: settings?.etcd or 'http://etcd1.isd.ictu:4001/v2/keys/'
         etcdBaseUrl: settings?.etcdBaseUrl or 'http://etcd1.isd.ictu:4001'
