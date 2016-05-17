@@ -1,3 +1,6 @@
+### 4.0.4
+- Fixed multiple settings creation.
+
 ### 4.0.3
 - Fixed settings update.
 

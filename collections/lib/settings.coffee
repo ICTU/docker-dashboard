@@ -1,5 +1,5 @@
 collection = new Mongo.Collection 'settings'
-key = if Meteor.settings.key then {key: Meteor.settings.key} else {}
+key = if Meteor.settings.key then {key: (Meteor.settings.key or 'default')} else {}
 
 @Settings =
   collection: collection
@@ -27,6 +27,7 @@ Settings.collection.allow
   remove: -> true
 
 Settings.collection.attachSchema new SimpleSchema
+  key: type: String
   project: type: String
   etcd: type: String
   etcdBaseUrl: type: String
@@ -45,9 +46,10 @@ Meteor.startup ->
     Meteor.publish null, -> Settings.cursor()
 
     settings = Meteor.settings
-    unless Settings.collection.find().count()
+    unless Settings.collection.findOne(key)
       aurl = settings?.agentUrl
       Settings.collection.insert
+        key: settings?.key or 'default'
         project: settings?.project or 'undef'
         etcd: settings?.etcd or 'http://etcd1.isd.ictu:4001/v2/keys/'
         etcdBaseUrl: settings?.etcdBaseUrl or 'http://etcd1.isd.ictu:4001'
