@@ -15,15 +15,31 @@ appSearch = ->
 
 Template.apps.helpers
   applicationDefs: -> ApplicationDefs.find {}, sort: name: 1
-  appNames: -> _.uniq(ApplicationDefs.find(appSearch(), sort: name: 1).map (ad) -> ad.name)
-  appDefCount: -> ApplicationDefs.find(name: "#{@}").count()
-  appDefs: -> ApplicationDefs.find {name: "#{@}"}, sort: version: 1
+  apps: ->
+    apps = _.reduce ApplicationDefs.find(appSearch(), sort: name: 1).fetch(), (l, r) ->
+      ver =
+        version: r.version
+        def: r.def
+        tags: r.tags
+      if app = _.findWhere(l, name: r.name)
+        app.tags = _.union app.tags, r.tags
+        app.defs.push ver
+      else
+        l.push
+          name: r.name
+          defs: [ver]
+          tags: r.tags
+      l
+    , []
+    _.map apps, (app) ->
+      app.defs = _.sortBy app.defs, 'version'
+      app
+  appDefCount: -> @defs.length
   isSearching: -> Session.get('queryAppName')?.length or Session.get('filterByTag')?.length
   filterByTag: -> Session.get 'filterByTag'
   multipleSearchTerms: -> Session.get('queryAppName')?.length and Session.get 'filterByTag'
   appDefTemplate: -> appDefTemplate
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
-  appTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find(name: "#{@}").map (ad) -> ad.tags if ad.tags)), undefined)
   allTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find().map (ad) -> ad.tags if ad.tags)), undefined)
   searchTerms: -> Session.get 'queryAppName'
 

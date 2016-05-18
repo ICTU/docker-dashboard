@@ -24,27 +24,27 @@
       </ul>
     </div>
     <div id="apps-container" class="col-md-9">
-      {{#each appNames}}
+      {{#each apps}}
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title heading-flex-container">
-            <a data-toggle="collapse" data-target="#appPanel-{{this}}" href="#" class="titleToggle collapsed toggle">
-               <span class="badge">{{appDefCount}}</span> {{this}}
+            <a data-toggle="collapse" data-target="#appPanel-{{name}}" href="#" class="titleToggle collapsed toggle">
+               <span class="badge">{{appDefCount}}</span> {{name}}
             </a>
             <div>
-              {{#each appTags}}
+              {{#each tags}}
                 <span class="label label-info">{{this}}</span>
               {{/each}}
             </div>
-            <a data-toggle="collapse" data-target="#appPanel-{{this}}" href="#" class="collapsed toggle"></a>
+            <a data-toggle="collapse" data-target="#appPanel-{{name}}" href="#" class="collapsed toggle"></a>
           </h4>
         </div>
-        <div id="appPanel-{{this}}" class="appPanel panel-collapse collapse">
+        <div id="appPanel-{{name}}" class="appPanel panel-collapse collapse">
             <div class="panel-body">
               <table class="table table-hover">
                 <tbody>
-                  {{#each appDefs}}
-                  <tr id="controlPanel-{{name}}-{{version}}">
+                  {{#each defs}}
+                  <tr id="controlPanel-{{../name}}-{{version}}">
                     <th scope="row" style="width:250px; padding: 20px;">
                       {{version}}
                     </th>
@@ -64,7 +64,7 @@
         </div>
       </div>
 
-      {{#each appDefs}}
+      {{#each defs}}
       {{> editAppDefBox}}
       {{/each}}
 
