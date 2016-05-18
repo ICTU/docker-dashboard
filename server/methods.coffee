@@ -66,4 +66,4 @@ Meteor.methods logInvocation
 
   getInstanceLog: (id) ->
     instance = Instances.findOne _id: id
-    getLogs should: [query_string: query: instance.meta.id]
+    getLogs must: [match_phrase: message: instance.meta.id]

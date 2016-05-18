@@ -21,6 +21,7 @@ Template.apps.helpers
         version: r.version
         def: r.def
         tags: r.tags
+        name: r.name
       if app = _.findWhere(l, name: r.name)
         app.tags = _.union app.tags, r.tags
         app.defs.push ver
