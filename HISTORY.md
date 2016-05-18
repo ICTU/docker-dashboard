@@ -1,3 +1,6 @@
+### 4.0.6
+- Fixed: Parse tags from the application definition text and store them separately on the definition object.
+
 ### 4.0.5
 - Simplified missing settings key handling.
 
