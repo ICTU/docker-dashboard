@@ -84,6 +84,7 @@ pickAgent = ->
       name: "#{name}"
       version: "#{version}"
       def: definition
+      tags: Helper.extractTags definition
 
   retrieveApp: (name, version) ->
     ApplicationDefs.find({name: "#{name}", version: "#{version}"}, {fields: {"def":1, "_id":0}}).map (app) -> app.def
