@@ -18,44 +18,7 @@
         {{> editAppDefBox}}
       {{/if}}
 
-      {{#each apps}}
-          <div style="width: 33%; float:left; margin-bottom: 10px">
-            <div class="appcard" style="height:200px; background-color:#001f3f; margin-right: 15px">
-                <div style="background-image: url({{pic}});" class="pull-left img">&nbsp;</div>
-                <div class="pull-left">
-                  <h2>{{name}}</h2>
-                  <h3>{{version}}</h3>
-                  <p>
-                    {{description}}
-                  </p>
-                  <div class="btn-group">
-                    <a title="View" href="#" data-toggle="modal" data-target="#viewbox-{{hash}}">
-                      <i class="glyphicon glyphicon-zoom-in"></i>
-                    </a>
-                    <a title="Install" href="#" class="dropdown-toggle" data-toggle="dropdown">
-                      <i class="glyphicon glyphicon-cloud-download"></i>
-                    </a>
-                    <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
-                        <div class="form-group" style="width:20em">
-                          <div class="alert alert-warning" role="alert">
-                            Installing may overwrite an existing app called <strong>'{{name}}'</strong> with version <strong>'{{version}}'</strong>.
-                            <br/>
-                            Do you wish to continue?
-                          </div>
-                        </div>
-                        <button type="button" class="btn-install-app btn btn-mini btn-danger pull-right">Yes!</button>
-                    </form>
-                  </div>
-                  {{#if hasLocalAppstore}}
-                  <button type="button" class="btn btn-link pull-right btn-edit-app" data-toggle="modal" data-target="#editbox-{{hash}}">Edit</button>
-                  <button type="button" class="btn btn-link pull-right btn-remove-app">Remove</button>
-                  {{/if}}
-                </div>
-            </div>
-          </div>
-          {{> editAppDefBox}}
-          {{> viewAppDefBox}}
-      {{/each}}
+      <span>{{> React component=Appstore apps=apps}}</span>
 
   </div>
 </template>
