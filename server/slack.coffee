@@ -13,15 +13,15 @@ Meteor.startup =>
 
     slack.on 'open', =>
       @channel = slack.getChannelByName(channelName)
-      @noticeChannel = slack.getChannelByName 'dashboard-notice'
-      noticeChannelId = noticeChannel?.id
-      if channel
-        noticeChannel.send "A new dashboard connection was established from project #{channelName}"
-        channelId = channel.id
-      else
-        console.log "Slack channel '#{channelName}' does not exist"
+      # @noticeChannel = slack.getChannelByName 'dashboard-notice'
+      # noticeChannelId = noticeChannel?.id
+      # if channel
+      #   noticeChannel.send "A new dashboard connection was established from project #{channelName}"
+      #   channelId = channel.id
+      # else
+      #   console.log "Slack channel '#{channelName}' does not exist"
 
-    slack.on 'message', Meteor.bindEnvironment (message) ->
+    # slack.on 'message', Meteor.bindEnvironment (message) ->
       # Messages.insert processMessage(message) if message.channel in [channelId, noticeChannelId]
     slack.on 'error', Meteor.bindEnvironment (err) ->
       console.error 'Slack error:', err
