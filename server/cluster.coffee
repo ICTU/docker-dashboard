@@ -36,11 +36,10 @@ pickAgent = ->
 
     console.log "Sending request to #{options.agentUrl}"
 
-    HTTP.post "#{agentUrl}/app/install-and-run", callOpts, (err, result) ->
+    HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
-      console.log err if err
-      Instances.update {name: instance, application: app},
-        $set: {'logs.bootstrapLog': "#{result.content}"}
+      console.error err if err
+      Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
 
 
@@ -70,9 +69,9 @@ pickAgent = ->
       data:
         dir: "#{Settings.get('project')}-#{instanceName}"
 
-    HTTP.post "#{agentUrl}/app/stop", callOpts, (err, result) ->
+    HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       console.log "Sent request to stop instance. Response from the agent is #{result.content}"
-      console.log err if err
+      console.error err if err
     ""
 
   clearInstance: (project, instance) ->
