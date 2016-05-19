@@ -1,5 +1,4 @@
 newEvent = (type, subject, action, info) ->
-  console.log 'newEvent', type, subject, action, info
   Events.insert
     type: type
     subject: subject
