@@ -1,7 +1,10 @@
 log = logger.bunyan.createLogger name:'method-invocation'
 
+isAuthorized = -> Meteor.user() or not Settings.get('userAccountsEnabled')
+
 loggedMethod = (name, f) -> ->
-  log.info method: name, arguments: arguments, client: @connection.clientAddress, user: Meteor.user().username
+  if !isAuthorized() then throw new Meteor.Error '403', 'Not authorized'
+  log.info method: name, arguments: arguments, client: @connection.clientAddress, user: Meteor.user()?.username
   f.apply @, arguments
 
 logInvocation = (methods) ->
@@ -32,7 +35,6 @@ Meteor.methods logInvocation
   clearInstance: Cluster.clearInstance
   setHellobarMessage: Cluster.setHellobarMessage
   saveApp: Cluster.saveApp
-
   deleteApp: Cluster.deleteApp
 
   execService: Cluster.execService
