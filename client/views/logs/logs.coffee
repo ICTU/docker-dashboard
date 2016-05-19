@@ -2,8 +2,13 @@ Template.logs.helpers
   isLoading: -> Session.get("log#{@containerId or @instanceId}") is 'loading'
   hasLogLines: -> Session.get("log#{@containerId or @instanceId}").length > 0
 
+Template.logs.events
+  'click .toggle-timestamp': (e, t) ->
+    Session.set 'showLogTimestamp', not Session.get('showLogTimestamp')
+
 Template.logs.onCreated ->
   Session.set "log#{@data.containerId}", 'loading'
+  Session.set 'showLogTimestamp', true
 
 Template.logs.onRendered ->
   $('body').height('100%')
@@ -25,3 +30,4 @@ Template.logs.onDestroyed ->
 
 Template.logTable.helpers
   logLines: -> Session.get "log#{@containerId or @instanceId}"
+  showLogTimestamp: -> Session.get('showLogTimestamp')
