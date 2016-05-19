@@ -15,6 +15,7 @@
     <div id="page-menu" class="col-md-3">
       <ul class="nav nav-stacked">
         {{#if isAuthenticated}}
+        <hr>
         {{#with appDefTemplate}}
         <li><a title="New App" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-plus"></i> New App</a></li>
         {{/with}}
