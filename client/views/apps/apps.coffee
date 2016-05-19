@@ -59,11 +59,11 @@ Template.apps.events
 Template.appActions.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
   parameters: ->
-    params = @def.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
-    if params?.length
-      _.uniq(params.map (p) -> p.replace('{{', '').trim())
-    else
-      []
+    regex = /(?:\{\{)([\d|\w|_|-]*?)(?:\}\})/g
+    params = []
+    while match = regex.exec @def
+      params.push match[1]
+    _.uniq params
 
 Template.appActions.events
   'submit #start-app-form': (e, tpl) ->

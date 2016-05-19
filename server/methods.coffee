@@ -66,4 +66,8 @@ Meteor.methods logInvocation
 
   getInstanceLog: (id) ->
     instance = Instances.findOne _id: id
-    getLogs must: [match_phrase: message: instance.meta.id]
+    if instance?.meta?.id
+      getLogs(must: [match_phrase: message: instance.meta.id])
+    else if instance?.logs?.bootstrapLog
+      [{date: new Date(), message: instance?.logs?.bootstrapLog}]
+    else []

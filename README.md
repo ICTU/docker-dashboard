@@ -23,6 +23,7 @@ Create a configuration file in the root of the project: `settings.json`. Populat
         "syslogUrl":"udp://<logstash_host>:5454",
         "elasticSearchUrl": "http://<elasticsearch_host>:9200",
         "agentUrl":"http://<agent_url>",
+        "agentAuthToken": "<agent_auth_token",
         "admin": true,
         "slack":{
           "authToken": "<slack_auth_token>"

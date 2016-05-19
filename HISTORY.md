@@ -1,3 +1,6 @@
+### master
+- Secure comm between dashboard and agent; requires token auth enabled agent.
+
 ### 4.0.7
 - Improved apps page rendering.
 - Fixed displaying start up log.

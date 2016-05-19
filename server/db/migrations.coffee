@@ -68,4 +68,11 @@ Migrations.add
 
       ApplicationDefs.updateCollection objects
 
+Migrations.add
+  version: 3
+  name: 'Add agent auth token setting.'
+  up: ->
+    Settings.set 'agentAuthToken', Meteor.settings.agentAuthToken
+
+
 Meteor.startup -> Migrations.migrateTo('latest')
