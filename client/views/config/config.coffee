@@ -21,3 +21,35 @@ Template.registeredRoles.events
 
 Template.registeredRoles.helpers
   hasRole: -> Roles.userIsInRole(Template.parentData('1'), Template.parentData('0').name, Roles.GLOBAL_GROUP)
+
+Template.apiSettings.onCreated ->
+  @subscribe "APIKey"
+
+Template.apiSettings.onRendered ->
+  $(document).ready ->
+    $('#btnCopyApi').tooltip()
+    $('#btnRegenerateApi').tooltip()
+
+    $('#btnCopyApi').bind 'click', ->
+      new Clipboard('#btnCopyApi')
+      $('#btnCopyApi').trigger('copied', ['Copied!'])
+
+    $('#btnCopyApi').bind 'copied', (event, message) ->
+      $(this).attr('title', message)
+          .tooltip('fixTitle')
+          .tooltip('show')
+          .attr('title', "Copy to Clipboard")
+          .tooltip('fixTitle')
+
+Template.apiSettings.helpers
+  apiKey: -> APIKeys.findOne()?.key
+
+Template.apiSettings.events
+  'click #btnRegenerateApi': (e) ->
+    e.stopPropagation()
+    userId = Meteor.userId()
+    confirmRegeneration = confirm "Are you sure? This will invalidate your current key!"
+
+    if confirmRegeneration
+     Meteor.call "regenerateApiKey", userId, (err, res) ->
+       console.error err.reason if err

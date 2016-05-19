@@ -73,3 +73,16 @@ Meteor.methods logInvocation
     else if instance?.logs?.bootstrapLog
       [{date: new Date(), message: instance?.logs?.bootstrapLog}]
     else []
+
+Meteor.methods
+  regenerateApiKey: (userId) ->
+    check userId, Match.OneOf( Meteor.userId(), String )
+    newKey = Random.hexString 32
+    APIKeys.update { "owner": userId }, $set: "key": newKey
+      
+  initApiKey: (userId) ->
+    check userId, Match.OneOf( Meteor.userId(), String )
+    newKey = Random.hexString 32
+    APIKeys.insert owner: userId, key: newKey
+
+Meteor.users.after.insert (userId, doc) -> Meteor.call "initApiKey", @_id  

@@ -20,3 +20,5 @@ Meteor.publish 'thaRoles', ->
   loggedInUser = @userId
   if loggedInUser and Roles.userIsInRole(loggedInUser, ['admin'], Roles.GLOBAL_GROUP)
     Roles.getAllRoles()
+
+Meteor.publish 'APIKey', -> APIKeys.find { owner: this.userId }, { fields: { key: 1}}   
