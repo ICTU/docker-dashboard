@@ -1,6 +1,10 @@
+Appstore = require '/imports/ui/appstore.cjsx'
+console.log Appstore
+
 Template.appstore.helpers
   apps: -> AppStore?.find()
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
+  Appstore: -> Appstore.Appstore
 
 Template.appstore.events
   "click .btn-install-app": (event, template) ->
