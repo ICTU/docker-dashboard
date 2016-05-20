@@ -4,17 +4,24 @@ Meteor.startup ->
 
     @route 'apiStartApp',
       where: 'server'
-      path: '/api/v1/start-app/:app/:version/:name'
-      action: ->
-        check([@params.app, @params.version, @params.name], [String])
-        console.log 'start app via api', @params.app, @params.version, @params.name
-        if ApplicationDefs.find(project: Settings.get('project'), name: @params.app, version: @params.version).count()
-          Cluster.startApp @params.app, @params.version, @params.name, @request.query
-          @response.writeHead 200, 'Content-Type': 'text/plain'
-          @response.end "Application #{@params.name} (#{@params.app}:#{@params.version}) is scheduled for execution."
-        else
-          @response.writeHead 404, 'Content-Type': 'text/plain'
-          @response.end "Could not find #{@params.app}:#{@params.version}!"
+      path: 'api/v1/start-app/:app/:version/:name'
+    .get ->
+      check([@params.app, @params.version, @params.name], [String])
+      args = [
+        @params.app
+        @params.version
+        @params.name
+        @request.query
+      ]
+      succesResponse =
+        statusCode: 200
+        message: "Starting '#{@params.app}' instance '#{@params.name}'"
+      failedResponse =
+        statusCode: 403
+        error: "Failed to start '#{@params.app}' instance '#{@params.name}'"
+
+      API.handleRequest @, Cluster.startApp, args, succesResponse, failedResponse
+
     @route 'apiStopApp',
       where: 'server'
       path: '/api/v1/stop-app/:name'

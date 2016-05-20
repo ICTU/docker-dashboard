@@ -14,6 +14,9 @@ pickAgent = ->
 
 @Cluster =
   startApp: (app, version, instance, parameters, options = {}) ->
+    unless ApplicationDefs.findOne {name: app, version: version}
+      throw new Meteor.Error "Application #{app}:#{version} does not exist"
+
     project = Settings.get('project')
     options = _.extend {"dataDir": Settings.get('dataDir')}, options
     dir = "#{Settings.get('project')}-#{instance}"
