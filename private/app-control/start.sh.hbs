@@ -274,12 +274,12 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 {{#each services}}
 DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
 DOCKERNETNAME="net-$DOCKERNAME"
-if [ "$(docker ps | /usr/bin/grep '\s'$DOCKERNAME)" ]; then
+if [ "$(docker ps | grep '\s'$DOCKERNAME)" ]; then
 	echo "SUCCESS: $DOCKERNAME is running";
 else
 	echo "FAILURE: $DOCKERNAME is not running";
 fi
-if [ "$(docker ps | /usr/bin/grep '\s'$DOCKERNETNAME)" ]; then
+if [ "$(docker ps | grep '\s'$DOCKERNETNAME)" ]; then
 	echo "SUCCESS: network for $DOCKERNAME is running";
 else
 	echo "FAILURE: network for $DOCKERNAME is not running";
