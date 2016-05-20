@@ -3,23 +3,23 @@
     getUser = APIKeys.findOne({ 'key': apiKey }, fields: 'owner': 1)
     if getUser then getUser.owner else false
   connection: (request) ->
-    request[content] = API.utility.getRequestContents(request)
-    apiKey = request.api_key
+    request.content = API.utility.getRequestContents(request)
+    apiKey = request.content.api_key
     validUser = API.authentication(apiKey)
     if validUser
-      delete request.api_key
-      return request
+      delete request.content.api_key
     else
-      return { error: 401, message: 'Invalid API key.' }
+      request.content = { error: 401, message: 'Invalid API key.' }
+    request
   handleAuthRequest: (context, f, args, successResponse, failedResponse) ->
     context.request = API.connection(context.request)
     if !context.request.content.error
       API.handleRequest(context, f, args, successResponse, failedResponse)
     else
-      API.utility.response context, 401, { error: 401, message: 'Invalid API key.' }
+      API.utility.response context, 401, context.request.content.error
   handleRequest: (context, f, args, successResponse, failedResponse) ->
-    console.log context.request
-    console.log "Received '#{JSON.stringify context.method}' -> #{JSON.stringify context.request}"
+    context.request.content = API.utility.getRequestContents(context.request) unless context.request.content
+    console.log "Received '#{context.method}' -> #{JSON.stringify context.request.content}"
     try
       API.methods[context.method] context, f, args, successResponse
     catch ex
@@ -37,7 +37,7 @@
 
   utility:
     execute: (context, f, args, successResponse) ->
-      f.apply @, args
+      f.apply @, args if f
       API.utility.response context, 200, successResponse
     getRequestContents: (request) ->
       switch request.method

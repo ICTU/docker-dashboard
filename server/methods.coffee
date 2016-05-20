@@ -75,14 +75,30 @@ Meteor.methods logInvocation
     else []
 
 Meteor.methods
+  getRolesForUser: (targetUser) ->
+    loggedInUser = Meteor.user
+    unless loggedInUser and Roles.userIsInRole(loggedInUser, ['admin'], Roles.GLOBAL_GROUP)
+      throw new Meteor.error 403, 'Access denied'
+    Roles.getRolesForUser targetUser
+  updateRoles: (userId, roles) ->
+    loggedInUser = Meteor.user
+    unless loggedInUser and Roles.userIsInRole(loggedInUser, ['admin'], Roles.GLOBAL_GROUP)
+      throw new Meteor.Error 403, 'Access denied'
+    Roles.setUserRoles userId, roles, Roles.GLOBAL_GROUP
+  addRole: (userId, role) ->
+    loggedInUser = Meteor.user
+    unless loggedInUser and Roles.userIsInRole(loggedInUser, ['admin'], Roles.GLOBAL_GROUP)
+      throw new Meteor.Error 403, 'Access denied'
+    Roles.addUsersToRoles userId, [role], Roles.GLOBAL_GROUP
   regenerateApiKey: (userId) ->
     check userId, Match.OneOf( Meteor.userId(), String )
     newKey = Random.hexString 32
-    APIKeys.update { "owner": userId }, $set: "key": newKey
-      
+    APIKeys.upsert { "owner": userId }, $set: "key": newKey
+
   initApiKey: (userId) ->
     check userId, Match.OneOf( Meteor.userId(), String )
     newKey = Random.hexString 32
     APIKeys.insert owner: userId, key: newKey
 
-Meteor.users.after.insert (userId, doc) -> Meteor.call "initApiKey", @_id  
+Meteor.users.after.insert (userId, doc) ->
+  if Roles.userIsInRole 'admin' then Meteor.call "initApiKey", @_id

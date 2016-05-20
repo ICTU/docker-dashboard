@@ -44,8 +44,6 @@ pickAgent = ->
       console.error err if err
       Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
-
-
   setHellobarMessage: (instanceName, message) ->
     asyncFunc = (instanceName, message, callback) ->
       instance = Instances.findOne name: instanceName
@@ -60,9 +58,9 @@ pickAgent = ->
     syncFunc = Meteor.wrapAsync asyncFunc
     syncFunc instanceName, message
 
-
-
   stopInstance: (instanceName) ->
+    unless Instances.findOne {name: instanceName}
+      throw new Meteor.Error "Instance #{@params.name} does not exist"
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.get('project')}."
     instance = Instances.findOne name: instanceName
     agentUrl = instance.meta.agentUrl
@@ -76,7 +74,6 @@ pickAgent = ->
       console.log "Sent request to stop instance. Response from the agent is #{result.content}"
       console.error err if err
     ""
-
   clearInstance: (project, instance) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
     Instances.remove project: project, name: instance

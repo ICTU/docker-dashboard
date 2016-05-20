@@ -13,24 +13,28 @@ Meteor.startup ->
         @params.name
         @request.query
       ]
-      succesResponse =
+      successResponse =
         statusCode: 200
         message: "Starting '#{@params.app}' instance '#{@params.name}'"
       failedResponse =
-        statusCode: 403
+        statusCode: 404
         error: "Failed to start '#{@params.app}' instance '#{@params.name}'"
 
-      API.handleRequest @, Cluster.startApp, args, succesResponse, failedResponse
+      API.handleRequest @, Cluster.startApp, args, successResponse, failedResponse
 
     @route 'apiStopApp',
       where: 'server'
       path: '/api/v1/stop-app/:name'
-      action: ->
-        check(@params.name, String)
-        if Instances.findOne(name: @params.name)
-          Cluster.stopInstance @params.name
-          @response.writeHead 200, 'Content-Type': 'text/plain'
-          @response.end "#{@params.name} instance is scheduled for destruction."
-        else
-          @response.writeHead 404, 'Content-Type': 'application/json'
-          @response.end '{"message": "Instance not found"}'
+    .get ->
+      check(@params.name, String)
+      args = [
+        @params.name
+      ]
+      successResponse =
+        statusCode: 200
+        message: "Stopping instance '#{@params.name}'"
+      failedResponse =
+        statusCode: 404
+        error: "Failed to stop instance '#{@params.name}'"
+
+      API.handleRequest @, Cluster.stopInstance, args, successResponse, failedResponse

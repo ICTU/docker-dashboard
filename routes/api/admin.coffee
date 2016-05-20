@@ -11,11 +11,11 @@ Meteor.startup ->
         @request.body.parameters
         @request.body.options
       ]
-      succesResponse =
+      successResponse =
         statusCode: 200
         message: "Starting '#{@request.body.name}' instance '#{@request.body.instanceName}'"
       failedResponse =
         statusCode: 403
         error: "Failed to start '#{@request.body.name}' instance '#{@request.body.instanceName}'"
 
-      API.handleAuthRequest @, Cluster.startApp, args, succesResponse, failedResponse
+      API.handleAuthRequest @, Cluster.startApp, args, successResponse, failedResponse

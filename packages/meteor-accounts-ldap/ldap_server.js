@@ -389,7 +389,7 @@ Accounts.registerLoginHandler('ldap', function (loginRequest) {
             if (admin.indexOf(ldapResponse.searchResults.uid) > -1) {
               Roles.addUsersToRoles(userId, ['admin'], Roles.GLOBAL_GROUP);
             } else {
-              Roles.addUsersToRoles(userId, ['viewer'], Roles.GLOBAL_GROUP);
+              Roles.addUsersToRoles(userId, ['dev'], Roles.GLOBAL_GROUP);
             }
 
         } else {

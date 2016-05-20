@@ -4,17 +4,25 @@ Meteor.startup ->
     @route 'apiListInstances',
       where: 'server'
       path: '/api/v1/instances/:app/:version'
-      action: ->
-        check([@params.app, @params.version], [String])
-        instNames = Instances.find(project: Settings.get('project'), "meta.appName": @params.app, "meta.appVersion": @params.version).map (inst) -> inst.name
-        @response.writeHead 200, 'Content-Type': 'application/json'
-        @response.end EJSON.stringify(instNames)
+    .get ->
+      check([@params.app, @params.version], [String])
+
+      successResponse =
+        statusCode: 200
+        instances: Instances.find(project: Settings.get('project'), "meta.appName": @params.app, "meta.appVersion": @params.version).map (inst) -> inst.name
+      failedResponse =
+        statusCode: 404
+        error: "Failed to retrieve instances for app '#{@params.app}:#{@params.version}'"
+
+      API.handleRequest @, null, null, successResponse, failedResponse
+
     @route 'apiStatus',
       where: 'server'
       path: '/api/v1/state/:name'
     .get ->
         check(@params.name, String)
         instance = Instances.findOne project: Settings.get('project'), name: @params.name
+        console.log instance.meta.state
         if instance
           @response.writeHead 200, 'Content-Type': 'application/json'
           @response.end instance.meta.state
