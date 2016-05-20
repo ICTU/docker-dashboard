@@ -51,22 +51,21 @@ Meteor.startup ->
     Meteor.publish null, -> Settings.cursor()
 
     settings = Meteor.settings
-    unless Settings.collection.findOne(key)
-      aurl = settings?.agentUrl
-      Settings.collection.insert
-        key: settings?.public?.key or 'default'
-        project: settings?.project or 'undef'
-        etcd: settings?.etcd or 'http://etcd1.isd.ictu:4001/v2/keys/'
-        etcdBaseUrl: settings?.etcdBaseUrl or 'http://etcd1.isd.ictu:4001'
-        syslogUrl: settings?.syslogUrl or 'udp://logstash:5454'
-        elasticSearchUrl: settings?.elasticSearchUrl or 'http://elasticsearch:9200'
-        dataDir: settings?.dataDir or '/local/data'
-        sharedDataDir: settings?.sharedDataDir or '/mnt/data'
-        agentAuthToken: settings?.agentAuthToken
-        agentUrl:
-          if aurl
-            if aurl.constructor is Array then aurl else [aurl]
-          else
-            ['http://agent']
-        isAdmin: settings?.admin or settings?.public?.admin or false
-        remoteAppstoreUrl: settings?.remoteAppstoreUrl or settings?.public?.remoteAppstoreUrl or ''
+    aurl = settings?.agentUrl
+    Settings.collection.upsert key, $set:
+      key: settings?.public?.key or 'default'
+      project: settings?.project or 'undef'
+      etcd: settings?.etcd or 'http://etcd1.isd.ictu:4001/v2/keys/'
+      etcdBaseUrl: settings?.etcdBaseUrl or 'http://etcd1.isd.ictu:4001'
+      syslogUrl: settings?.syslogUrl or 'udp://logstash.isd.ictu:5454'
+      elasticSearchUrl: settings?.elasticSearchUrl or 'http://elasticsearch.isd.ictu:9200'
+      dataDir: settings?.dataDir or '/local/data'
+      sharedDataDir: settings?.sharedDataDir or '/mnt/data'
+      agentAuthToken: settings?.agentAuthToken
+      agentUrl:
+        if aurl
+          if aurl.constructor is Array then aurl else [aurl]
+        else
+          ['http://agent']
+      isAdmin: settings?.admin or settings?.public?.admin or false
+      remoteAppstoreUrl: settings?.remoteAppstoreUrl or settings?.public?.remoteAppstoreUrl or ''
