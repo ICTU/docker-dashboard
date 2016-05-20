@@ -20,7 +20,6 @@ Meteor.startup ->
       path: '/'
       loadingTemplate: 'loading'
       subscriptions: -> [
-        Meteor.subscribe 'apps'
         Meteor.subscribe 'applicationDefs'
       ]
 
@@ -35,7 +34,6 @@ Meteor.startup ->
       loadingTemplate: 'loading'
       subscriptions: -> [
         Meteor.subscribe 'applicationDefs'
-        Meteor.subscribe 'apps'
       ]
 
     @route 'appstore',

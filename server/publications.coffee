@@ -1,5 +1,4 @@
 Meteor.publish 'applicationDefs', -> ApplicationDefs.find()
-Meteor.publish 'apps', -> Apps.find()
 Meteor.publish 'chatMessages', -> Messages.find type: 'chat'
 Meteor.publish 'latestNotice', -> Messages.find {$or: [{type: 'info'}, {type: 'warning'}]}, limit: 1, sort: date: -1
 Meteor.publish 'instances', -> Instances.find()
