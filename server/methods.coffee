@@ -94,11 +94,10 @@ Meteor.methods
     check userId, Match.OneOf( Meteor.userId(), String )
     newKey = Random.hexString 32
     APIKeys.upsert { "owner": userId }, $set: "key": newKey
-
   initApiKey: (userId) ->
     check userId, Match.OneOf( Meteor.userId(), String )
     newKey = Random.hexString 32
     APIKeys.insert owner: userId, key: newKey
 
 Meteor.users.after.insert (userId, doc) ->
-  if Roles.userIsInRole 'admin' then Meteor.call "initApiKey", @_id
+  if doc.username in Meteor.settings?.ldap?.admins then Meteor.call "initApiKey", @_id

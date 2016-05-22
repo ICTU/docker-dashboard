@@ -64,3 +64,4 @@ react-meteor-data
 kadira:dochead
 typ:accounts-ldap
 matb33:collection-hooks
+theduke:bootstrap-modal-prompt

@@ -24,8 +24,13 @@ Template.apiSettings.events
   'click #btnRegenerateApi': (e) ->
     e.stopPropagation()
     userId = Meteor.userId()
-    confirmRegeneration = confirm "Are you sure? This will invalidate your current key!"
 
-    if confirmRegeneration
-     Meteor.call "regenerateApiKey", userId, (err, res) ->
-       console.error "Failed to regenerate key: #{err.reason}" if err
+    BootstrapModalPrompt.prompt
+      title: "Generate new key"
+      content: "Are you sure? This will invalidate your current key!"
+      btnDismissText: "No"
+      btnOkText: "Yes"
+    , (confirmRegeneration) ->
+      if confirmRegeneration
+        Meteor.call "regenerateApiKey", userId, (err, res) ->
+          console.error "Failed to regenerate key: #{err.reason}" if err
