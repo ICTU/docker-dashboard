@@ -9,7 +9,7 @@
     if validUser
       delete request.content.api_key
     else
-      request.content = { error: 401, message: 'Invalid API key.' }
+      request.content.error = { error: 401, message: 'Invalid API key.' }
     request
   handleAuthRequest: (context, f, args, successResponse, failedResponse) ->
     context.request = API.connection(context.request)
