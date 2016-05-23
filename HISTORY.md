@@ -4,6 +4,9 @@
 - Authenticate against LDAP.
 - Secure admin API.
 
+### 4.0.8
+- Do not use project name when searching for apps/instances.
+
 ### 4.0.7
 - Improved apps page rendering.
 - Fixed displaying start up log.
