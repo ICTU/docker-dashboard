@@ -1,5 +1,8 @@
 ### master
 - Secure comm between dashboard and agent; requires token auth enabled agent.
+- Useraccounts enabled.
+- Authenticate against LDAP.
+- Secure admin API.
 
 ### 4.0.7
 - Improved apps page rendering.

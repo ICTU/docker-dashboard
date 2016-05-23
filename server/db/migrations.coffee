@@ -50,9 +50,6 @@ Migrations.add
     syncWithBaseKey "apps", (err, nodes) ->
       console.error 'Error while syncing apps info, skipping...', err if err
 
-      apps = if nodes then (toApp node for node in nodes) else []
-      Apps.updateCollection apps
-
       objects = []
       if nodes
         for n in nodes
