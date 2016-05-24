@@ -4,6 +4,9 @@
 - Authenticate against LDAP.
 - Secure admin API.
 
+### 4.0.9
+- Reverted 0907a871b8c601c45e812cafee3b5ba72158508a (improved apps paged rendering) due to bug in displaying app defs.
+
 ### 4.0.8
 - Do not use project name when searching for apps/instances.
 

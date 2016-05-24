@@ -14,33 +14,15 @@ appSearch = ->
   filterObj
 
 Template.apps.helpers
-  applicationDefs: -> ApplicationDefs.find {}, sort: name: 1
-  apps: ->
-    apps = _.reduce ApplicationDefs.find(appSearch(), sort: name: 1).fetch(), (l, r) ->
-      ver =
-        version: r.version
-        def: r.def
-        tags: r.tags
-        name: r.name
-      if app = _.findWhere(l, name: r.name)
-        app.tags = _.union app.tags, r.tags
-        app.defs.push ver
-      else
-        l.push
-          name: r.name
-          defs: [ver]
-          tags: r.tags
-      l
-    , []
-    _.map apps, (app) ->
-      app.defs = _.sortBy app.defs, 'version'
-      app
-  appDefCount: -> @defs.length
+  appNames: -> _.uniq(ApplicationDefs.find(appSearch(), sort: name: 1).map (ad) -> ad.name)
+  appDefCount: -> ApplicationDefs.find(name: "#{@}").count()
+  appDefs: -> ApplicationDefs.find {name: "#{@}"}, sort: version: 1
   isSearching: -> Session.get('queryAppName')?.length or Session.get('filterByTag')?.length
   filterByTag: -> Session.get 'filterByTag'
   multipleSearchTerms: -> Session.get('queryAppName')?.length and Session.get 'filterByTag'
   appDefTemplate: -> appDefTemplate
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
+  appTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find(name: "#{@}").map (ad) -> ad.tags if ad.tags)), undefined)
   allTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find().map (ad) -> ad.tags if ad.tags)), undefined)
   searchTerms: -> Session.get 'queryAppName'
 
@@ -59,11 +41,11 @@ Template.apps.events
 Template.appActions.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
   parameters: ->
-    regex = /(?:\{\{)([\d|\w|_|-]*?)(?:\}\})/g
-    params = []
-    while match = regex.exec @def
-      params.push match[1]
-    _.uniq params
+    params = @def.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
+    if params?.length
+      _.uniq(params.map (p) -> p.replace('{{', '').trim())
+    else
+      []
 
 Template.appActions.events
   'submit #start-app-form': (e, tpl) ->
