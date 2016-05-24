@@ -1,3 +1,6 @@
+### 4.0.9
+- Undo: Improved apps page rendering.
+
 ### 4.0.7
 - Improved apps page rendering.
 - Fixed displaying start up log.
