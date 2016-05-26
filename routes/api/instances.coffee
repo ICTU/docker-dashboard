@@ -1,3 +1,5 @@
+dot = require 'mongo-dot-notation'
+
 Meteor.startup ->
 
   Router.map ->
@@ -31,9 +33,8 @@ Meteor.startup ->
           @response.end '{"message": "Instance not found"}'
     .put ->
         check(@params.name, String)
-        instance = Instances.findOne(name: @params.name) or {}
-        updatedInstance = lodash.merge instance, @request.body
-        Instances.update {name: @params.name}, {$set: _.omit(updatedInstance, '_id')}, (err, result) =>
+        dotized = dot.flatten @request.body
+        Instances.update {name: @params.name}, dotized, (err, result) =>
           console.error err if err
           if err or not result
             @response.writeHead 404, 'Content-Type': 'application/json'

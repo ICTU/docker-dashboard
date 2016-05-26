@@ -61,13 +61,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 	} \
 }"
 
-docker pull {{image}} | while IFS= read -r line; do
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"stateDescription\": \"$line\" \
-	} \
-}";
-done
+docker pull {{image}}
 
 echo "Done pulling image {{image}}"
 STEP=$((STEP+1))

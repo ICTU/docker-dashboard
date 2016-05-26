@@ -37,11 +37,11 @@ pickAgent = ->
         startScript: Scripts.bash.start app, version, instance, options, parameters
         stopScript: Scripts.bash.stop app, version, instance, options, parameters
 
-    console.log "Sending request to #{options.agentUrl}"
+    console.log "Sending a POST request to '#{agentUrl}' to start '#{instance}'."
 
     HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+      throw new Meteor.Error err if err
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
-      console.error err if err
       Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
   setHellobarMessage: (instanceName, message) ->
@@ -64,15 +64,15 @@ pickAgent = ->
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.get('project')}."
     instance = Instances.findOne name: instanceName
     agentUrl = instance.meta.agentUrl
-    console.log "Agent URL is #{agentUrl}. Sending a POST request to stop the applicaiton."
+    console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
     callOpts =
       responseType: "buffer"
       data:
         dir: "#{Settings.get('project')}-#{instanceName}"
 
     HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+      throw new Meteor.Error err if err
       console.log "Sent request to stop instance. Response from the agent is #{result.content}"
-      console.error err if err
     ""
   clearInstance: (project, instance) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
