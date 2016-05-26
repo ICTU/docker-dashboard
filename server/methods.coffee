@@ -99,5 +99,5 @@ Meteor.methods
     newKey = Random.hexString 32
     APIKeys.insert owner: userId, key: newKey
 
-# Meteor.users.after.insert (userId, doc) ->
-#   if doc.username in Meteor.settings?.ldap?.admins then Meteor.call "initApiKey", @_id
+Meteor.users.after.insert (userId, doc) ->
+  if doc.username in Meteor.settings?.ldap?.admins then Meteor.call "initApiKey", @_id
