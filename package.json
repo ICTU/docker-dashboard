@@ -25,6 +25,7 @@
   "homepage": "https://github.com/ICTU/docker-dashboard#readme",
   "dependencies": {
     "meteor-node-stubs": "^0.2.3",
+    "mongo-dot-notation": "^1.0.5",
     "node-etcd": "^4.2.1",
     "react": "^15.0.2",
     "react-addons-create-fragment": "^15.0.2",

@@ -1,3 +1,6 @@
+### 4.0.10
+- Fixed: Race condition occuring when multiple update requests to Instances occurred
+
 ### 4.0.9
 - Undo: Improved apps page rendering.
 
