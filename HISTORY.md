@@ -1,5 +1,8 @@
+### 4.0.11
+- Fixed: Create locally persisted volumes with 777 permissions.
+
 ### 4.0.10
-- Fixed: Race condition occuring when multiple update requests to Instances occurred
+- Fixed: Race condition occuring when multiple update requests to Instances occurred.
 
 ### 4.0.9
 - Undo: Improved apps page rendering.
