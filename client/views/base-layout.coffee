@@ -1,7 +1,7 @@
 { EventsListView } = require '/imports/ui/events.cjsx'
 
 Meteor.startup ->
-  DocHead.setTitle("Big Boat #{version or ''}")
+  DocHead.setTitle("Big Boat #{Helper.appVersion() or ''}")
 
 Template['base-layout'].helpers
   user: -> Meteor.user().emails?[0].address
