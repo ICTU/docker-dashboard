@@ -13,6 +13,7 @@ Meteor.startup =>
 
     slack.on 'open', =>
       @channel = slack.getChannelByName(channelName)
+      # this is left here for documentation purposes, if later we ever need it again......
       # @noticeChannel = slack.getChannelByName 'dashboard-notice'
       # noticeChannelId = noticeChannel?.id
       # if channel
