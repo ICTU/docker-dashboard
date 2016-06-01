@@ -20,7 +20,6 @@ Meteor.startup ->
       path: '/'
       loadingTemplate: 'loading'
       subscriptions: -> [
-        Meteor.subscribe 'apps'
         Meteor.subscribe 'applicationDefs'
       ]
 
@@ -29,13 +28,16 @@ Meteor.startup ->
 
     @route 'config',
       path: '/config'
+      subscriptions: -> [
+        Meteor.subscribe 'thaRoles'
+        Meteor.subscribe 'thaUsers'
+      ]
 
     @route 'apps',
       path: '/apps'
       loadingTemplate: 'loading'
       subscriptions: -> [
         Meteor.subscribe 'applicationDefs'
-        Meteor.subscribe 'apps'
       ]
 
     @route 'appstore',

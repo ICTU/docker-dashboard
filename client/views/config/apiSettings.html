@@ -1,0 +1,19 @@
+<template name="apiSettings">
+  <div class="panel panel-primary">
+    <div class="panel-heading"><h3 class="panel-title">API</h3></div>
+    <div class="panel-body">
+      <div class="input-group">
+        <span class="input-group-addon">API Key</span>
+        <input type="text" class="form-control" readonly value="{{apiKey}}" placeholder="Your API key" id="inputApi">
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="button" id="btnCopyApi" data-clipboard-target="#inputApi" data-toggle="tooltip" data-placement="button" title="Copy to Clipboard">
+            <img src="img/svg/clippy.svg" alt="Copy">
+          </button>
+          <button class="btn btn-default" type="button" id="btnRegenerateApi" title="Generate new key">
+            <img src="img/svg/refresh.svg" alt="Generate">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

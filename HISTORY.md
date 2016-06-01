@@ -1,3 +1,18 @@
+### master
+- Secure comm between dashboard and agent; requires token auth enabled agent.
+- Useraccounts enabled.
+- Authenticate against LDAP.
+- Secure admin API.
+
+### 4.0.10
+Fixed race condition occuring when multiple update requests are received for Instances
+
+### 4.0.9
+- Reverted 0907a871b8c601c45e812cafee3b5ba72158508a (improved apps paged rendering) due to bug in displaying app defs.
+
+### 4.0.8
+- Do not use project name when searching for apps/instances.
+
 ### 4.0.7
 - Improved apps page rendering.
 - Fixed displaying start up log.

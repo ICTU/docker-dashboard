@@ -7,17 +7,6 @@
       </div>
       <hr>
 
-      {{#if hasLocalAppstore}}
-        <div style="width: 33%; float:left; margin-bottom: 10px">
-          <div class="appcard" style="height:200px; background-color:#001f3f; margin-right: 15px; padding-top:30px">
-          <button type="button" class="btn btn-link center-block btn-edit-app" data-toggle="modal" data-target="#editbox-{{hash}}" title="Create new application">
-              <i style="font-size: 100px; color:grey;" class="glyphicon glyphicon-plus"></i>
-          </button>
-          </div>
-        </div>
-        {{> editAppDefBox}}
-      {{/if}}
-
       <span>{{> React component=Appstore apps=apps}}</span>
 
   </div>

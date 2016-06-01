@@ -14,37 +14,40 @@
   <div id="content-row" class="row">
     <div id="page-menu" class="col-md-3">
       <ul class="nav nav-stacked">
+        {{#if isAuthenticated}}
+        <hr>
         {{#with appDefTemplate}}
         <li><a title="New App" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-plus"></i> New App</a></li>
         {{/with}}
         <hr>
+        {{/if}}
         {{#each allTags}}
         <li><a title="{{this}}" class="filterByTag" href="#"><i class="glyphicon glyphicon-zoom-in"></i> {{this}}</a></li>
         {{/each}}
       </ul>
     </div>
     <div id="apps-container" class="col-md-9">
-      {{#each apps}}
+      {{#each appNames}}
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title heading-flex-container">
-            <a data-toggle="collapse" data-target="#appPanel-{{name}}" href="#" class="titleToggle collapsed toggle">
-               <span class="badge">{{appDefCount}}</span> {{name}}
+            <a data-toggle="collapse" data-target="#appPanel-{{this}}" href="#" class="titleToggle collapsed toggle">
+               <span class="badge">{{appDefCount}}</span> {{this}}
             </a>
             <div>
-              {{#each tags}}
+              {{#each appTags}}
                 <span class="label label-info">{{this}}</span>
               {{/each}}
             </div>
-            <a data-toggle="collapse" data-target="#appPanel-{{name}}" href="#" class="collapsed toggle"></a>
+            <a data-toggle="collapse" data-target="#appPanel-{{this}}" href="#" class="collapsed toggle"></a>
           </h4>
         </div>
-        <div id="appPanel-{{name}}" class="appPanel panel-collapse collapse">
+        <div id="appPanel-{{this}}" class="appPanel panel-collapse collapse">
             <div class="panel-body">
               <table class="table table-hover">
                 <tbody>
-                  {{#each defs}}
-                  <tr id="controlPanel-{{../name}}-{{version}}">
+                  {{#each appDefs}}
+                  <tr id="controlPanel-{{name}}-{{version}}">
                     <th scope="row" style="width:250px; padding: 20px;">
                       {{version}}
                     </th>
@@ -54,7 +57,9 @@
                       </div>
                     </td>
                     <td style="width: 100px;">
+                      {{#if isAuthenticated}}
                       {{> appActions}}
+                      {{/if}}
                     </td>
                   </tr>
                   {{/each}}
@@ -64,7 +69,7 @@
         </div>
       </div>
 
-      {{#each defs}}
+      {{#each appDefs}}
       {{> editAppDefBox}}
       {{/each}}
 

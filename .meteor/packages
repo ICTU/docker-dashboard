@@ -8,10 +8,7 @@ es5-shim
 coffeescript
 http
 zimme:iron-router-active
-
-msavin:mongol
-
-
+matb33:collection-hooks
 twbs:bootstrap
 fortawesome:fontawesome
 jparker:crypto-md5
@@ -52,8 +49,6 @@ random
 ejson
 spacebars
 check
-
-
 stevezhu:lodash
 standard-minifier-css
 standard-minifier-js
@@ -62,3 +57,5 @@ react-template-helper
 jhartma:cjsx
 react-meteor-data
 kadira:dochead
+typ:accounts-ldap
+theduke:bootstrap-modal-prompt

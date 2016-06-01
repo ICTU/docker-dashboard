@@ -45,10 +45,12 @@ ssh -p {{port}} {{hostname}}
       <tr><th scope="row">Network</th><td>{{data.dockerContainerInfo.net.State.Status}}</td></tr>
 
       {{#if data.dockerContainerId}}
+      {{#if isAuthenticated}}
       <tr>
         <th scope="row">Logs</th>
         <td><a target="_blank" href="{{pathFor route='logs' containerId=data.dockerContainerId}}" class="showContainerLogsOld">Show Logs</a></td>
       </tr>
+      {{/if}}
       {{/if}}
     </tbody>
   </table>

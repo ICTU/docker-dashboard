@@ -50,9 +50,6 @@ Migrations.add
     syncWithBaseKey "apps", (err, nodes) ->
       console.error 'Error while syncing apps info, skipping...', err if err
 
-      apps = if nodes then (toApp node for node in nodes) else []
-      Apps.updateCollection apps
-
       objects = []
       if nodes
         for n in nodes
@@ -67,5 +64,12 @@ Migrations.add
             tags: Helper.extractTags n.value
 
       ApplicationDefs.updateCollection objects
+
+Migrations.add
+  version: 3
+  name: 'Add agent auth token setting.'
+  up: ->
+    Settings.set 'agentAuthToken', Meteor.settings.agentAuthToken
+
 
 Meteor.startup -> Migrations.migrateTo('latest')

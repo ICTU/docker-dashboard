@@ -1,10 +1,12 @@
 { EventsListView } = require '/imports/ui/events.cjsx'
 
 Meteor.startup ->
-  DocHead.setTitle("Big Boat #{version or ''}")
+  DocHead.setTitle("Big Boat #{Helper.appVersion() or ''}")
 
 Template['base-layout'].helpers
   user: -> Meteor.user().emails?[0].address
+  gravatarUrl: ->
+    "http://www.gravatar.com/avatar/#{CryptoJS.MD5(Meteor.user().profile.email).toString()}?s=24"
   statusColor: -> if Services.findOne(isUp:false) then 'red' else 'green'
   session: (sessVar) -> Session.get sessVar
   projectName: -> Settings.get('project').toUpperCase()
@@ -34,6 +36,18 @@ Template['base-layout'].events
       InstanceMeta.notify = true
     , 5000
     t.$('li.dropdown.open').removeClass('open')
+  'submit #formLogin': (e) ->
+    e.preventDefault()
+    username = e.target.username.value
+    password = e.target.password.value
+    Meteor.loginWithLDAP username, password, { searchBeforeBind: {'uid': username} }, (err, res) ->
+      if err
+        sAlert.error "Login failed!"
+      else
+        sAlert.info "#{Meteor.user().username} logged in."
+  'click #logOut': ->
+    Meteor.logout()
+    sAlert.info "#{Meteor.user().username} logged out."
 
 Template.notices.helpers
   notices: -> Messages.find $or: [{type: 'info'}, {type: 'warning'}]

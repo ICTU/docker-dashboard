@@ -23,6 +23,7 @@ Create a configuration file in the root of the project: `settings.json`. Populat
         "syslogUrl":"udp://<logstash_host>:5454",
         "elasticSearchUrl": "http://<elasticsearch_host>:9200",
         "agentUrl":"http://<agent_url>",
+        "agentAuthToken": "<agent_auth_token",
         "admin": true,
         "slack":{
           "authToken": "<slack_auth_token>"
@@ -73,3 +74,25 @@ The example shows how to update an existing application definition. If the defin
 An existing application definition can be deleted with the _HTTP DELETE_ operation.
 
     curl -X DELETE http://BIG_BOAT/api/v1/appdef/myNewApp/1.0
+    
+## User Accounts
+
+The dashboard supports the following authentication methods:
+- LDAP
+
+### LDAP
+
+Add the following object to your Meteor settings file:
+
+```
+"ldap" : {
+   "serverAddr": "ldap://myldap",
+   "serverPort": "389",
+   "baseDn": <<baseDn>>,
+   "superDn": "<<superDn>>",
+   "superPass" : <<superPassword>>,
+   "admins" : ["user1", "user2"]
+ }
+```
+
+After starting the dashboard you will be able to authenticate against the specified ldap server. You specify your username (uid) and password as listed in the LDAP directory. The superDn and superPass are used to perform an ldap search to determine the usersDn based on the passed uid. After a userDn has been found the dashboard will bind to ldap with the user credentials. On a succesful bind the account will be created and added to the user collection.

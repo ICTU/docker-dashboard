@@ -1,7 +1,10 @@
 log = logger.bunyan.createLogger name:'method-invocation'
 
+isAuthorized = -> Meteor.user() or not Settings.get('userAccountsEnabled')
+
 loggedMethod = (name, f) -> ->
-  log.info method: name, arguments: arguments, client: @connection.clientAddress
+  if !isAuthorized() then throw new Meteor.Error '403', 'Not authorized'
+  log.info method: name, arguments: arguments, client: @connection.clientAddress, user: Meteor.user()?.username
   f.apply @, arguments
 
 logInvocation = (methods) ->
@@ -32,7 +35,6 @@ Meteor.methods logInvocation
   clearInstance: Cluster.clearInstance
   setHellobarMessage: Cluster.setHellobarMessage
   saveApp: Cluster.saveApp
-
   deleteApp: Cluster.deleteApp
 
   execService: Cluster.execService
@@ -66,4 +68,36 @@ Meteor.methods logInvocation
 
   getInstanceLog: (id) ->
     instance = Instances.findOne _id: id
-    getLogs must: [match_phrase: message: instance.meta.id]
+    if instance?.meta?.id
+      getLogs(must: [match_phrase: message: instance.meta.id])
+    else if instance?.logs?.bootstrapLog
+      [{date: new Date(), message: instance?.logs?.bootstrapLog}]
+    else []
+
+Meteor.methods
+  getRolesForUser: (targetUser) ->
+    loggedInUser = Meteor.user
+    unless loggedInUser and Roles.userIsInRole(loggedInUser, ['admin'], Roles.GLOBAL_GROUP)
+      throw new Meteor.error 403, 'Access denied'
+    Roles.getRolesForUser targetUser
+  updateRoles: (userId, roles) ->
+    loggedInUser = Meteor.user
+    unless loggedInUser and Roles.userIsInRole(loggedInUser, ['admin'], Roles.GLOBAL_GROUP)
+      throw new Meteor.Error 403, 'Access denied'
+    Roles.setUserRoles userId, roles, Roles.GLOBAL_GROUP
+  addRole: (userId, role) ->
+    loggedInUser = Meteor.user
+    unless loggedInUser and Roles.userIsInRole(loggedInUser, ['admin'], Roles.GLOBAL_GROUP)
+      throw new Meteor.Error 403, 'Access denied'
+    Roles.addUsersToRoles userId, [role], Roles.GLOBAL_GROUP
+  regenerateApiKey: (userId) ->
+    check userId, Match.OneOf( Meteor.userId(), String )
+    newKey = Random.hexString 32
+    APIKeys.upsert { "owner": userId }, $set: "key": newKey
+  initApiKey: (userId) ->
+    check userId, Match.OneOf( Meteor.userId(), String )
+    newKey = Random.hexString 32
+    APIKeys.insert owner: userId, key: newKey
+
+Meteor.users.after.insert (userId, doc) ->
+  if doc.username in Meteor.settings?.ldap?.admins then Meteor.call "initApiKey", @_id

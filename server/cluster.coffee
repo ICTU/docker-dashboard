@@ -14,6 +14,9 @@ pickAgent = ->
 
 @Cluster =
   startApp: (app, version, instance, parameters, options = {}) ->
+    unless ApplicationDefs.findOne {name: app, version: version}
+      throw new Meteor.Error "Application #{app}:#{version} does not exist"
+
     project = Settings.get('project')
     options = _.extend {"dataDir": Settings.get('dataDir')}, options
     dir = "#{Settings.get('project')}-#{instance}"
@@ -34,16 +37,13 @@ pickAgent = ->
         startScript: Scripts.bash.start app, version, instance, options, parameters
         stopScript: Scripts.bash.stop app, version, instance, options, parameters
 
-    console.log "Sending request to #{options.agentUrl}"
+    console.log "Sending a POST request to '#{agentUrl}' to start '#{instance}'."
 
-    HTTP.post "#{agentUrl}/app/install-and-run", callOpts, (err, result) ->
+    HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+      throw new Meteor.Error err if err
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
-      console.log err if err
-      Instances.update {name: instance, application: app},
-        $set: {'logs.bootstrapLog': "#{result.content}"}
+      Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
-
-
   setHellobarMessage: (instanceName, message) ->
     asyncFunc = (instanceName, message, callback) ->
       instance = Instances.findOne name: instanceName
@@ -58,23 +58,22 @@ pickAgent = ->
     syncFunc = Meteor.wrapAsync asyncFunc
     syncFunc instanceName, message
 
-
-
   stopInstance: (instanceName) ->
+    unless Instances.findOne {name: instanceName}
+      throw new Meteor.Error "Instance #{@params.name} does not exist"
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.get('project')}."
     instance = Instances.findOne name: instanceName
     agentUrl = instance.meta.agentUrl
-    console.log "Agent URL is #{agentUrl}. Sending a POST request to stop the applicaiton."
+    console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
     callOpts =
       responseType: "buffer"
       data:
         dir: "#{Settings.get('project')}-#{instanceName}"
 
-    HTTP.post "#{agentUrl}/app/stop", callOpts, (err, result) ->
+    HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+      throw new Meteor.Error err if err
       console.log "Sent request to stop instance. Response from the agent is #{result.content}"
-      console.log err if err
     ""
-
   clearInstance: (project, instance) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
     Instances.remove project: project, name: instance

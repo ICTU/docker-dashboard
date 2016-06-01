@@ -49,6 +49,7 @@
                       <td><span class="label label-info">{{tag}}</span></td>
                       <td>{{count}}</td>
                       <td style="width:50px;">
+                        {{#if isAuthenticated}}
                         <ul class="nav nav-justified">
                           <li class="btn-group">
 
@@ -63,6 +64,7 @@
                             </form>
                           </li>
                         </ul>
+                        {{/if}}
                       </td>
                     </tr>
                     {{/each}}

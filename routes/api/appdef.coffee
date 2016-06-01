@@ -1,6 +1,6 @@
 Meteor.startup ->
 
-  Router.onBeforeAction Iron.Router.bodyParser.text(), only: [ 'appdef/crud' ]
+  Router.onBeforeAction Iron.Router.bodyParser.text(), only: [ 'appdef/crud' ] if Meteor.isServer
 
   Router.map ->
     @route 'appdef/crud',

@@ -1,17 +1,18 @@
 <template name="config">
-<div class="container settings">
-  <div class="row">
+  <div class="container settings">
+    <div class="row">
       <div class="col-sm-12">
         <div class="row">
           <div class="col-md-11"><h1 class="pageTitle"><i class="glyphicon glyphicon-wrench">
             </i> Configuration</h1>
-            <div>
-              {{> quickForm collection="Settings.collection" doc=settings id="updateSettingsForm" type=formType}}
-            </div>
+            {{>generalSettings}}
+            {{#if isInRole 'admin'}}
+            {{>userSettings}}
+            {{>apiSettings}}
+            {{/if}}
           </div>
         </div>
-        <hr>
       </div>
+    </div>
   </div>
-</div>
 </template>

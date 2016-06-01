@@ -61,13 +61,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 	} \
 }"
 
-docker pull {{image}} | while IFS= read -r line; do
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"stateDescription\": \"$line\" \
-	} \
-}";
-done
+docker pull {{image}}
 
 echo "Done pulling image {{image}}"
 STEP=$((STEP+1))
@@ -109,7 +103,7 @@ docker rm $DOCKERSSHDNAME 2>/dev/null
 # Prepare the volumes
 #
 {{#each volumes}}
-mkdir -p {{../../dataDir}}/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
+mkdir -m 777 -p {{../../dataDir}}/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
 {{/each}}
 #
 # Prepare the network
@@ -178,7 +172,7 @@ docker run -d \
 {{#if privileged}}--privileged{{/if}} \
 {{#if user}}-u {{user}}{{/if}} \
 {{#if mem_limit}}-m {{mem_limit}}{{/if}} \
-{{{attribute "environment" "-e "}}} \
+{{{environmentAttributes}}} \
 -v /etc/localtime:/etc/localtime:ro {{image}} {{#if command}}{{command}}{{/if}} > /dev/null
 
 {{#if enable_ssh}}
@@ -274,12 +268,12 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 {{#each services}}
 DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
 DOCKERNETNAME="net-$DOCKERNAME"
-if [ "$(docker ps | /usr/bin/grep '\s'$DOCKERNAME)" ]; then
+if [ "$(docker ps | grep '\s'$DOCKERNAME)" ]; then
 	echo "SUCCESS: $DOCKERNAME is running";
 else
 	echo "FAILURE: $DOCKERNAME is not running";
 fi
-if [ "$(docker ps | /usr/bin/grep '\s'$DOCKERNETNAME)" ]; then
+if [ "$(docker ps | grep '\s'$DOCKERNETNAME)" ]; then
 	echo "SUCCESS: network for $DOCKERNAME is running";
 else
 	echo "FAILURE: network for $DOCKERNAME is not running";
