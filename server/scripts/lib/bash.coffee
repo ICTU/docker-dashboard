@@ -31,11 +31,18 @@ Meteor.startup ->
         "#{prev}--volumes-from #{volume}-#{parentCtx.project}-#{parentCtx.instance} "
       , ""
 
-    attribute: (attrName, attrPrefix) ->
+    attribute: attribute = (attrName, attrPrefix) ->
       @[attrName]?.reduce (left, right) =>
         acc = "#{right}".replace /"/g, '\\"'
         "#{left}#{attrPrefix}\"#{acc}\" "
       , ""
+    environmentAttributes: ->
+      if @environment and Array.isArray @environment
+        attribute 'environment', '-e'
+      else
+        ("-e '#{key}=#{value}'" for key, value of @environment).join ' '
+
+
     mapDocker: ->
       @mapDocker or @map_docker
 
