@@ -10,7 +10,7 @@ Template['base-layout'].helpers
   statusColor: -> if Services.findOne(isUp:false) then 'red' else 'green'
   session: (sessVar) -> Session.get sessVar
   projectName: -> Settings.get('project').toUpperCase()
-  appVersion: -> version
+  appVersion: -> Helper.appVersion()
   hellobar: ->
     message = RemoteConfig.findOne()?.hellobarMessage
     sAlert.config
