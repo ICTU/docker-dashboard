@@ -89,17 +89,20 @@ ProductDetails = React.createClass
                 </div>
               </div>
               <div className="col-md-2" style={paddingTop:25}>
-                <button type="button" className="btn btn-success btn-lg dropdown-toggle" data-toggle="dropdown"><i className="material-icons">file_download</i> Install</button>
-                <form role="form" className="dropdown-menu dropdown-menu-right" style={padding:10}>
-                    <div className="form-group" style={width:350}>
-                      <div className="alert alert-warning" role="alert">
-                        Installing may overwrite an existing app called <strong>{@state.selectedApp.name}</strong> with version <strong>{@state.selectedApp.version}</strong>.
-                        <br />
-                        Do you wish to continue?
-                      </div>
-                    </div>
-                    <button onClick={@installApp} type="button" className="btn-install-app btn btn-lg btn-success pull-right">Yes!</button>
-                </form>
+                {if Helpers.isAuthenticated()
+                  [
+                    <button type="button" className="btn btn-success btn-lg dropdown-toggle" data-toggle="dropdown"><i className="material-icons">file_download</i> Install</button>
+                    <form role="form" className="dropdown-menu dropdown-menu-right" style={padding:10}>
+                        <div className="form-group" style={width:350}>
+                          <div className="alert alert-warning" role="alert">
+                            Installing may overwrite an existing app called <strong>{@state.selectedApp.name}</strong> with version <strong>{@state.selectedApp.version}</strong>.
+                            <br />
+                            Do you wish to continue?
+                          </div>
+                        </div>
+                        <button onClick={@installApp} type="button" className="btn-install-app btn btn-lg btn-success pull-right">Yes!</button>
+                    </form>
+                  ]}
               </div>
             </div>
             <div className="row" style={paddingTop:20}>
