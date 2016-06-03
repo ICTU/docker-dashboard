@@ -14,13 +14,13 @@ body {
   box-shadow: 0 3px 5px #AAAAAA;
 }
 
+.glyphicon-lg {
+  font-size: 18px;
+}
+
 h5 {
   font-size: 16px;
   font-style: oblique;
-}
-
-i {
-  font-size:18px;
 }
 
 footer {

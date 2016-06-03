@@ -17,12 +17,12 @@
         {{#if isAuthenticated}}
         <hr>
         {{#with appDefTemplate}}
-        <li><a title="New App" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-plus"></i> New App</a></li>
+        <li><a title="New App" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-lg glyphicon-plus"></i> New App</a></li>
         {{/with}}
         <hr>
         {{/if}}
         {{#each allTags}}
-        <li><a title="{{this}}" class="filterByTag" href="#"><i class="glyphicon glyphicon-zoom-in"></i> {{this}}</a></li>
+        <li><a title="{{this}}" class="filterByTag" href="#"><i class="glyphicon glyphicon-lg glyphicon-zoom-in"></i> {{this}}</a></li>
         {{/each}}
       </ul>
     </div>
@@ -103,7 +103,7 @@
     <li class="btn-group">
 
       <a title="Start" href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <i class="glyphicon glyphicon-play"></i>
+        <i class="glyphicon glyphicon-lg glyphicon-play"></i>
       </a>
       <form id="start-app-form" role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
           <div class="form-group" style="width:30em">
@@ -121,11 +121,11 @@
       </form>
 
     </li>
-    <li><a title="Edit" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-cog"></i></a></li>
+    <li><a title="Edit" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-lg glyphicon-cog"></i></a></li>
     <li class="btn-group">
 
       <a title="Remove" href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <i class="glyphicon glyphicon-trash"></i>
+        <i class="glyphicon glyphicon-lg glyphicon-trash"></i>
       </a>
       <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
           <div class="form-group" style="width:20em">

@@ -39,4 +39,4 @@ Meteor.startup ->
     callback()
 
 
-  Jobs.startJobs()
+  Jobs.startJobServer()

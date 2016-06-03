@@ -46,6 +46,7 @@ Meteor.startup =>
     slack.login()
 
   createInstanceEventSlackMessage = (doc) ->
+    user = doc.info.user?.username or null
     msg = switch doc.action
       when 'starting' then "Instance #{doc.info.name} is starting..."
       when 'started'  then "Instance #{doc.info.name} has become active."
@@ -62,25 +63,28 @@ Meteor.startup =>
     # "thumb_url": "http://example.com/path/to/thumb.png"
     # "title": "Instance ",
     # "title_link": "http://www.dashboard.innovation.ictu/instances",
-    "fallback": "msg",
-    "color": color,
-    "author_name": "Big Boat",
-    "author_link": Meteor.absoluteUrl(),
-    "author_icon": 'http://i.imgur.com/UpazEoU.png',
-    "text": msg,
-    "fields": [
-      "title": "Instance",
-      "value": doc.info.name,
-      "short": false
-    ,
-      "title": "Action",
-      "value": doc.action,
-      "short": false
-    ,
-      "title": "User",
-      "value": 'Anonymous',
-      "short": false
-    ]
+    msg =
+      "fallback": msg,
+      "color": color,
+      "author_name": "Big Boat",
+      "author_link": Meteor.absoluteUrl(),
+      "author_icon": 'http://i.imgur.com/UpazEoU.png',
+      "text": msg,
+      "fields": [
+        "title": "Instance",
+        "value": doc.info.name,
+        "short": false
+      ,
+        "title": "Action",
+        "value": doc.action,
+        "short": false
+      ]
+    if user
+      msg.fields.push
+        "title": "User",
+        "value": user,
+        "short": false
+    msg
 
   starting = true
   Events.find().observe added: (doc) =>

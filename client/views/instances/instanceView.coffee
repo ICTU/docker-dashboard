@@ -54,6 +54,8 @@ Template.instanceView.helpers
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2
   instanceHash: -> CryptoJS.MD5 "#{@key}"
+  startedByUser: -> @startedBy?.username
+  stoppedByUser: -> @stoppedBy?.username
 
 Template.instanceView.events
   'click .stop-instance': ->

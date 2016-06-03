@@ -49,7 +49,7 @@
           {{#if isAuthenticated}}
           <li class="btn-group">
             <a title="Logs" target="_blank" href="{{pathFor route='instanceLogs' instanceId=_id}}">
-              <i class="glyphicon glyphicon-list-alt"></i>
+              <i class="glyphicon glyphicon-lg glyphicon-list-alt"></i>
             </a>
             <!-- <a title="Logs" class="showLogs" href="#" data-toggle="modal" data-target="#logsModal">
               <i class="glyphicon glyphicon-list-alt"></i>
@@ -58,7 +58,7 @@
           <li class="btn-group">
 
             <a title="Stop" href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="glyphicon glyphicon-stop"></i>
+              <i class="glyphicon glyphicon-lg glyphicon-stop"></i>
             </a>
             <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
                 <div class="form-group" style="width:20em">
@@ -71,7 +71,7 @@
           <li class="btn-group">
 
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="glyphicon glyphicon-trash"></i>
+              <i class="glyphicon glyphicon-lg glyphicon-trash"></i>
             </a>
             <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
                 <div class="form-group" style="width:20em">
@@ -96,6 +96,10 @@
             <tr><th scope="row">State</th><td>{{stateDescription}}</td></tr>
             {{#if isAdminBoard}}
             <tr><th scope="row">Agent URL</th><td>{{agentUrl}}</td></tr>
+            {{/if}}
+            <tr><th scope="row">Started by</th><td>{{startedByUser}}</td></tr>
+            {{#if stoppedByUser}}
+              <tr><th scope="row">Stopped by</th><td>{{stoppedByUser}}</td></tr>
             {{/if}}
           {{/with}}
           {{#if params}}

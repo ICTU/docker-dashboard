@@ -22,6 +22,8 @@ pickAgent = ->
     dir = "#{Settings.get('project')}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.get('project')}."
 
+    user = Meteor.user()
+
     agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
     Instances.upsert {project: project, name: instance}, $set:
       key: "#{project}/#{app}/#{instance}"
@@ -30,6 +32,9 @@ pickAgent = ->
         appName: app
         appVersion: version
         agentUrl: agentUrl
+        startedBy:
+          userId: user._id
+          username: user.username
     callOpts =
       responseType: "buffer"
       data:
@@ -69,6 +74,12 @@ pickAgent = ->
       responseType: "buffer"
       data:
         dir: "#{Settings.get('project')}-#{instanceName}"
+
+    user = Meteor.user()
+    Instances.upsert {name: instanceName}, $set:
+      'meta.stoppedBy':
+        userId: user._id
+        username: user.username
 
     HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err

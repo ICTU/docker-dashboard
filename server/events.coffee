@@ -16,9 +16,11 @@ Instances.find().observe
     if newDoc?.meta?.state == 'active' && oldDoc?.meta.state != 'active'
       newSuccessEvent 'instance', 'started', name: newDoc.name unless starting
     if newDoc?.meta?.state == 'stopping' && oldDoc?.meta.state != 'stopping'
-      newInfoEvent 'instance', 'stopping', name: newDoc.name unless starting
+      newInfoEvent 'instance', 'stopping', (name: newDoc.name, user: newDoc.meta.stoppedBy) unless starting
   removed:  (doc) -> newWarningEvent 'instance', 'stopped', name: doc.name unless starting
-  added:    (doc) -> newInfoEvent 'instance', 'starting', name: doc.name unless starting
+  added:    (doc) ->
+    unless starting
+      newInfoEvent 'instance', 'starting', (name: doc.name, user: doc.meta.startedBy)
 
 ApplicationDefs.find().observe
   changed: (doc) ->
