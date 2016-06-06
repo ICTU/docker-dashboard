@@ -1,4 +1,7 @@
-### 4.10.0
+### 4.1.1
+- Added "What's new in 4.1" to the landing page.
+
+### 4.1.0
 - Secure comm between dashboard and agent; requires token auth enabled agent.
 - Useraccounts enabled.
 - Authenticate against LDAP.
