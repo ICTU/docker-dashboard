@@ -38,7 +38,7 @@ Meteor.startup ->
       , ""
     environmentAttributes: ->
       if @environment and Array.isArray @environment
-        attribute 'environment', '-e'
+        attribute.call @, 'environment', '-e '
       else
         ("-e '#{key}=#{value}'" for key, value of @environment).join ' '
 
