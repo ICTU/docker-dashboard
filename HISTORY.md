@@ -1,8 +1,9 @@
-### master
+### 4.10.0
 - Secure comm between dashboard and agent; requires token auth enabled agent.
 - Useraccounts enabled.
 - Authenticate against LDAP.
 - Secure admin API.
+- New Appstore UI
 
 ### 4.0.10
 Fixed race condition occuring when multiple update requests are received for Instances
