@@ -1,9 +1,12 @@
+### 4.1.2
+- Technical: Fixed regression in the API when no user is associated with the current context.
+
 ### 4.1.1
 - Added "What's new in 4.1" to the landing page.
 
 ### 4.1.0
 - Secure comm between dashboard and agent; requires token auth enabled agent.
-- Useraccounts enabled.
+- User accounts enabled.
 - Authenticate against LDAP.
 - Secure admin API.
 - New Appstore UI
@@ -12,7 +15,7 @@
 Fixed race condition occuring when multiple update requests are received for Instances
 
 ### 4.0.9
-- Reverted 0907a871b8c601c45e812cafee3b5ba72158508a (improved apps paged rendering) due to bug in displaying app defs.
+- Reverted 0907a871b8c601c45e812cafee3b5ba72158508a (improved apps page rendering) due to bug in displaying app defs.
 
 ### 4.0.8
 - Do not use project name when searching for apps/instances.

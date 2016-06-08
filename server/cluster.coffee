@@ -22,7 +22,10 @@ pickAgent = ->
     dir = "#{Settings.get('project')}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.get('project')}."
 
-    user = Meteor.user()
+    if @userId
+      user = Meteor.user()
+    else
+      user = userId: null, username: 'API'
 
     agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
     Instances.upsert {project: project, name: instance}, $set:
@@ -75,7 +78,11 @@ pickAgent = ->
       data:
         dir: "#{Settings.get('project')}-#{instanceName}"
 
-    user = Meteor.user()
+    if @userId
+      user = Meteor.user()
+    else
+      user = userId: null, username: 'API'
+      
     Instances.upsert {name: instanceName}, $set:
       'meta.stoppedBy':
         userId: user._id
