@@ -1,14 +1,27 @@
-set -x
+set -e
 
 if [ "$(whoami)" != "root" ]; then
 	echo "Start script should be executed with root privileges."
 	exit 1
 fi
 
+#
+# GENERAL STATE CLEANUP AND CONFIGURATION+
+#
+
+# Root data directory is {{dataDir}}
+PROJECT="{{project}}"
+APPNAME="{{appName}}"
+INSTANCE="{{instance}}"
+ETCD_CLUSTER="{{etcdCluster}}"
+DASHBOARD_URL={{dashboardUrl}}/api/v1/state/$INSTANCE
+
 # Setup docker environment
-swarmLeader=$(etcdctl --peers=http://10.25.55.11:4001 get /docker/swarm/leader)
+swarmPath=/swarm/swarm.sock
 dockerPath=$(which docker)
-DOCKER="$dockerPath -H $swarmLeader"
+[ -a $swarmPath ] {{{literal '&'}}}{{{literal '&'}}} swarmLeader=unix:///swarm/sock.sock
+if [[ -a $swarmPath ]]; then swarmLeader=unix://$swarmPath; DOCKER="$dockerPath -H $swarmLeader"; else DOCKER="$dockerPath"; fi
+
 
 syslogProto=`echo '{{syslogUrl}}' | grep -oE '(^[a-z]+):' | grep -oE '[a-z]+'`
 syslogHost=`echo '{{syslogUrl}}' | grep -oE '(//.+):' | cut -c3-  | rev | cut -c2- | rev`
@@ -18,212 +31,203 @@ ID="$(cat /proc/sys/kernel/random/uuid)"
 
 exec 1> >(awk -v id=$ID '{ print id, "=>", $0; fflush(); }' | ncat $syslogHost --$syslogProto $syslogPort) 2>{{{literal '&'}}}1
 
-#
-# GENERAL STATE CLEANUP AND CONFIGURATION+
-#
-# Root data directory is {{dataDir}}
-#
-PROJECT="{{project}}"
-APPNAME="{{appName}}"
-INSTANCE="{{instance}}"
-ETCD_CLUSTER="{{etcdCluster}}"
-
 {{#if vlan}}
 vlan="{{vlan}}"
 {{else}}
 vlan=$(curl --silent $ETCD_CLUSTER/v2/keys/networking/{{project}}/vlan | jq -r '.node.value')
 {{/if}}
 
-TOTAL_STEPS=$((({{total}}*3)+2))
-STEP=1
-
-
-DASHBOARD_URL={{dashboardUrl}}/api/v1/state/$INSTANCE
-
-
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"state\": \"loading\", \
-		\"totalSteps\": \"$TOTAL_STEPS\", \
-		\"progress\": \"$STEP\", \
-		\"id\": \"$ID\" \
-	} \
-}"
-
-
-# PULL ALL IMAGES
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
-	"meta": {
-		"state": "pulling"
-	}
-}'
-
-{{#each services}}
-echo "Pulling image {{image}}..."
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"stateDescription\": \"Pulling image {{image}}\" \
-	} \
-}"
-
-$DOCKER pull {{image}}
-
-echo "Done pulling image {{image}}"
-STEP=$((STEP+1))
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"progress\": \"$STEP\" \
-	} \
-}"
-
-{{/each}}
-
-# ACTIVATE ALL SERVICES
-
-{{#each services}}
-
-DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
-DOCKERSSHDNAME="sshd-$DOCKERNAME"
-
 #
-# Remove any left-behind instances
+# Functions
 #
-$DOCKER kill $DOCKERNETNAME 2>/dev/null
-$DOCKER rm $DOCKERNETNAME 2>/dev/null
-$DOCKER kill $DOCKERNAME 2>/dev/null
-$DOCKER rm $DOCKERNAME 2>/dev/null
-$DOCKER kill $DOCKERSSHDNAME 2>/dev/null
-$DOCKER rm $DOCKERSSHDNAME 2>/dev/null
-#
-# Prepare the volumes
-#
-{{#each volumes}}
-mkdir -m 777 -p {{../../dataDir}}/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
-{{/each}}
-#
-# Prepare the network
-#
-links=""
-{{#each links}}
-links="$links--link net-{{this}}-$PROJECT-$INSTANCE:{{this}} "
-{{/each}}
 
-$DOCKER run \
---restart=always \
---name $DOCKERNETNAME \
---net=none \
---dns-search={{../instance}}.{{../project}}.ictu \
--h {{service}}.{{../instance}}.{{../project}}.ictu \
---label bigboat/dashboard/url={{dashboardUrl}} \
---label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
---label bigboat/project={{../project}} \
---label bigboat/application/name={{../appName}} \
---label bigboat/instance/name={{../instance}} \
---label bigboat/service/name={{service}} \
---label bigboat/container/type=net \
-{{attribute "extra_hosts" "--add-host="}} \
--e pipework_cmd="@VLT_NIC@ -i eth0 @CONTAINER_NAME@ dhclient @${vlan}" \
--d www.docker-registry.isd.ictu:5000/pipes:1
-
-while [ 1 ]; do
-  pubip=$($DOCKER exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}');
-  if [[ $pubip ]]; then
-    echo "ip=$pubip"
-    break;
-  else
-    echo "waiting on IP from DHCP for $DOCKERNETNAME"
-    sleep 5
-  fi
-done
-STEP=$((STEP+1))
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"progress\": \"$STEP\" \
-	} \
-}"
-
-#
-# Start the service container
-#
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
-	"meta": {"stateDescription": "Activating service {{service}}"}
-}'
-
-res=$($DOCKER run -d \
---restart=always \
---name $DOCKERNAME \
---net="container:$DOCKERNETNAME" \
---hostname={{service}}.{{../instance}}.{{../project}}.ictu \
---label bigboat/dashboard/url={{dashboardUrl}} \
---label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
---label bigboat/project={{../project}} \
---label bigboat/application/name={{../appName}} \
---label bigboat/instance/name={{../instance}} \
---label bigboat/service/name={{service}} \
---label bigboat/container/type=service \
-{{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
-{{dockervolumes}} \
-{{volumesfrom}} \
-{{attribute "expose" "--expose="}} \
-{{#if privileged}}--privileged{{/if}} \
-{{#if user}}-u {{user}}{{/if}} \
-{{#if mem_limit}}-m {{mem_limit}}{{/if}} \
-{{{environmentAttributes}}} \
--v /etc/localtime:/etc/localtime:ro {{image}} {{#if command}}{{command}}{{/if}} 2>{{{literal '&'}}}1)
-
-if [[ $? -ne 0 ]]; then
+function set_state {
+	state=$1
+	stateDescription=$2
 	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 		\"meta\": { \
-			\"stateDescription\": \"$res\" \
+			\"state\": \"${state}\", \
+			\"stateDescription\": \"${stateDescription}\" \
 		} \
 	}"
-	exit 1
-fi
+}
 
-{{#if enable_ssh}}
-#
-# Start the ssh container
-#
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
-	"meta": {
-		"stateDescription": "Enabling SSH for service {{service}}"
-	}
-}'
+function notify_on_failure {
+	local exit_code=$?
+  if [[ $exit_code -ne 0 ]]; then
+		# Report state
+		set_state "failed" "$result"
+		exit $exit_code
+	fi
+}
 
-$DOCKER pull jeroenpeeters/docker-ssh
-$DOCKER run -d --name $DOCKERSSHDNAME \
---restart=always \
--e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
--e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
---net="container:$DOCKERNETNAME" \
---label bigboat/dashboard/url={{dashboardUrl}} \
---label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
---label bigboat/project={{../project}} \
---label bigboat/application/name={{../appName}} \
---label bigboat/instance/name={{../instance}} \
---label bigboat/service/name={{service}} \
---label bigboat/container/type=ssh \
--v /var/run/docker.sock:/var/run/docker.sock \
-jeroenpeeters/docker-ssh
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
-	"services": {
+function remove_existing_instances {
+	$DOCKER kill $DOCKERNETNAME 2>/dev/null || true
+	$DOCKER rm -v $DOCKERNETNAME 2>/dev/null || true
+	$DOCKER kill $DOCKERNAME 2>/dev/null || true
+	$DOCKER rm -v $DOCKERNAME 2>/dev/null || true
+	$DOCKER kill $DOCKERSSHDNAME 2>/dev/null || true
+	$DOCKER rm -v $DOCKERSSHDNAME 2>/dev/null || true
+}
+
+function cleanup_on_failure {
+	local exit_code=$?
+	if [[ $exit_code -ne 0 ]]; then
+		remove_existing_instances
+  fi
+}
+
+{{#each services}}
+function pull_image_{{service}} {
+	echo "Pulling image {{image}}..."
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+		\"meta\": { \
+			\"stateDescription\": \"Pulling image {{image}}\" \
+		} \
+	}"
+
+	$DOCKER pull {{image}}
+
+	echo "Done pulling image {{image}}"
+	STEP=$((STEP+1))
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+		\"meta\": { \
+			\"progress\": \"$STEP\" \
+		} \
+	}"
+}
+{{/each}}
+
+{{#each services}}
+function start_{{service}} {
+	DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
+	DOCKERNETNAME="net-$DOCKERNAME"
+	DOCKERSSHDNAME="sshd-$DOCKERNAME"
+
+	# Remove any left-behind instances
+	remove_existing_instances
+
+	# Prepare the volumes
+	{{#each volumes}}
+	mkdir -m 777 -p {{../../dataDir}}/{{../../project}}/{{../../instance}}/{{../service}}{{this}}
+	{{/each}}
+
+	# Prepare the network
+
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+		\"meta\": { \
+			\"state\": \"activating\", \
+			\"stateDescription\": \"Preparing network for {{service}}\" \
+		} \
+	}"
+
+	echo "Preparing network for service {{service}}"
+	links=""
+	{{#each links}}
+	links="$links--link net-{{this}}-$PROJECT-$INSTANCE:{{this}} "
+	{{/each}}
+
+	$DOCKER run \
+	--restart=always \
+	--name $DOCKERNETNAME \
+	--net=none \
+	--dns-search={{../instance}}.{{../project}}.ictu \
+	-h {{service}}.{{../instance}}.{{../project}}.ictu \
+	--label bigboat/dashboard/url={{dashboardUrl}} \
+	--label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
+	--label bigboat/project={{../project}} \
+	--label bigboat/application/name={{../appName}} \
+	--label bigboat/instance/name={{../instance}} \
+	--label bigboat/service/name={{service}} \
+	--label bigboat/container/type=net \
+	{{attribute "extra_hosts" "--add-host="}} \
+	-e pipework_cmd="@VLT_NIC@ -i eth0 @CONTAINER_NAME@ dhclient @${vlan}" \
+	-d www.docker-registry.isd.ictu:5000/pipes:1
+
+	while [ 1 ]; do
+	pubip=$($DOCKER exec $DOCKERNETNAME ifconfig eth0 2>/dev/null | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}');
+	if [[ $pubip ]]; then
+	echo "ip=$pubip"
+	break;
+	else
+	echo "waiting on IP from DHCP for $DOCKERNETNAME"
+	sleep 5
+	fi
+	done
+	STEP=$((STEP+1))
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+		\"meta\": { \
+			\"progress\": \"$STEP\" \
+		} \
+	}"
+
+	# Start the service container
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
+		"meta": {"stateDescription": "Activating service {{service}}"}
+	}'
+
+	$DOCKER run -d \
+	--restart=always \
+	--name $DOCKERNAME \
+	--net="container:$DOCKERNETNAME" \
+	--label bigboat/dashboard/url={{dashboardUrl}} \
+	--label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
+	--label bigboat/project={{../project}} \
+	--label bigboat/application/name={{../appName}} \
+	--label bigboat/instance/name={{../instance}} \
+	--label bigboat/service/name={{service}} \
+	--label bigboat/container/type=service \
+	{{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
+	{{dockervolumes}} \
+	{{volumesfrom}} \
+	{{attribute "expose" "--expose="}} \
+	{{#if privileged}}--privileged{{/if}} \
+	{{#if user}}-u {{user}}{{/if}} \
+	{{#if mem_limit}}-m {{mem_limit}}{{/if}} \
+	{{{environmentAttributes}}} \
+	-v /etc/localtime:/etc/localtime:ro {{image}} {{#if command}}{{command}}{{/if}}
+
+	{{#if enable_ssh}}
+	# Start the ssh container
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
+		"meta": {
+			"stateDescription": "Enabling SSH for service {{service}}"
+		}
+	}'
+
+	$DOCKER pull jeroenpeeters/docker-ssh
+	$DOCKER run -d --name $DOCKERSSHDNAME \
+	--restart=always \
+	-e CONTAINER=$DOCKERNAME -e AUTH_MECHANISM=noAuth \
+	-e HTTP_ENABLED=false -e CONTAINER_SHELL=bash \
+	--net="container:$DOCKERNETNAME" \
+	--label bigboat/dashboard/url={{dashboardUrl}} \
+	--label bigboat/status/url={{dashboardUrl}}/api/v1/state/{{../instance}} \
+	--label bigboat/project={{../project}} \
+	--label bigboat/application/name={{../appName}} \
+	--label bigboat/instance/name={{../instance}} \
+	--label bigboat/service/name={{service}} \
+	--label bigboat/container/type=ssh \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	jeroenpeeters/docker-ssh
+
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
+		"services": {
 			"{{service}}": {
 				"sshPort": 22
 			}
 		}
-}'
-{{/if}}
+	}'
+	{{/if}}
 
-#
-# Publish info about the container
-#
-hostname="{{service}}.$INSTANCE.$PROJECT.ictu"
-myip=$($DOCKER exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
-ports=$($DOCKER inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}})
-cid=$($DOCKER inspect -f '{{{literal '{{.Id}}'}}}' $DOCKERNAME)
+	# Publish info about the container
+	hostname="{{service}}.$INSTANCE.$PROJECT.ictu"
+	myip=$($DOCKER exec $DOCKERNETNAME ifconfig eth0 2>/dev/null | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
+	ports=$($DOCKER inspect -f '{{{literal '{{range $p, $conf := .Config.ExposedPorts}}{{$p}} {{end}}'}}}' {{image}})
+	cid=$($DOCKER inspect -f '{{{literal '{{.Id}}'}}}' $DOCKERNAME)
 
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"services\": { \
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+		\"services\": { \
 			\"{{service}}\": { \
 				\"ip\": \"$myip\", \
 				\"hostname\": \"$hostname\", \
@@ -232,66 +236,99 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 				\"dockerContainerId\": \"$cid\" \
 			} \
 		} \
-}"
+	}"
 
 
-{{#if endpoint}}
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"services\": { \
+	{{#if endpoint}}
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+		\"services\": { \
 			\"{{service}}\": { \
 				\"endpoint\": \"{{endpoint}}\" \
 			} \
 		} \
-}"
-{{/if}}
-{{#if protocol}}
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"services\": { \
+	}"
+	{{/if}}
+	{{#if protocol}}
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+		\"services\": { \
 			\"{{service}}\": { \
 				\"protocol\": \"{{protocol}}\" \
 			} \
 		} \
-}"
-{{/if}}
+	}"
+	{{/if}}
 
-STEP=$((STEP+1))
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"progress\": \"$STEP\" \
-	} \
-}"
+	STEP=$((STEP+1))
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+		\"meta\": { \
+			\"progress\": \"$STEP\" \
+		} \
+	}"
+}
 {{/each}}
 
+function check_health {
+		STEP=$((STEP+1))
+		curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+			\"meta\": { \
+				\"progress\": \"$STEP\", \
+				\"stateDescription\": \"Checking application health\" \
+			} \
+		}"
+		{{#each services}}
+		DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
+		DOCKERNETNAME="net-$DOCKERNAME"
+		if [ "$($DOCKER ps | grep '\s'$DOCKERNAME)" ]; then
+		echo "SUCCESS: $DOCKERNAME is running";
+		else
+		echo "FAILURE: $DOCKERNAME is not running";
+		fi
+		if [ "$($DOCKER ps | grep '\s'$DOCKERNETNAME)" ]; then
+		echo "SUCCESS: network for $DOCKERNAME is running";
+		else
+		echo "FAILURE: network for $DOCKERNAME is not running";
+		fi
+		{{/each}}
+}
 
-STEP=$((STEP+1))
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"progress\": \"$STEP\", \
-		\"stateDescription\": \"Checking application health\" \
-	} \
-}"
-{{#each services}}
-DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
-DOCKERNETNAME="net-$DOCKERNAME"
-if [ "$($DOCKER ps | grep '\s'$DOCKERNAME)" ]; then
-	echo "SUCCESS: $DOCKERNAME is running";
-else
-	echo "FAILURE: $DOCKERNAME is not running";
-fi
-if [ "$($DOCKER ps | grep '\s'$DOCKERNETNAME)" ]; then
-	echo "SUCCESS: network for $DOCKERNAME is running";
-else
-	echo "FAILURE: network for $DOCKERNAME is not running";
-fi
-{{/each}}
+trap notify_on_failure EXIT
 
-sleep 2
+function start {
+	set -e
 
-curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
-	\"meta\": { \
-		\"state\": \"active\", \
-		\"stateDescription\": \"Active\" \
-	} \
-}"
+	trap cleanup_on_failure EXIT
 
-echo "Application started"
+	TOTAL_STEPS=$((({{total}}*3)+2))
+	STEP=1
+
+	curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
+		\"meta\": { \
+			\"state\": \"loading\", \
+			\"totalSteps\": \"$TOTAL_STEPS\", \
+			\"progress\": \"$STEP\", \
+			\"id\": \"$ID\" \
+		} \
+	}"
+
+	# PULL ALL IMAGES
+	{{#each services}}
+	pull_image_{{service}}
+	{{/each}}
+
+	# ACTIVATE ALL SERVICES
+	{{#each services}}
+	start_{{service}}
+	{{/each}}
+
+	# CHECK APPLICATION HEALTH
+	check_health
+
+	sleep 2
+
+	# SET STATE
+	set_state active Active
+
+	echo "Application started"
+}
+
+result=$(start 2>{{{literal '&'}}}1 > /dev/null)

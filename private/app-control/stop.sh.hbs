@@ -3,18 +3,24 @@ if [ "$(whoami)" != "root" ]; then
   exit 1
 fi
 
-# Setup docker environment
-swarmLeader=$(etcdctl --peers=http://10.25.55.11:4001 get /docker/swarm/leader)
-dockerPath=$(which docker)
-DOCKER="$dockerPath -H $swarmLeader"
+#
+# GENERAL STATE CLEANUP AND CONFIGURATION+
+#
 
+# Root data directory is {{dataDir}}
 PROJECT="{{project}}"
 APPNAME="{{appName}}"
 INSTANCE="{{instance}}"
+DASHBOARD_URL={{dashboardUrl}}/api/v1/state/$INSTANCE
+
+# Setup docker environment
+swarmPath=/swarm/swarm.sock
+dockerPath=$(which docker)
+[ -a $swarmPath ] {{{literal '&'}}}{{{literal '&'}}} swarmLeader=unix:///swarm/sock.sock
+if [[ -a $swarmPath ]]; then swarmLeader=unix://$swarmPath; DOCKER="$dockerPath -H $swarmLeader"; else DOCKER="$dockerPath"; fi
+
 TOTAL_STEPS=$((({{total}}*2)+1))
 STEP=0
-
-DASHBOARD_URL={{dashboardUrl}}/api/v1/state/$INSTANCE
 
 curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 	\"meta\": { \
@@ -26,8 +32,8 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
 
 {{#each reverse services}}
   DOCKERNAME="{{service}}-$PROJECT-$INSTANCE"
+  DOCKERNETNAME="net-$DOCKERNAME"
   DOCKERSSHDNAME="sshd-$DOCKERNAME"
-
 
   curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
     \"meta\": { \
@@ -41,6 +47,9 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
       \"progress\": \"$STEP\" \
     } \
   }"
+
+  $DOCKER stop $DOCKERNETNAME
+  $DOCKER rm -v $DOCKERNETNAME
   $DOCKER stop -t 10 $DOCKERSSHDNAME
   $DOCKER rm -v $DOCKERSSHDNAME
   $DOCKER stop -t 30 $DOCKERNAME
