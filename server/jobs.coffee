@@ -21,6 +21,23 @@ Meteor.startup ->
       wait: 1000 * 60
     job.save()
 
+  job = new Job Jobs, 'getSwarmInfo',
+    name: 'SWARM'
+    url: "http://localhost/swarm/info"
+  job.repeat
+    repeats: Jobs.forever
+    wait: 5000
+  job.retry
+    wait: 1000
+  job.save()
+
+  Jobs.processJobs 'getSwarmInfo', (job, callback) ->
+    HTTP.get job.data.url, (err, res) ->
+      Swarm.upsert Swarm.findOne(),
+        swarm: res.data
+      job.done()
+    callback()
+
   Jobs.processJobs 'serviceCheck', (job, callback) ->
     HTTP.get job.data.url, (err, data) ->
       if err or not data

@@ -13,6 +13,7 @@ Meteor.startup ->
       Meteor.subscribe 'chatMessages'
       Meteor.subscribe 'latestNotice'
       Meteor.subscribe 'instances'
+      Meteor.subscribe 'swarm'
     ]
 
   Router.map ->

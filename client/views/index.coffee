@@ -1,3 +1,6 @@
+Highcharts = require 'highcharts/highstock'
+_          = require 'lodash'
+
 Template.index.helpers
   projectName: -> Settings.get('project').toUpperCase()
   appVersion: -> Helper.appVersion()
@@ -13,6 +16,10 @@ Template.index.helpers
       memo
     , {}
     tag: k, count: v for k,v of tagsAndCount
+  createChart: ->
+    systemStatus = _.fromPairs Swarm.findOne().swarm.SystemStatus
+    systemStatus = _.mapKeys systemStatus, (value, key) ->
+      key.trim().replace(/[\s\u2514]+/g, "")
 
 Template.index.events
   'click .restart-tag': (e, tpl) -> Meteor.call 'restartTag', @tag
