@@ -12,6 +12,11 @@ pickAgent = ->
   Settings.set 'agentUrl', agents
   agent
 
+findAppDef = (name, version) ->
+  ApplicationDefs.findOne
+    name: name
+    version: version
+
 @Cluster =
   startApp: (app, version, instance, parameters, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
@@ -45,7 +50,22 @@ pickAgent = ->
         startScript: Scripts.bash.start app, version, instance, options, parameters
         stopScript: Scripts.bash.stop app, version, instance, options, parameters
 
+<<<<<<< Updated upstream
     console.log "Sending a POST request to '#{agentUrl}' to start '#{instance}'."
+=======
+    appInfo =
+      app:
+        name: app
+        version: version
+      definition: YAML.safeLoad (findAppDef app, version).def
+      parameters: parameters
+      options: options
+    callOpts.data.appInfo = appInfo
+
+    console.log 'APPINFO', appInfo
+
+    console.log "Sending request to #{options.agentUrl}"
+>>>>>>> Stashed changes
 
     HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err
