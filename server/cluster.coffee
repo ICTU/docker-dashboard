@@ -49,14 +49,18 @@ findAppDef = (name, version) ->
         dir: dir
         startScript: Scripts.bash.start app, version, instance, options, parameters
         stopScript: Scripts.bash.stop app, version, instance, options, parameters
+
         app:
           name: app
           version: version
           definition: YAML.safeLoad (findAppDef app, version).def
         instance:
           name: instance
-          options: options
-          #parameters: parameters we do not send params to the agent, this is a feature of the dashboard
+          options: _.extend({}, options, { project:project })
+          parameters: parameters
+        bigboat:
+          url: process.env.ROOT_URL
+          statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instance}"
 
     console.log "Sending a POST request to '#{agentUrl}' to start '#{instance}'."
 
@@ -90,6 +94,17 @@ findAppDef = (name, version) ->
       responseType: "buffer"
       data:
         dir: "#{Settings.get('project')}-#{instanceName}"
+
+        app:
+          name: instance.meta.appName
+          version: instance.meta.appVersion
+          definition: YAML.safeLoad (findAppDef instance.meta.appName, instance.meta.appVersion).def
+        instance:
+          name: instanceName
+          options: _.extend({}, { project: Settings.get('project') })
+        bigboat:
+          url: process.env.ROOT_URL
+          statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instanceName}"
 
     if @userId
       user = Meteor.user()
