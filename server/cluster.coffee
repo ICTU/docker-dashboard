@@ -43,6 +43,13 @@ findAppDef = (name, version) ->
         startedBy:
           userId: user._id
           username: user.username
+
+    # replace deprecated parameter substition
+    def = (findAppDef app, version).def
+    def = def.replace (new RegExp "\{\{", 'g'), '_#_'
+    def = def.replace (new RegExp "\}\}", 'g'), '_#_'
+    definition = YAML.load def
+
     callOpts =
       responseType: "buffer"
       data:
@@ -53,7 +60,8 @@ findAppDef = (name, version) ->
         app:
           name: app
           version: version
-          definition: YAML.safeLoad (findAppDef app, version).def
+          definition: definition
+          parameter_key: '_#_'
         instance:
           name: instance
           options: _.extend({}, options, { project:project })
