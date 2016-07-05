@@ -36,6 +36,8 @@ Meteor.methods logInvocation
   setHellobarMessage: Cluster.setHellobarMessage
   saveApp: Cluster.saveApp
   deleteApp: Cluster.deleteApp
+  'storage/buckets/delete': (id) ->
+    StorageBuckets.remove _id: id
 
   execService: Cluster.execService
 

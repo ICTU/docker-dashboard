@@ -116,6 +116,16 @@
               <label>{{this}}</label>
               <input required type="text" class="form-control parameter" data-parameter="{{this}}" style="width:90%">
               {{/each}}
+
+              <label>Persist to</label>
+              <select class="form-control" style="width:90%">
+                <option>Use instance name</option>
+                <option>Do not persist</option>
+                <option disabled=true><span role="separator" class="divider"></span></option>
+                {{#each storageBuckets}}
+                <option>{{name}}</option>
+                {{/each}}
+              </select>
           </div>
           <button type="submit" class="start-app btn btn-mini">Go!</button>
       </form>

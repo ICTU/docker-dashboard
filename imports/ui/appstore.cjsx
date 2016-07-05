@@ -28,15 +28,7 @@ ApplicationDefinition = React.createClass
     editor = ace.edit $(@refs.appDefEditor).get(0)
     editor.getSession().setValue definition
   render: ->
-    <div class="editAppDefForm">
-      <form class="form-horizontal">
-        <div class="form-group">
-          <div class="col-sm-12">
-            <div id="ace" ref="appDefEditor" className="appDefEditor" style={height:600}></div>
-          </div>
-        </div>
-      </form>
-    </div>
+    <div id="ace" ref="appDefEditor" className="appDefEditor" style={height:600}></div>
 
 ProductDetails = React.createClass
   displayName: 'ProductDetails'
