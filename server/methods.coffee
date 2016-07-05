@@ -36,6 +36,8 @@ Meteor.methods logInvocation
   clearInstance: Cluster.clearInstance
   saveApp: Cluster.saveApp
   deleteApp: Cluster.deleteApp
+  'storage/buckets/delete': (id) ->
+    StorageBuckets.remove _id: id
 
   restartTag: (tag) ->
     for instance in Instances.find('parameters.tags': tag).fetch()
