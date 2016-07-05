@@ -94,11 +94,11 @@ echo "Preparing network for service {{service}}"
 # Remove any left-behind instances
 #
 docker kill $DOCKERNETNAME 2>/dev/null
-docker rm $DOCKERNETNAME 2>/dev/null
+docker rm -v $DOCKERNETNAME 2>/dev/null
 docker kill $DOCKERNAME 2>/dev/null
-docker rm $DOCKERNAME 2>/dev/null
+docker rm -v $DOCKERNAME 2>/dev/null
 docker kill $DOCKERSSHDNAME 2>/dev/null
-docker rm $DOCKERSSHDNAME 2>/dev/null
+docker rm -v $DOCKERSSHDNAME 2>/dev/null
 #
 # Prepare the volumes
 #
