@@ -1,13 +1,47 @@
 <template name="storage">
   <div class="container storage">
-      <div class="row">
-          <div class="col-sm-12">
-              <h1 class="pageTitle"><i class="material-icons">cloud_queue</i> Storage</h1>
-          </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div id="searchbox-container" class="row" style="border-bottom: 1px solid lightblue; padding-bottom: 10px;">
+        <div class="col-md-8"><h1 class="pageTitle"><i class="material-icons">cloud_queue</i> Storage Buckets</h1></div>
+        <div class="col-md-4">
+          {{> filterBox sessionVar='queryName'}}
+        </div>
       </div>
-      <hr>
-
-      <span>{{> React component=Storage}}</span>
-
+    </div>
   </div>
+  <div id="content-row" class="row" style="margin-top: 10px;">
+    <div id="page-menu" class="col-md-3">
+      {{#if isAuthenticated}}
+      <ul class="nav nav-stacked">
+        <li>
+          <a title="New Storage Bucket" href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="glyphicon glyphicon-lg glyphicon-plus"></i> New Storage Bucket
+          </a>
+          <form id="create-bucket-form" role="form" class="dropdown-menu dropdown-menu-left" style="padding:1em">
+              <div class="form-group" style="width:30em">
+                  <label>Bucket name</label>
+                  <input required pattern="/?[a-zA-Z0-9_-]+" type="text"
+                    class="form-control bucket-name"
+                    placeholder="A unique name. Must match /?[a-zA-Z0-9_-]+.">
+              </div>
+              <button type="submit" class="create-bucket btn btn-mini">Save</button>
+          </form>
+        </li>
+      </ul>
+      {{/if}}
+    </div>
+    <div id="buckets-container" class="col-md-9">
+
+      <span>{{> React component=Storage filter=nameFilter}}</span>
+
+      {{#if isSearching}}
+      <div class="searchInfo">
+        Showing results for: "{{searchTerms}}" <br />
+        <button id="reset" type="button" class="btn btn-link">- reset -</button>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</div>
 </template>
