@@ -38,6 +38,8 @@ Meteor.methods logInvocation
   deleteApp: Cluster.deleteApp
   'storage/buckets/delete': (id) ->
     StorageBuckets.remove _id: id
+  'storage/buckets/create': (name) ->
+    StorageBuckets.upsert {name: name}, {$set: name: name}
 
   execService: Cluster.execService
 
