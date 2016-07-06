@@ -1,3 +1,6 @@
+### 4.1.5
+- Removed ETCD dependency for VLAN resolution.
+
 ### 4.1.4 (4.1.3)
 - Remove container volumes when stopping/killing containers.
 
