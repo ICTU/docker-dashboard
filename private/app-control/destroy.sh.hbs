@@ -38,7 +38,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
     } \
   }"
 
-  docker rm $DOCKERNETNAME
+  docker rm -v $DOCKERNETNAME
 
   curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
     \"meta\": { \
@@ -52,8 +52,8 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
       \"progress\": \"$STEP\" \
     } \
   }"
-  docker rm $DOCKERSSHDNAME
-  docker rm $DOCKERNAME
+  docker rm -v $DOCKERSSHDNAME
+  docker rm -v $DOCKERNAME
 
 {{/each}}
 

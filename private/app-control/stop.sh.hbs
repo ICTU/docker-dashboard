@@ -39,7 +39,7 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
   }"
 
   docker stop -t 5 $DOCKERNETNAME
-  docker rm $DOCKERNETNAME
+  docker rm -v $DOCKERNETNAME
 
   curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
     \"meta\": { \
@@ -54,9 +54,9 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
     } \
   }"
   docker stop -t 10 $DOCKERSSHDNAME
-  docker rm $DOCKERSSHDNAME
+  docker rm -v $DOCKERSSHDNAME
   docker stop -t 30 $DOCKERNAME
-  docker rm $DOCKERNAME
+  docker rm -v $DOCKERNAME
 
 {{/each}}
 

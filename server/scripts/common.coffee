@@ -51,7 +51,7 @@ render = (template, appDef, instance, options, params = {}) ->
     project: Settings.get('project')
     instance: instance
     etcdCluster: Settings.get('etcdBaseUrl')
-    vlan: options?.targetVlan
+    vlan: options?.targetVlan or Settings.get('targetVlan')
     dataDir: options?.dataDir
     agentUrl: options?.agentUrl
     params: params || {}

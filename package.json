@@ -1,6 +1,6 @@
 {
   "name": "dashboard",
-  "version": "4.0.7",
+  "version": "4.1.5",
   "description": "Docker dashboard",
   "main": "index.js",
   "directories": {

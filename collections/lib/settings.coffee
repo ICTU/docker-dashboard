@@ -30,6 +30,7 @@ Settings.schema = new SimpleSchema
   project: type: String
   etcd: type: String
   etcdBaseUrl: type: String
+  targetVlan: type: String
   syslogUrl: type: String
   elasticSearchUrl: type: String
   dataDir: type: String
@@ -58,8 +59,9 @@ Meteor.startup ->
     Settings.collection.upsert key, $set:
       key: settings?.public?.key or 'default'
       project: settings?.project or 'undef'
-      etcd: settings?.etcd or 'http://etcd1.isd.ictu:4001/v2/keys/'
-      etcdBaseUrl: settings?.etcdBaseUrl or 'http://etcd1.isd.ictu:4001'
+      etcd: settings?.etcd or 'undef'
+      etcdBaseUrl: settings?.etcdBaseUrl or 'undef'
+      targetVlan: settings?.targetVlan
       syslogUrl: settings?.syslogUrl or 'udp://logstash.isd.ictu:5454'
       elasticSearchUrl: settings?.elasticSearchUrl or 'http://elasticsearch.isd.ictu:9200'
       dataDir: settings?.dataDir or '/local/data'
