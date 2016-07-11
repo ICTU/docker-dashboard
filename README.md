@@ -74,7 +74,39 @@ The example shows how to update an existing application definition. If the defin
 An existing application definition can be deleted with the _HTTP DELETE_ operation.
 
     curl -X DELETE http://BIG_BOAT/api/v1/appdef/myNewApp/1.0
-    
+
+### API Examples
+
+Before running the examples make sure you have a file called **appdef.yml** in your current working dir. It must contain a valid application definition. The simplest one you can use is:
+
+    name: nginx
+    version: 1
+
+    www:
+        image: nginx
+
+Below is an example of how to create, inspect and remove an application definition and how to create an instance from it.
+
+    # create the appdef
+    curl -H "Content-Type: text/plain" -X PUT --data-binary @appdef.yml http://BIG_BOAT/api/v1/appdef/nginx/1.0
+
+    # retrieve the appdef
+    curl http://BIG_BOAT/api/v1/appdef/nginx/1.0
+
+    # start an instance
+    curl http://BIG_BOAT/api/v1/start-app/nginx/1.0/my-nginx
+
+    # check the state
+    curl http://BIG_BOAT/api/v1/state/my-nginx
+
+    # get instances for a certain definition
+    curl http://BIG_BOAT/api/v1/instances/nginx/1.0
+
+    # finally stop the instance
+    curl http://BIG_BOAT/api/v1/stop-app/my-nginx
+
+
+
 ## User Accounts
 
 The dashboard supports the following authentication methods:
