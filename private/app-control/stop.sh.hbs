@@ -24,7 +24,6 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
   DOCKERNETNAME="net-$DOCKERNAME"
   DOCKERSSHDNAME="sshd-$DOCKERNAME"
 
-  myip=$(docker exec $DOCKERNETNAME ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}')
   curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d "{ \
   	\"meta\": { \
   		\"stateDescription\": \"Stopping network for {{service}}\" \

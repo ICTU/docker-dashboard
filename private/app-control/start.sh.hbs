@@ -154,6 +154,11 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
 	"meta": {"stateDescription": "Activating service {{service}}"}
 }'
 
+BIGBOAT_PROJECT={{../project}}
+BIGBOAT_APPLICATION_NAME={{../appName}}
+BIGBOAT_INSTANCE_NAME={{../instance}}
+BIGBOAT_SERVICE_NAME={{service}}
+
 docker run -d \
 --restart=always \
 --name $DOCKERNAME \
@@ -165,6 +170,10 @@ docker run -d \
 --label bigboat/instance/name={{../instance}} \
 --label bigboat/service/name={{service}} \
 --label bigboat/container/type=service \
+-e BIGBOAT_PROJECT={{../project}} \
+-e BIGBOAT_APPLICATION_NAME={{../appName}} \
+-e BIGBOAT_INSTANCE_NAME={{../instance}} \
+-e BIGBOAT_SERVICE_NAME={{service}} \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes}} \
 {{volumesfrom}} \
