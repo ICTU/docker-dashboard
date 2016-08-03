@@ -1,3 +1,8 @@
+### 4.1.6
+- Inject environment variables BIGBOAT_PROJECT, BIGBOAT_APPLICATION_NAME, BIGBOAT_INSTANCE_NAME and BIGBOAT_SERVICE_NAME in each service container.
+- Provide access to these variables from the application definition in the web ui.
+- Remove unnecessary ip retrieval in stop script.
+
 ### 4.1.5
 - Removed ETCD dependency for VLAN resolution.
 
