@@ -33,6 +33,7 @@ Settings.schema = new SimpleSchema
   targetVlan: type: String
   syslogUrl: type: String
   elasticSearchUrl: type: String
+  elasticSearchAuth: type: String
   dataDir: type: String
   sharedDataDir: type: String
   agentAuthToken:
@@ -64,6 +65,7 @@ Meteor.startup ->
       targetVlan: settings?.targetVlan
       syslogUrl: settings?.syslogUrl or 'udp://logstash.isd.ictu:5454'
       elasticSearchUrl: settings?.elasticSearchUrl or 'http://elasticsearch.isd.ictu:9200'
+      elasticSearchAuth: settings?.elasticSearchAuth or 'user:pwd'
       dataDir: settings?.dataDir or '/local/data'
       sharedDataDir: settings?.sharedDataDir or '/mnt/data'
       agentAuthToken: settings?.agentAuthToken

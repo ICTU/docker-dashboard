@@ -128,7 +128,7 @@ docker run \
 --label bigboat/container/type=net \
 {{attribute "extra_hosts" "--add-host="}} \
 -e pipework_cmd="@VLT_NIC@ -i eth0 @CONTAINER_NAME@ dhclient @${vlan}" \
--d www.docker-registry.isd.ictu:5000/pipes:1
+-d ictu/pipes
 
 while [ 1 ]; do
   pubip=$(docker exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}');

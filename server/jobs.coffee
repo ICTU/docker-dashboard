@@ -2,10 +2,7 @@ Meteor.startup ->
   Jobs  = JobCollection 'jobs'
   Jobs.remove {}
 
-  jobs = [
-    name: 'ETCD'
-    url: Settings.get('etcd')
-  ]
+  jobs = []
 
   for agent in Settings.get('agentUrl')
     jobs.push

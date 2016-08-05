@@ -19,6 +19,7 @@ getLogs = (q) ->
             bool: q
       sort:['@timestamp': order: 'desc']
       size: 500
+    auth: "#{Settings.get 'elasticSearchAuth'}"
 
   result = JSON.parse result.content
 
