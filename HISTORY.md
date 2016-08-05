@@ -1,3 +1,8 @@
+### 4.1.7
+- Fixed logging
+- Added basic auth to es query requests
+- Remove etcd check from job queue
+
 ### 4.1.6
 - Inject environment variables BIGBOAT_PROJECT, BIGBOAT_APPLICATION_NAME, BIGBOAT_INSTANCE_NAME and BIGBOAT_SERVICE_NAME in each service container.
 - Provide access to these variables from the application definition in the web ui.
