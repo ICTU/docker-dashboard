@@ -36,6 +36,56 @@ Create a configuration file in the root of the project: `settings.json`. Populat
 ## Start dashboard
 `ROOT_URL=<root_url_of_app> meteor --settings settings.json`
 
+## Application Definition
+
+### Environment variables (4.1.6)
+
+The following default variables are accessible within the context of a service in your application definition. These variables are also injected in each service container.
+- BIGBOAT_PROJECT
+- BIGBOAT_APPLICATION_NAME
+- BIGBOAT_INSTANCE_NAME
+- BIGBOAT_SERVICE_NAME
+
+See use case example for project 'innovation' and instance name 'test1' below.
+
+    name: alpine
+    version: var_exp_multi_service
+    
+    os1:
+      image: alpine
+      command: sh -c "while true; do sleep 600; done"
+      environment:
+        - MY_PROJECT=$BIGBOAT_PROJECT
+        - MY_APPLICATION=$BIGBOAT_APPLICATION_NAME
+        - MY_INSTANCE=$BIGBOAT_INSTANCE_NAME
+        - MY_SERVICE=$BIGBOAT_SERVICE_NAME
+        - MY_FQDN=${BIGBOAT_SERVICE_NAME}.${BIGBOAT_INSTANCE_NAME}.${BIGBOAT_PROJECT}.ictu
+        
+    os2:
+      image: alpine
+      command: sh -c "while true; do sleep 600; done"
+      environment:
+        - MY_PROJECT=$BIGBOAT_PROJECT
+        - MY_APPLICATION=$BIGBOAT_APPLICATION_NAME
+        - MY_INSTANCE=$BIGBOAT_INSTANCE_NAME
+        - MY_SERVICE=$BIGBOAT_SERVICE_NAME
+        - MY_FQDN=${BIGBOAT_SERVICE_NAME}.${BIGBOAT_INSTANCE_NAME}.${BIGBOAT_PROJECT}.ictu
+
+In the example the environment variables for service 'os1' would be expanded as follows:
+- MY_PROJECT=innovation
+- MY_APPLICATION=alpine
+- MY_INSTANCE=test1
+- MY_SERVICE=os1
+- MY_FQDN=os1.test1.innovation.ictu
+
+While the environment variables for service 'os2' would be expanded to:
+- MY_PROJECT=innovation
+- MY_APPLICATION=alpine
+- MY_INSTANCE=test1
+- MY_SERVICE=os2
+- MY_FQDN=os2.test1.innovation.ictu
+
+The MY* variables defined under the 'environment'  list for each service would be exported as envs inside the 'os1' and 'os2' service container.
 
 ## API
 
@@ -74,7 +124,39 @@ The example shows how to update an existing application definition. If the defin
 An existing application definition can be deleted with the _HTTP DELETE_ operation.
 
     curl -X DELETE http://BIG_BOAT/api/v1/appdef/myNewApp/1.0
-    
+
+### API Examples
+
+Before running the examples make sure you have a file called **appdef.yml** in your current working dir. It must contain a valid application definition. The simplest one you can use is:
+
+    name: nginx
+    version: 1
+
+    www:
+        image: nginx
+
+Below is an example of how to create, inspect and remove an application definition and how to create an instance from it.
+
+    # create the appdef
+    curl -H "Content-Type: text/plain" -X PUT --data-binary @appdef.yml http://BIG_BOAT/api/v1/appdef/nginx/1.0
+
+    # retrieve the appdef
+    curl http://BIG_BOAT/api/v1/appdef/nginx/1.0
+
+    # start an instance
+    curl http://BIG_BOAT/api/v1/start-app/nginx/1.0/my-nginx
+
+    # check the state
+    curl http://BIG_BOAT/api/v1/state/my-nginx
+
+    # get instances for a certain definition
+    curl http://BIG_BOAT/api/v1/instances/nginx/1.0
+
+    # finally stop the instance
+    curl http://BIG_BOAT/api/v1/stop-app/my-nginx
+
+
+
 ## User Accounts
 
 The dashboard supports the following authentication methods:

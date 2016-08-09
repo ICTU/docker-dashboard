@@ -1,3 +1,19 @@
+### 4.1.7
+- Fixed logging
+- Added basic auth to es query requests
+- Remove etcd check from job queue
+
+### 4.1.6
+- Inject environment variables BIGBOAT_PROJECT, BIGBOAT_APPLICATION_NAME, BIGBOAT_INSTANCE_NAME and BIGBOAT_SERVICE_NAME in each service container.
+- Provide access to these variables from the application definition in the web ui.
+- Remove unnecessary ip retrieval in stop script.
+
+### 4.1.5
+- Removed ETCD dependency for VLAN resolution.
+
+### 4.1.4 (4.1.3)
+- Remove container volumes when stopping/killing containers.
+
 ### 4.1.2
 - Technical: Fixed regression in the API when no user is associated with the current context.
 

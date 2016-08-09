@@ -94,11 +94,11 @@ echo "Preparing network for service {{service}}"
 # Remove any left-behind instances
 #
 docker kill $DOCKERNETNAME 2>/dev/null
-docker rm $DOCKERNETNAME 2>/dev/null
+docker rm -v $DOCKERNETNAME 2>/dev/null
 docker kill $DOCKERNAME 2>/dev/null
-docker rm $DOCKERNAME 2>/dev/null
+docker rm -v $DOCKERNAME 2>/dev/null
 docker kill $DOCKERSSHDNAME 2>/dev/null
-docker rm $DOCKERSSHDNAME 2>/dev/null
+docker rm -v $DOCKERSSHDNAME 2>/dev/null
 #
 # Prepare the volumes
 #
@@ -128,7 +128,7 @@ docker run \
 --label bigboat/container/type=net \
 {{attribute "extra_hosts" "--add-host="}} \
 -e pipework_cmd="@VLT_NIC@ -i eth0 @CONTAINER_NAME@ dhclient @${vlan}" \
--d www.docker-registry.isd.ictu:5000/pipes:1
+-d ictu/pipes
 
 while [ 1 ]; do
   pubip=$(docker exec $DOCKERNETNAME ifconfig eth0 | grep "inet addr:" | awk '{print $2}' | awk -F: '{print $2}');
@@ -154,6 +154,11 @@ curl -XPUT -sS $DASHBOARD_URL -H "Content-Type: application/json" -d '{
 	"meta": {"stateDescription": "Activating service {{service}}"}
 }'
 
+BIGBOAT_PROJECT={{../project}}
+BIGBOAT_APPLICATION_NAME={{../appName}}
+BIGBOAT_INSTANCE_NAME={{../instance}}
+BIGBOAT_SERVICE_NAME={{service}}
+
 docker run -d \
 --restart=always \
 --name $DOCKERNAME \
@@ -165,6 +170,10 @@ docker run -d \
 --label bigboat/instance/name={{../instance}} \
 --label bigboat/service/name={{service}} \
 --label bigboat/container/type=service \
+-e BIGBOAT_PROJECT={{../project}} \
+-e BIGBOAT_APPLICATION_NAME={{../appName}} \
+-e BIGBOAT_INSTANCE_NAME={{../instance}} \
+-e BIGBOAT_SERVICE_NAME={{service}} \
 {{#if mapDocker}}-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker{{/if}} \
 {{dockervolumes}} \
 {{volumesfrom}} \
