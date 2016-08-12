@@ -54,8 +54,6 @@ findAppDef = (name, version) ->
       responseType: "buffer"
       data:
         dir: dir
-        startScript: Scripts.bash.start app, version, instance, options, parameters
-        stopScript: Scripts.bash.stop app, version, instance, options, parameters
 
         app:
           name: app
