@@ -10,7 +10,6 @@ Meteor.startup ->
 
     subscriptions: -> [
       Meteor.subscribe 'services'
-      Meteor.subscribe 'chatMessages'
       Meteor.subscribe 'latestNotice'
       Meteor.subscribe 'instances'
     ]
