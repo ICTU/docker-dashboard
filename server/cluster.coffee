@@ -75,19 +75,6 @@ findAppDef = (name, version) ->
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
       Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
-  setHellobarMessage: (instanceName, message) ->
-    asyncFunc = (instanceName, message, callback) ->
-      instance = Instances.findOne name: instanceName
-      HTTP.put "http://www.#{instanceName}.#{Settings.get('project')}.ictu/api/v1/hellobar/", params: value: message, (err, result) ->
-        if not err and result and result.statusCode == 200
-          EtcdClient.set "instances/#{Settings.get('project')}/#{instance.meta.appName}/#{instance.name}/meta_/hellobar", message
-          callback null,result
-        else
-          console.log err
-          callback err, result
-
-    syncFunc = Meteor.wrapAsync asyncFunc
-    syncFunc instanceName, message
 
   stopInstance: (instanceName) ->
     unless Instances.findOne {name: instanceName}
