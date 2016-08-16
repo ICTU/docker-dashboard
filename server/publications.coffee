@@ -7,7 +7,7 @@ Meteor.publish 'services', -> Services.find()
 Meteor.publish 'appstore', -> AppStore.find {}, {sort: name: 1}
 Meteor.publish 'events', -> Events.find {}, limit: 20, sort: timestamp: -1
 
-Meteor.publish 'thaUsers', ->
+Meteor.publish 'allUsers', ->
   loggedInUser = @userId
   if loggedInUser and Roles.userIsInRole(loggedInUser, ["admin"], Roles.GLOBAL_GROUP)
     Meteor.users.find {}
@@ -16,7 +16,7 @@ Meteor.publish 'thaUsers', ->
   else
     @stop()
 
-Meteor.publish 'thaRoles', ->
+Meteor.publish 'myRoles', ->
   loggedInUser = @userId
   if loggedInUser and Roles.userIsInRole(loggedInUser, ['admin'], Roles.GLOBAL_GROUP)
     Roles.getAllRoles()
