@@ -37,8 +37,6 @@ Meteor.methods logInvocation
   saveApp: Cluster.saveApp
   deleteApp: Cluster.deleteApp
 
-  execService: Cluster.execService
-
   restartTag: (tag) ->
     for instance in Instances.find('parameters.tags': tag).fetch()
       try
@@ -50,14 +48,6 @@ Meteor.methods logInvocation
         Cluster.startApp def.name, def.version, def.name, EJSON.stringify({tags: def.tags})
       catch err
         console.log err
-
-  sendChatMessage: (text) =>
-    @channel.send text
-    Messages.insert
-      type:  'chat'
-      date: new Date()
-      text: text
-      direction: 'sent'
 
   getLog: (cid) ->
     getLogs must: [term: 'docker.id': cid]
