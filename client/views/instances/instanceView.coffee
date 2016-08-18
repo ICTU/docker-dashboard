@@ -33,7 +33,6 @@ Template.instanceView.helpers
       'collapse-down'
     else
       'exclamation-sign'
-  isDashboard: -> @meta.appName == "dashboard"
   showProgressbar: -> "#{@meta.state}".match /loading|activating|pulling|stopping/
   totalSteps: -> @meta.totalSteps
   progress: -> @meta.progress
