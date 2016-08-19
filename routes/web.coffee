@@ -10,7 +10,6 @@ Meteor.startup ->
 
     subscriptions: -> [
       Meteor.subscribe 'services'
-      Meteor.subscribe 'chatMessages'
       Meteor.subscribe 'latestNotice'
       Meteor.subscribe 'instances'
     ]
@@ -29,8 +28,8 @@ Meteor.startup ->
     @route 'config',
       path: '/config'
       subscriptions: -> [
-        Meteor.subscribe 'thaRoles'
-        Meteor.subscribe 'thaUsers'
+        Meteor.subscribe 'myRoles'
+        Meteor.subscribe 'allUsers'
       ]
 
     @route 'apps',

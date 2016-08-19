@@ -22,11 +22,6 @@ Meteor.startup ->
     stack: true
     offset: 40
 
-  # publish alerts for new chat messages
-  chatStream = new Meteor.Stream 'notificationStream'
-  chatStream.on 'chatMessage', (message) ->
-    sAlert.info "<strong>New Chat Message</strong><br/><i>#{message.text}</i>"
-
   Meteor.subscribe 'events', ->
     starting = true
     Events.find().observe added: (e) ->

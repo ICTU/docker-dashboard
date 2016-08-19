@@ -12,6 +12,11 @@ pickAgent = ->
   Settings.set 'agentUrl', agents
   agent
 
+findAppDef = (name, version) ->
+  ApplicationDefs.findOne
+    name: name
+    version: version
+
 @Cluster =
   startApp: (app, version, instance, parameters, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
@@ -38,12 +43,30 @@ pickAgent = ->
         startedBy:
           userId: user._id
           username: user.username
+
+    # replace deprecated parameter substition
+    def = (findAppDef app, version).def
+    def = def.replace (new RegExp "\{\{", 'g'), '_#_'
+    def = def.replace (new RegExp "\}\}", 'g'), '_#_'
+    definition = YAML.load def
+
     callOpts =
       responseType: "buffer"
       data:
         dir: dir
-        startScript: Scripts.bash.start app, version, instance, options, parameters
-        stopScript: Scripts.bash.stop app, version, instance, options, parameters
+
+        app:
+          name: app
+          version: version
+          definition: definition
+          parameter_key: '_#_'
+        instance:
+          name: instance
+          options: _.extend({}, options, { project:project })
+          parameters: parameters
+        bigboat:
+          url: process.env.ROOT_URL
+          statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instance}"
 
     console.log "Sending a POST request to '#{agentUrl}' to start '#{instance}'."
 
@@ -52,19 +75,6 @@ pickAgent = ->
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
       Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
-  setHellobarMessage: (instanceName, message) ->
-    asyncFunc = (instanceName, message, callback) ->
-      instance = Instances.findOne name: instanceName
-      HTTP.put "http://www.#{instanceName}.#{Settings.get('project')}.ictu/api/v1/hellobar/", params: value: message, (err, result) ->
-        if not err and result and result.statusCode == 200
-          EtcdClient.set "instances/#{Settings.get('project')}/#{instance.meta.appName}/#{instance.name}/meta_/hellobar", message
-          callback null,result
-        else
-          console.log err
-          callback err, result
-
-    syncFunc = Meteor.wrapAsync asyncFunc
-    syncFunc instanceName, message
 
   stopInstance: (instanceName) ->
     unless Instances.findOne {name: instanceName}
@@ -78,11 +88,22 @@ pickAgent = ->
       data:
         dir: "#{Settings.get('project')}-#{instanceName}"
 
+        app:
+          name: instance.meta.appName
+          version: instance.meta.appVersion
+          definition: YAML.safeLoad (findAppDef instance.meta.appName, instance.meta.appVersion).def
+        instance:
+          name: instanceName
+          options: _.extend({}, { project: Settings.get('project') })
+        bigboat:
+          url: process.env.ROOT_URL
+          statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instanceName}"
+
     if @userId
       user = Meteor.user()
     else
       user = userId: null, username: 'API'
-      
+
     Instances.upsert {name: instanceName}, $set:
       'meta.stoppedBy':
         userId: user._id
