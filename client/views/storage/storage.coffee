@@ -7,5 +7,4 @@ Template.storage.helpers
 Template.storage.events
   'submit #create-bucket-form': (e, tpl) ->
     e.preventDefault()
-    console.log tpl.$('.bucket-name').val()
     Meteor.call 'storage/buckets/create', tpl.$('.bucket-name').val()

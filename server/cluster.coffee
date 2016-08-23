@@ -17,7 +17,15 @@ findAppDef = (name, version) ->
     name: name
     version: version
 
-@Cluster =
+@Cluster = @Agent =
+  listStorageBuckets: ->
+    res = HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
+    JSON.parse res.content
+  deleteStorageBucket: (name) ->
+    HTTP.del "#{pickAgent()}/storage/#{name}?access_token=#{Settings.get('agentAuthToken')}"
+  createStorageBucket: (name) ->
+    HTTP.put "#{pickAgent()}/storage?access_token=#{Settings.get('agentAuthToken')}", data: name: name
+
   startApp: (app, version, instance, parameters, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
       throw new Meteor.Error "Application #{app}:#{version} does not exist"
