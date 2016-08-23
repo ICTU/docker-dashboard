@@ -25,6 +25,9 @@ findAppDef = (name, version) ->
     HTTP.del "#{pickAgent()}/storage/#{name}?access_token=#{Settings.get('agentAuthToken')}"
   createStorageBucket: (name) ->
     HTTP.put "#{pickAgent()}/storage?access_token=#{Settings.get('agentAuthToken')}", data: name: name
+  copyStorageBucket: (source, destination) ->
+    HTTP.put "#{pickAgent()}/storage?access_token=#{Settings.get('agentAuthToken')}", data: name: destination, source: source
+
 
   startApp: (app, version, instance, parameters, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
