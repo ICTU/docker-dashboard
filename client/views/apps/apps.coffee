@@ -51,13 +51,18 @@ Template.appActions.helpers
 Template.appActions.events
   'submit #start-app-form': (e, tpl) ->
     e.preventDefault()
-    name = tpl.$('.instance-name').val();
+    name = tpl.$('.instance-name').val()
     parameters = {}
     parameters[$(p).data('parameter')] = p.value for p in tpl.$('.parameter')
     parameters.tags = @tags
+
     options =
       targetHost: Session.get 'targetHost'
       targetVlan: Session.get 'targetVlan'
+      storageBucket: switch bucket = tpl.$('.storage-bucket').val()
+        when '!! instance name !!' then name
+        when '!! do not persist !!' then undefined
+        else bucket
     tpl.$('li.open').removeClass('open')
     Meteor.call 'startApp', @name, @version, name, parameters, options
   'click .remove-app': (event, tpl) ->

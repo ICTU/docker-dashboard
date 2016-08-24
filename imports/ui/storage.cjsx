@@ -7,12 +7,12 @@ module.exports = React.createClass
   propTypes:
     buckets: React.PropTypes.array.isRequired
     onDelete: React.PropTypes.func
+    onCopy: React.PropTypes.func
     authenticated: React.PropTypes.bool.isRequired
 
   copy: (bucket) -> (e) =>
     e.preventDefault()
-    console.log bucket, @refs.bucketName.value
-    Meteor.call 'storage/buckets/copy', bucket.name, @refs.bucketName.value
+    @props.onCopy bucket.name, @refs.bucketName.value
 
   render: ->
     <div className="list-group">

@@ -73,7 +73,7 @@ findAppDef = (name, version) ->
           parameter_key: '_#_'
         instance:
           name: instance
-          options: _.extend({}, options, { project:project })
+          options: _.extend({}, options, { project: project })
           parameters: parameters
         bigboat:
           url: process.env.ROOT_URL

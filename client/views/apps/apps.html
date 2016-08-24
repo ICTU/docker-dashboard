@@ -114,9 +114,9 @@
                 value="{{name}}">
 
               <label>Storage bucket</label>
-              <select class="form-control">
-                <option value=1>Use instance name</option>
-                <option value=0>Do not persist</option>
+              <select class="form-control storage-bucket">
+                <option value="!! instance name !!">Use instance name</option>
+                <option value="!! do not persist !!">Do not persist</option>
                 <optgroup label="Available storage buckets">
                   {{#each storageBuckets}}
                   <option value={{name}}>{{name}}</option>
