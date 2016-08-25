@@ -59,10 +59,7 @@ Template.appActions.events
     options =
       targetHost: Session.get 'targetHost'
       targetVlan: Session.get 'targetVlan'
-      storageBucket: switch bucket = tpl.$('.storage-bucket').val()
-        when '!! instance name !!' then name
-        when '!! do not persist !!' then undefined
-        else bucket
+      storageBucket: tpl.$('.storage-bucket').val()
     tpl.$('li.open').removeClass('open')
     Meteor.call 'startApp', @name, @version, name, parameters, options
   'click .remove-app': (event, tpl) ->

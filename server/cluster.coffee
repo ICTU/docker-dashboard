@@ -35,6 +35,16 @@ findAppDef = (name, version) ->
 
     project = Settings.get('project')
     options = _.extend {"dataDir": Settings.get('dataDir')}, options
+
+    options.storageBucket =
+      if bucket = options.storageBucket
+        switch bucket
+          when '!! instance name !!' then instance
+          when '!! do not persist !!' then undefined
+          else bucket
+      else
+        instance
+
     dir = "#{Settings.get('project')}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.get('project')}."
 
