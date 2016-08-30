@@ -24,9 +24,11 @@
   },
   "homepage": "https://github.com/ICTU/docker-dashboard#readme",
   "dependencies": {
+    "bufferutil": "^1.2.1",
     "clipboard": "^1.5.10",
     "meteor-node-stubs": "^0.2.3",
     "mongo-dot-notation": "^1.0.5",
+    "mqtt": "^1.14.1",
     "node-etcd": "^4.2.1",
     "react": "^15.0.2",
     "react-addons-create-fragment": "^15.0.2",
@@ -37,6 +39,7 @@
     "react-addons-test-utils": "^15.0.2",
     "react-addons-transition-group": "^15.0.2",
     "react-addons-update": "^15.0.2",
-    "react-dom": "^15.0.2"
+    "react-dom": "^15.0.2",
+    "utf-8-validate": "^1.2.1"
   }
 }
