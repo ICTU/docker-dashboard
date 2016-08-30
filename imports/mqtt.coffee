@@ -38,7 +38,7 @@ processContainerStats = (data) ->
 
 processInstanceState = (data) ->
   meta = meta: data.state
-  unless data.state.state is 'stopped'
+  unless data.state.state is 'removed'
     dotized = dot.flatten meta
     Instances.update {name: data.instance}, dotized
   else
