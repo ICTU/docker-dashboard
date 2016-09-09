@@ -61,6 +61,7 @@ findAppDef = (name, version) ->
         appName: app
         appVersion: version
         agentUrl: agentUrl
+        storageBucket: options.storageBucket
         startedBy:
           userId: user._id
           username: user.username

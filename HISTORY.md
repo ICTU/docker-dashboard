@@ -1,3 +1,6 @@
+### 4.3.1
+- Showing storage bucket for instance
+
 ### 4.3.0
 - Added storage buckets
 
