@@ -17,13 +17,34 @@ findAppDef = (name, version) ->
     name: name
     version: version
 
-@Cluster =
+@Cluster = @Agent =
+  listStorageBuckets: ->
+    res = HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
+    JSON.parse res.content
+  deleteStorageBucket: (name) ->
+    HTTP.del "#{pickAgent()}/storage/#{name}?access_token=#{Settings.get('agentAuthToken')}"
+  createStorageBucket: (name) ->
+    HTTP.put "#{pickAgent()}/storage?access_token=#{Settings.get('agentAuthToken')}", data: name: name
+  copyStorageBucket: (source, destination) ->
+    HTTP.put "#{pickAgent()}/storage?access_token=#{Settings.get('agentAuthToken')}", data: name: destination, source: source
+
+
   startApp: (app, version, instance, parameters, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
       throw new Meteor.Error "Application #{app}:#{version} does not exist"
 
     project = Settings.get('project')
     options = _.extend {"dataDir": Settings.get('dataDir')}, options
+
+    options.storageBucket =
+      if bucket = options.storageBucket
+        switch bucket
+          when '!! instance name !!' then instance
+          when '!! do not persist !!' then undefined
+          else bucket
+      else
+        instance
+
     dir = "#{Settings.get('project')}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.get('project')}."
 
@@ -62,7 +83,7 @@ findAppDef = (name, version) ->
           parameter_key: '_#_'
         instance:
           name: instance
-          options: _.extend({}, options, { project:project })
+          options: _.extend({}, options, { project: project })
           parameters: parameters
         bigboat:
           url: process.env.ROOT_URL

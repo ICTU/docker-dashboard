@@ -5,6 +5,7 @@ Meteor.publish 'instanceByName', (name)-> Instances.find name: name
 Meteor.publish 'services', -> Services.find()
 Meteor.publish 'appstore', -> AppStore.find {}, {sort: name: 1}
 Meteor.publish 'events', -> Events.find {}, limit: 20, sort: timestamp: -1
+Meteor.publish 'storage', -> StorageBuckets.find {}, sort: name: 1
 
 Meteor.publish 'allUsers', ->
   loggedInUser = @userId

@@ -37,12 +37,19 @@ Meteor.startup ->
       loadingTemplate: 'loading'
       subscriptions: -> [
         Meteor.subscribe 'applicationDefs'
+        Meteor.subscribe 'storage'
       ]
 
     @route 'appstore',
       path: '/appstore'
       subscriptions: -> [
         Meteor.subscribe 'appstore'
+      ]
+
+    @route 'storage',
+      path: '/storage'
+      subscriptions: -> [
+        Meteor.subscribe 'storage'
       ]
 
     @route 'status',

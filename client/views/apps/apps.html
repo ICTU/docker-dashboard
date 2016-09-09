@@ -109,13 +109,29 @@
           <div class="form-group" style="width:30em">
               <label>Instance name</label>
               <input required pattern="/?[a-zA-Z0-9_-]+" type="text"
-                class="form-control instance-name" style="width:90%"
+                class="form-control instance-name"
                 placeholder="A unique name. Must match /?[a-zA-Z0-9_-]+."
                 value="{{name}}">
-              {{#each parameters}}
-              <label>{{this}}</label>
-              <input required type="text" class="form-control parameter" data-parameter="{{this}}" style="width:90%">
-              {{/each}}
+
+              <label>Storage bucket</label>
+              <select class="form-control storage-bucket">
+                <option value="!! instance name !!">Use instance name</option>
+                <option value="!! do not persist !!">Do not persist</option>
+                <optgroup label="Available storage buckets">
+                  {{#each storageBuckets}}
+                  <option value={{name}}>{{name}}</option>
+                  {{/each}}
+                </optgroup>
+              </select>
+
+              {{#if parameters}}
+                <div class="divider" style="padding-top: 5px;"></div>
+
+                {{#each parameters}}
+                <label>{{this}}</label>
+                <input required type="text" class="form-control parameter" data-parameter="{{this}}">
+                {{/each}}
+              {{/if}}
           </div>
           <button type="submit" class="start-app btn btn-mini">Go!</button>
       </form>

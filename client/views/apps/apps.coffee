@@ -40,6 +40,7 @@ Template.apps.events
 
 Template.appActions.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
+  storageBuckets: -> StorageBuckets?.find {}, sort: name: 1
   parameters: ->
     params = @def.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
     if params?.length
@@ -50,13 +51,15 @@ Template.appActions.helpers
 Template.appActions.events
   'submit #start-app-form': (e, tpl) ->
     e.preventDefault()
-    name = tpl.$('.instance-name').val();
+    name = tpl.$('.instance-name').val()
     parameters = {}
     parameters[$(p).data('parameter')] = p.value for p in tpl.$('.parameter')
     parameters.tags = @tags
+
     options =
       targetHost: Session.get 'targetHost'
       targetVlan: Session.get 'targetVlan'
+      storageBucket: tpl.$('.storage-bucket').val()
     tpl.$('li.open').removeClass('open')
     Meteor.call 'startApp', @name, @version, name, parameters, options
   'click .remove-app': (event, tpl) ->
