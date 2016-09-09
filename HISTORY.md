@@ -1,3 +1,9 @@
+### 4.3.0
+- Added storage buckets
+
+### 4.2.0
+- Moved application actions to the agent
+
 ### 4.1.7
 - Fixed logging
 - Added basic auth to es query requests
