@@ -39,14 +39,14 @@ module.exports = React.createClass
             <a href='#' className="dropdown-toggle" data-toggle="dropdown" title="Copy">
               <i className="pull-right material-icons">content_copy</i>
             </a>
-            <form id="start-app-form" role="form" className="dropdown-menu dropdown-menu-right" style={padding:'1em'}>
+            <form id="start-app-form" onSubmit={@copy(bucket)} role="form" className="dropdown-menu dropdown-menu-right" style={padding:'1em'}>
                 <div className="form-group" style={width:'30em'}>
                     <label>Bucket name</label>
                     <input ref='bucketName' required pattern="[a-zA-Z0-9_-]+" type="text"
                       className="form-control bucket-name"
                       placeholder="A unique name. Must match [a-zA-Z0-9_-]+" />
                 </div>
-                <button type="submit" onClick={@copy(bucket)} className="start-app btn btn-mini">Copy</button>
+                <button type="submit" className="start-app btn btn-mini">Copy</button>
             </form>
           </span>
         </span>
