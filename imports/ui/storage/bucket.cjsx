@@ -21,7 +21,7 @@ module.exports = React.createClass
       {if @props.displayButtons
         <span>
           <span>
-            <a href='#' className="dropdown-toggle" data-toggle="dropdown">
+            <a href='#' className="dropdown-toggle" data-toggle="dropdown" title="Delete">
               <i className="pull-right material-icons">delete_forever</i>
             </a>
             <form onClick={@dontClose} role="form" className="dropdown-menu dropdown-menu-right" style={padding:'1em'}>
@@ -36,7 +36,7 @@ module.exports = React.createClass
             </form>
           </span>
           <span>
-            <a href='#' className="dropdown-toggle" data-toggle="dropdown">
+            <a href='#' className="dropdown-toggle" data-toggle="dropdown" title="Copy">
               <i className="pull-right material-icons">content_copy</i>
             </a>
             <form id="start-app-form" role="form" className="dropdown-menu dropdown-menu-right" style={padding:'1em'}>
