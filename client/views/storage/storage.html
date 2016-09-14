@@ -14,16 +14,16 @@
     <div id="page-menu" class="col-md-3">
       {{#if isAuthenticated}}
       <ul class="nav nav-stacked">
-        <li>
-          <a title="New Storage Bucket" href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <li id="new-bucket-form">
+          <a title="New Storage Bucket" href="#" class="new-bucket-toggle">
             <i class="glyphicon glyphicon-lg glyphicon-plus"></i> New Storage Bucket
           </a>
           <form id="create-bucket-form" role="form" class="dropdown-menu dropdown-menu-left" style="padding:1em">
               <div class="form-group" style="width:30em">
                   <label>Bucket name</label>
-                  <input required pattern="/?[a-zA-Z0-9_-]+" type="text"
+                  <input required pattern="[a-zA-Z0-9_-]+" type="text" name='bucket-name'
                     class="form-control bucket-name"
-                    placeholder="A unique name. Must match /?[a-zA-Z0-9_-]+.">
+                    placeholder="A unique name. Must match [a-zA-Z0-9_-]+">
               </div>
               <button type="submit" class="create-bucket btn btn-mini">Save</button>
           </form>
