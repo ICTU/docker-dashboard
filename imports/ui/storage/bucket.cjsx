@@ -42,9 +42,9 @@ module.exports = React.createClass
             <form id="start-app-form" role="form" className="dropdown-menu dropdown-menu-right" style={padding:'1em'}>
                 <div className="form-group" style={width:'30em'}>
                     <label>Bucket name</label>
-                    <input ref='bucketName' required pattern="/?[a-zA-Z0-9_-]+" type="text"
+                    <input ref='bucketName' required pattern="[a-zA-Z0-9_-]+" type="text"
                       className="form-control bucket-name"
-                      placeholder="A unique name. Must match /?[a-zA-Z0-9_-]+." />
+                      placeholder="A unique name. Must match [a-zA-Z0-9_-]+" />
                 </div>
                 <button type="submit" onClick={@copy(bucket)} className="start-app btn btn-mini">Copy</button>
             </form>
