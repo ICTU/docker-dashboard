@@ -1,3 +1,6 @@
+### 4.3.2
+- Improved storage bucket name validation
+
 ### 4.3.1
 - Showing storage bucket for instance
 
