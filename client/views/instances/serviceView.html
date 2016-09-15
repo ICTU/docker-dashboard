@@ -41,7 +41,7 @@ ssh -p {{port}} {{hostname}}
       </td></tr>
       {{/if}}
 
-      <tr><th scope="row">State</th><td>{{data.dockerContainerInfo.service.State.Status}}</td></tr>
+      <tr><th scope="row">State</th><td>{{data.state}}</td></tr>
       <tr><th scope="row">Network</th><td>{{data.dockerContainerInfo.net.State.Status}}</td></tr>
 
       {{#if data.dockerContainerId}}

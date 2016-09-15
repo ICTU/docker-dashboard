@@ -1,7 +1,7 @@
 activeLogs = new ReactiveVar null
 
 isStateOk = (instance) ->
-  if instance.meta.state is 'active'
+  if instance?.meta.state is 'active'
     for i, service of instance.services
       return false if service?.state and service.state isnt 'running'
     true

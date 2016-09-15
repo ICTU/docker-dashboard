@@ -1,5 +1,5 @@
 isStateOk = (instance) ->
-  if instance.meta.state is 'active'
+  if instance.meta?.state is 'active'
     for i, service of instance.services
       return false unless service.dockerContainerInfo?.service?.State?.Running
     true
@@ -25,15 +25,15 @@ Template.instanceView.helpers
   activityIcon: ->
     if isStateOk(@)
       'ok-sign'
-    else if "#{@meta.state}".match /loading|activating/
+    else if "#{@meta?.state}".match /loading|activating/
       'play-circle'
-    else if "#{@meta.state}".match /pulling/
+    else if "#{@meta?.state}".match /pulling/
       'download'
-    else if "#{@meta.state}".match /stopping/
+    else if "#{@meta?.state}".match /stopping/
       'collapse-down'
     else
       'exclamation-sign'
-  showProgressbar: -> "#{@meta.state}".match /loading|activating|pulling|stopping/
+  showProgressbar: -> "#{@state}".match /starting|stopping/
   totalSteps: -> @meta.totalSteps
   progress: -> @meta.progress
   progressPercentage: ->

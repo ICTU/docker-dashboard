@@ -54,23 +54,37 @@ findAppDef = (name, version) ->
       user = userId: null, username: 'API'
 
     agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
-    Instances.upsert {project: project, name: instance}, $set:
-      key: "#{project}/#{app}/#{instance}"
-      parameters: parameters
-      meta:
-        appName: app
-        appVersion: version
-        agentUrl: agentUrl
-        storageBucket: options.storageBucket
-        startedBy:
-          userId: user._id
-          username: user.username
 
     # replace deprecated parameter substition
     def = (findAppDef app, version).def
     def = def.replace (new RegExp "\{\{", 'g'), '_#_'
     def = def.replace (new RegExp "\}\}", 'g'), '_#_'
+
     definition = YAML.load def
+    delete definition.name
+    delete definition.version
+    delete definition.pic
+    delete definition.description
+
+    # state:
+    #   name: 'created'
+    Instances.upsert {name: instance}, $set:
+      images: (service.image for serviceName, service of definition)
+      compose: definition
+
+    for serviceName, service of definition
+      service.labels =
+        'bigboat/instance/name': instance
+        'bigboat/service/name': serviceName
+        'bigboat/container/type': 'service'
+        'bigboat/application/name': app
+        'bigboat/application/version': version
+        'bigboat/agent/url': agentUrl
+        'bigboat/startedBy': user._id
+        'bigboat/storage/bucket': options.storageBucket
+      service.restart = 'unless-stopped'
+
+    console.log 'xxx', definition
 
     callOpts =
       responseType: "buffer"
@@ -86,6 +100,8 @@ findAppDef = (name, version) ->
           name: instance
           options: _.extend({}, options, { project: project })
           parameters: parameters
+          storage:
+            bucket: options.storageBucket
         bigboat:
           url: process.env.ROOT_URL
           statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instance}"
@@ -95,7 +111,7 @@ findAppDef = (name, version) ->
     HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
-      Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
+      # Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
 
   stopInstance: (instanceName) ->
@@ -103,7 +119,7 @@ findAppDef = (name, version) ->
       throw new Meteor.Error "Instance #{@params.name} does not exist"
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.get('project')}."
     instance = Instances.findOne name: instanceName
-    agentUrl = instance.meta.agentUrl
+    agentUrl = instance.agent.url
     console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
     callOpts =
       responseType: "buffer"
@@ -111,9 +127,9 @@ findAppDef = (name, version) ->
         dir: "#{Settings.get('project')}-#{instanceName}"
 
         app:
-          name: instance.meta.appName
-          version: instance.meta.appVersion
-          definition: YAML.safeLoad (findAppDef instance.meta.appName, instance.meta.appVersion).def
+          name: instance.app.name
+          version: instance.app.version
+          definition: YAML.safeLoad (findAppDef instance.app.name, instance.app.version).def
         instance:
           name: instanceName
           options: _.extend({}, { project: Settings.get('project') })
@@ -127,6 +143,7 @@ findAppDef = (name, version) ->
       user = userId: null, username: 'API'
 
     Instances.upsert {name: instanceName}, $set:
+      desiredState: 'stopped'
       'meta.stoppedBy':
         userId: user._id
         username: user.username

@@ -1,1 +1,1 @@
-require '/imports/mqtt.coffee'
+require '/imports/server/main.coffee'
