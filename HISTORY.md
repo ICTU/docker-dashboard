@@ -1,3 +1,6 @@
+### 4.3.3
+- Simplified/better UI for adding a storage bucket
+
 ### 4.3.2
 - Improved storage bucket name validation
 

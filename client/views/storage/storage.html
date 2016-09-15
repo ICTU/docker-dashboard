@@ -11,27 +11,20 @@
     </div>
   </div>
   <div id="content-row" class="row" style="margin-top: 10px;">
-    <div id="page-menu" class="col-md-3">
+    <div id="page-menu" class="col-md-4">
       {{#if isAuthenticated}}
-      <ul class="nav nav-stacked">
-        <li id="new-bucket-form">
-          <a title="New Storage Bucket" href="#" class="new-bucket-toggle">
-            <i class="glyphicon glyphicon-lg glyphicon-plus"></i> New Storage Bucket
-          </a>
-          <form id="create-bucket-form" role="form" class="dropdown-menu dropdown-menu-left" style="padding:1em">
-              <div class="form-group" style="width:30em">
-                  <label>Bucket name</label>
-                  <input required pattern="[a-zA-Z0-9_-]+" type="text" name='bucket-name'
-                    class="form-control bucket-name"
-                    placeholder="A unique name. Must match [a-zA-Z0-9_-]+">
-              </div>
-              <button type="submit" class="create-bucket btn btn-mini">Save</button>
-          </form>
-        </li>
-      </ul>
+      <form id="create-bucket-form" role="form">
+          <div class="form-group">
+              <label>Storage bucket name (must match [a-zA-Z0-9_-]+)</label>
+              <input required pattern="[a-zA-Z0-9_-]+" type="text" name='bucket-name'
+                class="form-control" id="bucket-name"
+                placeholder="Alphanummeric, underscores and dashes; no spaces">
+          </div>
+          <button type="submit" class="create-bucket btn btn-mini">Add bucket</button>
+      </form>
       {{/if}}
     </div>
-    <div id="buckets-container" class="col-md-9">
+    <div id="buckets-container" class="col-md-8">
 
       <span>{{> React component=Storage filter=nameFilter}}</span>
 

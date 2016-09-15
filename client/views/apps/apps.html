@@ -107,10 +107,10 @@
       </a>
       <form id="start-app-form" role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
           <div class="form-group" style="width:30em">
-              <label>Instance name</label>
-              <input required pattern="/?[a-zA-Z0-9_-]+" type="text"
+              <label>Instance name (must match [a-zA-Z0-9_-]+)</label>
+              <input required pattern="[a-zA-Z0-9_-]+" type="text"
                 class="form-control instance-name"
-                placeholder="A unique name. Must match /?[a-zA-Z0-9_-]+."
+                placeholder="Alphanummeric, underscores and dashes; no spaces"
                 value="{{name}}">
 
               <label>Storage bucket</label>

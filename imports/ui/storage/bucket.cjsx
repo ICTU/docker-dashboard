@@ -41,10 +41,11 @@ module.exports = React.createClass
             </a>
             <form id="start-app-form" onSubmit={@copy(bucket)} role="form" className="dropdown-menu dropdown-menu-right" style={padding:'1em'}>
                 <div className="form-group" style={width:'30em'}>
-                    <label>Bucket name</label>
+                    <label>Bucket name (must match [a-zA-Z0-9_-]+)</label>
                     <input ref='bucketName' required pattern="[a-zA-Z0-9_-]+" type="text"
+                      name='bucket-name'
                       className="form-control bucket-name"
-                      placeholder="A unique name. Must match [a-zA-Z0-9_-]+" />
+                      placeholder="Alphanummeric, underscores and dashes; no spaces" />
                 </div>
                 <button type="submit" className="start-app btn btn-mini">Copy</button>
             </form>
