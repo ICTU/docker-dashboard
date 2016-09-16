@@ -1,3 +1,5 @@
+Steps = require '/imports/ui/instance/steps.cjsx'
+
 isStateOk = (instance) ->
   if instance.meta?.state is 'active'
     for i, service of instance.services
@@ -22,15 +24,18 @@ determineProtocol = (port) ->
     "http"
 
 Template.instanceView.helpers
+  Steps: -> Steps
   activityIcon: ->
-    if isStateOk(@)
+    # else if "#{@meta?.state}".match /pulling/
+    #   'download'
+    if @state is 'running'
       'ok-sign'
-    else if "#{@meta?.state}".match /loading|activating/
+    else if @state is 'starting'
       'play-circle'
-    else if "#{@meta?.state}".match /pulling/
-      'download'
-    else if "#{@meta?.state}".match /stopping/
+    else if @state is 'stopping'
       'collapse-down'
+    else if @state is 'stopped'
+      'flash'
     else
       'exclamation-sign'
   showProgressbar: -> "#{@state}".match /starting|stopping/
@@ -52,7 +57,7 @@ Template.instanceView.helpers
   params: -> key: k, value: v for k, v of @parameters when k isnt 'tags' if @parameters
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2
-  instanceHash: -> CryptoJS.MD5 "#{@key}"
+  instanceHash: -> CryptoJS.MD5 "#{@name}"
   startedByUser: -> @startedBy?.username
   stoppedByUser: -> @stoppedBy?.username
 

@@ -1,3 +1,4 @@
+Instance = require '/imports/ui/instance.cjsx'
 activeLogs = new ReactiveVar null
 
 isStateOk = (instance) ->
@@ -16,6 +17,21 @@ Template.instances.helpers
       Instances.find {}, sort: key: 1
   isSearching: -> Session.get('queryName')?.length
   searchTerms: -> Session.get 'queryName'
+  Instance: -> Instance
+  activityIcon: ->
+    # else if "#{@meta?.state}".match /pulling/
+    #   'download'
+    if @state is 'running'
+      'ok-sign'
+    else if @state is 'starting'
+      'play-circle'
+    else if @state is 'stopping'
+      'collapse-down'
+    else if @state is 'stopped'
+      'flash'
+    else
+      'exclamation-sign'
+
 
 Template.instances.events
   'click #reset': -> Session.set 'queryName', null

@@ -25,6 +25,13 @@ Meteor.startup ->
     @route 'instances',
       path: '/instances'
 
+    @route 'instancesDetail',
+      path: '/instances/:name'
+      template: 'instances'
+      data: ->
+        name: @params.name
+
+
     @route 'config',
       path: '/config'
       subscriptions: -> [
