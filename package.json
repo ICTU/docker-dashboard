@@ -40,6 +40,7 @@
     "react-addons-transition-group": "^15.0.2",
     "react-addons-update": "^15.0.2",
     "react-dom": "^15.0.2",
+    "react-elm-components": "^1.0.0",
     "utf-8-validate": "^1.2.1"
   }
 }

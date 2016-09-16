@@ -22,6 +22,7 @@
 
       {{#each instances}}
         {{> instanceView }}
+        <span>{{> React component=Instance name=name}}</span>
       {{/each}}
 
       {{#if isSearching}}
