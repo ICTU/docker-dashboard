@@ -99,6 +99,10 @@
           </tbody>
         </table>
 
+        {{#with steps}}
+          <span>{{> React component=Steps items=this}}</span>
+        {{/with}}
+
         {{#each services}}
           {{> serviceView}}
         {{/each}}

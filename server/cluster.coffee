@@ -66,12 +66,19 @@ findAppDef = (name, version) ->
     delete definition.pic
     delete definition.description
 
-    # state:
-    #   name: 'created'
     Instances.upsert {name: instance}, $set:
       images: (service.image for serviceName, service of definition)
       compose: definition
+      steps: _.flatten (for serviceName, service of definition
+        [ {type: 'pull', image: service.image, completed: false}
+          {type: 'service', name: serviceName, completed: false} ]
+        )
 
+
+    # augment the compose file with bigboat specific Labels
+    # these labels are later communicated back to the dashboard
+    # though Docker events and inspect information.
+    # This way we can relate containers and events
     for serviceName, service of definition
       service.labels =
         'bigboat/instance/name': instance

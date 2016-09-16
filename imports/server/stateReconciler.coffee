@@ -33,6 +33,10 @@ determineState = (doc, stateF) ->
     console.log '\n\n'
   console.log 'OVERALL_STATE', overallState
 
+  for serviceName, service of doc.services
+    if service.state is 'running'
+      Instances.update {_id: doc._id, 'steps.name': serviceName}, {$set: {'steps.$.completed': true}}
+
 Instances.find({}, fields: {_id: 1}).observe
   added: (doc) ->
     Instances.update doc._id, $set:
@@ -79,6 +83,4 @@ module.exports =
   # Updates the internal state based on image pulls
   #
   imagePull: (image) ->
-    console.log 'imagePull', image
-    Instances.find(images: image, 'state.name': $in: ['created', 'starting']).forEach (instance) ->
-      Instance.update instance._id, $set: state: 'pulling'
+    updated = Instances.update {'steps.image': image}, {$set: {'steps.$.completed': true}}
