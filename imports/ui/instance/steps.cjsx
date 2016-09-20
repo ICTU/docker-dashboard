@@ -22,7 +22,7 @@ module.exports = React.createClass
   render: ->
     <ul>
       {@props.items.map (step) ->
-        <li key="#{step.name or step.image}" style={listStyle:'none'}>
+        <li key="#{step.type}-#{step.name or step.image}" style={listStyle:'none'}>
           <span className="glyphicon glyphicon-#{if step.completed then 'check' else 'unchecked'}"></span>
           {renderStep step}
         </li>
