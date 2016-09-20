@@ -38,15 +38,17 @@ Template.instanceView.helpers
       'flash'
     else
       'exclamation-sign'
-  showProgressbar: -> "#{@state}".match /starting|stopping/
-  totalSteps: -> @meta.totalSteps
-  progress: -> @meta.progress
+  showProgressbar: -> !("#{@state}" in ['running', 'failing', 'removed'])
+  totalSteps: -> @steps?.length
   progressPercentage: ->
-    if "#{@meta.state}".match /stopping/
+    progress = (@steps.map (s) -> if s.completed then 1 else 0).reduce (prev, curr) -> prev+curr
+    totalSteps = @steps.length
+    console.log 'progress', totalSteps, progress
+    if @state is 'stopping'
       # let the percentage count down
-      ((parseInt(@meta.totalSteps)-parseInt(@meta.progress))/parseInt(@meta.totalSteps))*100
+      ((parseInt(totalSteps)-parseInt(progress))/parseInt(totalSteps))*100
     else
-      (parseInt(@meta.progress)/parseInt(@meta.totalSteps))*100
+      (parseInt(progress)/parseInt(totalSteps))*100
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
     port = findWebPort @services?.www
