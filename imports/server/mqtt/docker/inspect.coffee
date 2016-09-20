@@ -10,7 +10,6 @@ module.exports = (msg) ->
     # console.log 'INSPECT_STATE', msg.State
 
     if mappedState
-      reconciler.reconcileLabels labels
       reconciler.updateServiceState mappedState, labels
 
 ###

@@ -16,7 +16,6 @@ handleContainerEvent = (msg) ->
 
   if mappedState
     console.log 'eventmsg', msg
-    reconciler.reconcileLabels msg.Actor?.Attributes
     reconciler.updateServiceState mappedState, msg.Actor?.Attributes
 
 handleImageEvent = (msg) ->
