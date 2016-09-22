@@ -12,7 +12,7 @@ module.exports = React.createClass
     authenticated: React.PropTypes.bool.isRequired
 
   render: ->
-    <div className="list-group">
+    <div id="storage-bucket-list" className="list-group">
       {for bucket in @props.buckets
         <StorageBucket
           key={bucket._id}

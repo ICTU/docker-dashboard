@@ -16,15 +16,15 @@ module.exports = React.createClass
 
   render: ->
     bucket = @props.bucket
-    <div className="list-group-item">
-      <span>{bucket.name}</span>
+    <div className="list-group-item storage-bucket" data-bucket-name={bucket.name}>
+      <span className="bucket-name">{bucket.name}</span>
       {if @props.displayButtons
         <span>
           <span>
             <a href='#' className="dropdown-toggle" data-toggle="dropdown" title="Delete">
-              <i className="pull-right material-icons">delete_forever</i>
+              <i className="delete-bucket pull-right material-icons">delete_forever</i>
             </a>
-            <form onClick={@dontClose} role="form" className="dropdown-menu dropdown-menu-right" style={padding:'1em'}>
+            <form onClick={@dontClose} role="form" className="delete-bucket-form dropdown-menu dropdown-menu-right" style={padding:'1em'}>
                 <div className="form-group" style={width:'25em'}>
                   <h4>Delete data bucket '{bucket.name}'</h4>
                   <div className="alert alert-warning" role="alert">
@@ -32,14 +32,17 @@ module.exports = React.createClass
                     <strong>Do you really want to delete this data bucket?</strong>
                   </div>
                 </div>
-                <button type="button" onClick={@props.onDelete?.bind(bucket)} className="clear-instance btn btn-mini btn-danger pull-right">Yes, destroy the data in this bucket!</button>
+                <button type="button" onClick={@props.onDelete?.bind(bucket)}
+                  className="delete-bucket-confirm btn btn-mini btn-danger pull-right">
+                  Yes, destroy the data in this bucket!
+                </button>
             </form>
           </span>
           <span>
             <a href='#' className="dropdown-toggle" data-toggle="dropdown" title="Copy">
-              <i className="pull-right material-icons">content_copy</i>
+              <i className="copy-bucket pull-right material-icons">content_copy</i>
             </a>
-            <form id="start-app-form" onSubmit={@copy(bucket)} role="form" className="dropdown-menu dropdown-menu-right" style={padding:'1em'}>
+            <form onSubmit={@copy(bucket)} role="form" className="copy-bucket-form dropdown-menu dropdown-menu-right" style={padding:'1em'}>
                 <div className="form-group" style={width:'30em'}>
                     <label>Bucket name (must match [a-zA-Z0-9_-]+)</label>
                     <input ref='bucketName' required pattern="[a-zA-Z0-9_-]+" type="text"
@@ -47,7 +50,10 @@ module.exports = React.createClass
                       className="form-control bucket-name"
                       placeholder="Alphanummeric, underscores and dashes; no spaces" />
                 </div>
-                <button type="submit" className="start-app btn btn-mini">Copy</button>
+                <button type="submit"
+                  className="copy-bucket-submit btn btn-mini">
+                  Copy
+                </button>
             </form>
           </span>
         </span>

@@ -1,3 +1,6 @@
+### 4.3.4
+- Improved **Storage** page testability
+
 ### 4.3.3
 - Simplified/better UI for adding a storage bucket
 
