@@ -29,12 +29,6 @@ determineState = (doc, stateF) ->
   overallState = 'failing' unless overallState
   Instances.update doc._id, $set: state: overallState
 
-  if overallState is 'undesired'
-    console.log '\n\nWHAAAAAAA\n\n'
-    console.log services.map (s) -> s.state
-    console.log '\n\n'
-  console.log 'OVERALL_STATE', overallState
-
   for serviceName, service of doc.services
     if service.state is 'running'
       Instances.update {_id: doc._id, 'steps.name': serviceName}, {$set: {'steps.$.completed': true}}
@@ -73,12 +67,12 @@ module.exports =
         (appVersion = labels['bigboat/application/version'])
           updateDoc.app = name: appName, version: appVersion
 
+      updateDoc.startedBy = startedBy if startedBy = labels['bigboat/startedBy']
+
       updateDoc['agent.url'] = val if val = labels['bigboat/agent/url']
 
       service = labels['bigboat/service/name']
       search = {name: name}
-      # if mappedState is 'running'
-      #   search["services.#{service}.state"] = $ne: 'stopping'
 
       updateDoc["services.#{service}.state"] = mappedState
 
