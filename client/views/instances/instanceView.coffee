@@ -26,11 +26,9 @@ determineProtocol = (port) ->
 Template.instanceView.helpers
   Steps: -> Steps
   activityIcon: ->
-    # else if "#{@meta?.state}".match /pulling/
-    #   'download'
     if @state is 'running'
       'ok-sign'
-    else if @state is 'starting'
+    else if @state in ['starting', 'created']
       'play-circle'
     else if @state is 'stopping'
       'collapse-down'
@@ -38,17 +36,19 @@ Template.instanceView.helpers
       'flash'
     else
       'exclamation-sign'
-  showProgressbar: -> !("#{@state}" in ['running', 'failing', 'removed'])
+  showProgressbar: -> @desiredState is 'stopped' or !("#{@state}" in ['running', 'failing', 'removed'])
   totalSteps: -> @steps?.length
   progressPercentage: ->
     progress = (@steps.map (s) -> if s.completed then 1 else 0).reduce (prev, curr) -> prev+curr
     totalSteps = @steps.length
-    console.log 'progress', totalSteps, progress
-    if @state is 'stopping'
-      # let the percentage count down
-      ((parseInt(totalSteps)-parseInt(progress))/parseInt(totalSteps))*100
-    else
-      (parseInt(progress)/parseInt(totalSteps))*100
+    if @state in ['stopping', 'stopped']
+      services = _.values @services
+      totalSteps = services.length
+      progress = totalSteps - (services.map (s) -> if !(s.state in ['running', 'stopping']) then 1 else 0).reduce (prev, curr) -> prev+curr
+
+    x = (parseInt(progress + 1)/parseInt(totalSteps + 1))*100
+    console.log 'progress', totalSteps, progress, x, @
+    x
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
     port = findWebPort @services?.www
@@ -60,7 +60,7 @@ Template.instanceView.helpers
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2
   instanceHash: -> CryptoJS.MD5 "#{@name}"
-  startedByUser: -> @startedBy?.username
+  startedByUser: -> Meteor.users.findOne(@startedBy).username
   stoppedByUser: -> @stoppedBy?.username
 
 Template.instanceView.events
