@@ -355,6 +355,28 @@ Accounts.registerLoginHandler('ldap', function (loginRequest) {
                     'services.resume.loginTokens': hashStampedToken
                 }
             });
+
+            // Set profile values if specified in searchResultsProfileMap
+            if (ldapResponse.searchResults && ldapObj.options.searchResultsProfileMap.length > 0) {
+              var profileMap = ldapObj.options.searchResultsProfileMap;
+              var profileObject = {};
+
+              // Loop through profileMap and set values on profile object
+              for (var i = 0; i < profileMap.length; i++) {
+                var resultKey = profileMap[i].resultKey;
+                // If our search results have the specified property, set the profile property to its value
+                if (ldapResponse.searchResults.hasOwnProperty(resultKey)) {
+                  profileObject[profileMap[i].profileProperty] = ldapResponse.searchResults[resultKey];
+                }
+              }
+              // Set userObject profile
+              // userObject.profile = profileObject;
+              Meteor.users.update(userId, {
+                  $set: {
+                      'profile': profileObject
+                  }
+              });
+            }
         }
         // Otherwise create user if option is set
         else if (ldapObj.options.createNewUser) {
