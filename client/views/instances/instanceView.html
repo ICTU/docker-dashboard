@@ -14,7 +14,7 @@
       {{#if showProgressbar}}
       <div class="progress">
         <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{progressPercentage}}%;">
-          <span>{{state}}</span>
+          <span></span>
         </div>
       </div>
       {{/if}}
@@ -75,9 +75,10 @@
         <table class="table table-condensed">
           <tbody>
             <tr><th scope="row" style="width:250px;">State</th><td>{{state}}</td></tr>
-          {{#with meta}}
-            <tr><th scope="row" >Application name</th><td>{{appName}}</td></tr>
-            <tr><th scope="row">Application version</th><td>{{appVersion}}</td></tr>
+            {{#with app}}
+            <tr><th scope="row" >Application name</th><td>{{name}}</td></tr>
+            <tr><th scope="row">Application version</th><td>{{version}}</td></tr>
+            {{/with}}
             {{#if isAdminBoard}}
             <tr><th scope="row">Agent URL</th><td>{{agentUrl}}</td></tr>
             {{/if}}
@@ -99,9 +100,9 @@
           </tbody>
         </table>
 
-        {{#with steps}}
+        <!-- {{#with steps}}
           <span>{{> React component=Steps items=this}}</span>
-        {{/with}}
+        {{/with}} -->
 
         {{#each services}}
           {{> serviceView}}
