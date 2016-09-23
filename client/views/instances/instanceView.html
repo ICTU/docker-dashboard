@@ -79,10 +79,12 @@
             <tr><th scope="row" >Application name</th><td>{{name}}</td></tr>
             <tr><th scope="row">Application version</th><td>{{version}}</td></tr>
             {{/with}}
-            {{#if isAdminBoard}}
-            <tr><th scope="row">Agent URL</th><td>{{agentUrl}}</td></tr>
+            {{#if isAuthenticated}}
+            <tr><th scope="row">Agent URL</th><td>{{agent.url}}</td></tr>
             {{/if}}
+            {{#if startedByUser}}
             <tr><th scope="row">Started by</th><td>{{startedByUser}}</td></tr>
+            {{/if}}
             {{#if stoppedByUser}}
               <tr><th scope="row">Stopped by</th><td>{{stoppedByUser}}</td></tr>
             {{/if}}
