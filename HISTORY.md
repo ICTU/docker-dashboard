@@ -1,5 +1,5 @@
 ### 4.3.5
-- Better progress indication when copying storage buckets
+- Added progress indication when copying storage buckets
 - Show created time for storage buckets
 
 ### 4.3.4
