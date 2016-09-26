@@ -119,7 +119,7 @@
                 <option value="!! do not persist !!">Do not persist</option>
                 <optgroup label="Available storage buckets">
                   {{#each storageBuckets}}
-                  <option value={{name}} {{styles}}> {{name}} </option>
+                  <option value={{name}} {{styles}}>{{name}}{{#if styles.disabled}} (not ready){{/if}}</option>
                   {{/each}}
                 </optgroup>
               </select>
