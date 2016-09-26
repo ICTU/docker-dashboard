@@ -41,6 +41,11 @@ Template.apps.events
 Template.appActions.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
   storageBuckets: -> StorageBuckets?.find {}, sort: name: 1
+  styles: ->
+    if @isLocked
+      disabled: true
+    else
+      ''
   parameters: ->
     params = @def.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
     if params?.length
