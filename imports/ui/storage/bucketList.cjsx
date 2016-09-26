@@ -19,6 +19,7 @@ module.exports = React.createClass
           bucket={bucket}
           onCopy={@props.onCopy}
           onDelete={@props.onDelete}
-          displayButtons={@props.authenticated} />
+          displayButtons={@props.authenticated and not bucket.isLocked}
+          displaySpinner={bucket.isLocked}/>
       }
     </div>

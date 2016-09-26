@@ -1,3 +1,7 @@
+### 4.3.5
+- Better progress indication when copying storage buckets
+- Show created time for storage buckets
+
 ### 4.3.4
 - Improved **Storage** page testability
 

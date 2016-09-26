@@ -16,8 +16,12 @@ module.exports = React.createClass
 
   render: ->
     bucket = @props.bucket
+    console.log bucket
     <div className="list-group-item storage-bucket" data-bucket-name={bucket.name}>
       <span className="bucket-name">{bucket.name}</span>
+      {if @props.displaySpinner
+        <img className="pull-right" src="/img/svg/hourglass.svg" style={marginTop: -5} />
+      }
       {if @props.displayButtons
         <span>
           <span>
@@ -58,4 +62,7 @@ module.exports = React.createClass
           </span>
         </span>
       }
+      <span className="pull-right" style={marginRight: 10, marginTop: 3, fontSize: 12, color: "grey"}>
+        Created {moment(bucket.created).fromNow()}
+      </span>
     </div>
