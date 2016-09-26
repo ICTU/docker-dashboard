@@ -1,3 +1,4 @@
+_           = require 'underscore'
 reconciler  = require '../../stateReconciler.coffee'
 
 
@@ -5,12 +6,21 @@ module.exports = (msg) ->
   if labels = msg.Config?.Labels
     mappedState = switch msg.State?.Status
       when 'running' then 'running'
+      when 'exited'  then 'stopped'
+      when 'restarting' then 'restarting'
       else console.log 'inspect:unknown container status', msg.State?.Status
 
     # console.log 'INSPECT_STATE', msg.State
 
     if mappedState
       reconciler.updateServiceState mappedState, labels
+
+    if (hostname = msg.Config?.Hostname) and (domain = msg.Config.Domainname)
+      reconciler.updateServiceFQDN "#{hostname}.#{domain}", labels
+    if ports = msg.Config?.ExposedPorts
+      reconciler.updateServicePorts (_.keys ports), labels
+    if name = msg.Name
+      reconciler.updateContainerName name[1..], labels
 
 ###
 {
