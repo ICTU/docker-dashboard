@@ -9,6 +9,7 @@ module.exports = React.createClass
     onDelete: React.PropTypes.func
     onCopy: React.PropTypes.func
     displayButtons: React.PropTypes.bool.isRequired
+    displaySpinner: React.PropTypes.bool.isRequired
 
   copy: (bucket) -> (e) =>
     e.preventDefault()
@@ -30,6 +31,11 @@ module.exports = React.createClass
             <form onClick={@dontClose} role="form" className="delete-bucket-form dropdown-menu dropdown-menu-right" style={padding:'1em'}>
                 <div className="form-group" style={width:'25em'}>
                   <h4>Delete data bucket '{bucket.name}'</h4>
+                  {if bucket.usedBy
+                    <div className="alert alert-danger" role="alert">
+                      <strong>This storage bucket is currently in use!</strong>
+                    </div>
+                  }
                   <div className="alert alert-warning" role="alert">
                     All data inside the bucket will be removed. This operation is irreversible.<br />
                     <strong>Do you really want to delete this data bucket?</strong>
@@ -63,5 +69,10 @@ module.exports = React.createClass
       }
       <span className="pull-right" style={marginRight: 10, marginTop: 3, fontSize: 12, color: "grey"}>
         Created {moment(bucket.created).fromNow()}
+        {if bucket.usedBy
+           " | Used by #{bucket.usedBy?.join(', ')}"
+        else
+          " | Not in use"
+        }
       </span>
     </div>

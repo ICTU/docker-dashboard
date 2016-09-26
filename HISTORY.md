@@ -1,3 +1,6 @@
+### 4.3.6
+- Show what instances are using each storage bucket
+
 ### 4.3.5
 - Added progress indication when copying storage buckets
 - Show created time for storage buckets
