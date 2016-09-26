@@ -13,7 +13,9 @@ HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
 
 findWebPort = (service) ->
   p = 80
-  service?.ports?.replace(/[^\d|\s]/g, '').split(/\s+/).forEach (port) ->
+  console.log service?.ports
+  service?.ports?.forEach (port) ->
+    port = port.split('/')[0]
     if port in HTTPS_PORTS.concat(HTTP_PORTS) then p = port
   p
 
@@ -54,8 +56,8 @@ Template.instanceView.helpers
     port = findWebPort @services?.www
     endpoint = @services?.www?.endpoint or ":" + port
     protocol = @services?.www?.protocol or determineProtocol port
-    if @services?.www?.hostname
-      "#{protocol}://#{@services?.www?.hostname}#{endpoint}"
+    if @services?.www?.fqdn
+      "#{protocol}://#{@services?.www?.fqdn}#{endpoint}"
   params: -> key: k, value: v for k, v of @parameters when k isnt 'tags' if @parameters
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2

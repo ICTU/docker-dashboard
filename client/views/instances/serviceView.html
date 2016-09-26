@@ -6,18 +6,19 @@
   <table class="table table-condensed">
     <tbody>
       <tr><th scope="row">Created</th><td>{{createdSince}}</td></tr>
+      <tr><th scope="row">State</th><td>{{data.state}}</td></tr>
       <tr>
         <th scope="row" style="width:250px;">FQDN</th>
         <td>
           {{#if data.endpoint}}
           <a href="{{#if data.protocol}}{{data.protocol}}{{else}}http{{/if}}://{{data.hostname}}{{data.endpoint}}">{{data.hostname}}</a>
           {{else}}
-          {{data.hostname}}
+          {{data.fqdn}}
           {{/if}}
         </td>
       </tr>
-      <tr><th scope="row">Container Name</th><td>{{data.dockerContainerName}}</td></tr>
-      <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr>
+      <tr><th scope="row">Container Name</th><td>{{data.container.name}}</td></tr>
+      <!-- <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr> -->
       <tr><th scope="row">Ports</th><td>{{data.ports}}</td></tr>
 
 
@@ -40,9 +41,6 @@ ssh -p {{port}} {{hostname}}
       {{/with}}
       </td></tr>
       {{/if}}
-
-      <tr><th scope="row">State</th><td>{{data.state}}</td></tr>
-      <tr><th scope="row">Network</th><td>{{data.dockerContainerInfo.net.State.Status}}</td></tr>
 
       {{#if data.dockerContainerId}}
       {{#if isAuthenticated}}
