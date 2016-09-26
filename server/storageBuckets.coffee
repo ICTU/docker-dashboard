@@ -4,4 +4,4 @@ updateStorageBuckets = ->
   StorageBuckets.remove {name: $nin: _.pluck(buckets, 'name')}
 
 
-Meteor.setInterval updateStorageBuckets, 1000
+# Meteor.setInterval updateStorageBuckets, 1000
