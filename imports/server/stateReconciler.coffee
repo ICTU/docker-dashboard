@@ -1,4 +1,4 @@
-SERVICE_STATES = ['starting', 'running', 'stopping', 'stopped', 'removed']
+SERVICE_STATES = ['starting', 'restarting', 'running', 'stopping', 'stopped', 'removed']
 
 atLeastOneWithState = (services, states...) ->
   _.reduce services, ((memo, service) -> memo or service.state in states), false
@@ -40,6 +40,7 @@ Instances.find({}, fields: {_id: 1}).observe
     if f then Instances.update doc._id, $set:
       state: 'created'
       desiredState: 'running'
+      status: 'Created'
 
 Instances.find({state: 'removed', desiredState: 'stopped'}, fields: {_id: 1}).observe
   added: (doc, olddoc) -> Instances.remove doc._id
@@ -56,7 +57,18 @@ setStateDescription = (instanceName, stateDescription) ->
 
 f = true
 
+setServiceField = (fieldName, fieldValue, labels) ->
+  if (name = labels['bigboat/instance/name']) and (service = labels['bigboat/service/name'])
+    Instances.upsert {name: name}, $set: {"services.#{service}.#{fieldName}": fieldValue}
+
 module.exports =
+  updateServiceFQDN: (fqdn, labels) -> setServiceField 'fqdn', fqdn, labels
+
+  updateServicePorts: (ports, labels) -> setServiceField 'ports', ports, labels
+
+  updateContainerName: (name, labels) -> setServiceField 'container.name', name, labels
+
+
   updateServiceState: (mappedState, labels) ->
     unless mappedState in SERVICE_STATES
       throw "Service state '#{mappedState}' is not supported."
@@ -83,3 +95,6 @@ module.exports =
   #
   imagePull: (image) ->
     updated = Instances.update {'steps.image': image}, {$set: {'steps.$.completed': true}}
+
+  imagePulling: (image, instance) ->
+    Instances.upsert {name: instance}, $set: status: "Pulling #{image}"
