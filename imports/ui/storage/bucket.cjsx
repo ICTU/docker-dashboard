@@ -16,7 +16,6 @@ module.exports = React.createClass
 
   render: ->
     bucket = @props.bucket
-    console.log bucket
     <div className="list-group-item storage-bucket" data-bucket-name={bucket.name}>
       <span className="bucket-name">{bucket.name}</span>
       {if @props.displaySpinner
