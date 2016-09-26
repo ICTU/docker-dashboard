@@ -87,6 +87,8 @@ module.exports =
       search = {name: name}
 
       updateDoc["services.#{service}.state"] = mappedState
+      updateDoc.status = "Starting #{service}" if mappedState is 'starting'
+      updateDoc.status = "Stopping #{service}" if mappedState is 'stopping'
 
       Instances.upsert search, $set: updateDoc
 
