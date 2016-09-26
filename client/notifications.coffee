@@ -11,6 +11,13 @@ renderAppDefNotification = (e) ->
     when 'changed' then sAlert.info "Application #{e.info.name}:#{e.info.version} was saved."
     when 'removed' then sAlert.warning "Application #{e.info.name}:#{e.info.version} was removed."
 
+renderStorageNotification = (e) ->
+  switch e.action
+    when 'added' then sAlert.success "Storage bucket #{e.info.name} was created."
+    when 'locked' then sAlert.info "Storage bucket #{e.info.name} has become unavailable."
+    when 'unlocked' then sAlert.info "Storage bucket #{e.info.name} has become available."
+    when 'removed' then sAlert.warning "Storage bucket #{e.info.name} was removed."
+
 Meteor.startup ->
   # general sAlert configuration
   sAlert.config
@@ -28,4 +35,5 @@ Meteor.startup ->
       unless starting then switch e.subject
         when 'instance' then renderInstanceNotification e
         when 'appdef'   then renderAppDefNotification e
+        when 'storage'   then renderStorageNotification e
     starting = false

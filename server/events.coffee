@@ -30,4 +30,15 @@ ApplicationDefs.find().observe
   added: (doc) ->
     newSuccessEvent 'appdef', 'added', {name: doc.name, version: doc.version} unless starting
 
+StorageBuckets.find().observe
+  changed: (doc, oldDoc) ->
+    if doc.isLocked and not oldDoc.isLocked
+      newInfoEvent 'storage', 'locked', {name: doc.name} unless starting
+    else
+      newInfoEvent 'storage', 'unlocked', {name: doc.name} unless starting
+  removed: (doc) ->
+    newWarningEvent 'storage', 'removed', {name: doc.name} unless starting
+  added: (doc) ->
+    newSuccessEvent 'storage', 'added', {name: doc.name} unless starting
+
 starting = false

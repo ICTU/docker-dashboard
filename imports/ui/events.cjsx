@@ -19,6 +19,18 @@ Event = React.createClass
 
 eventType =
 
+StorageEvent = React.createClass
+  displayName: 'StorageEvent'
+  propTypes: event: React.PropTypes.object.isRequired
+  render: ->
+    e = @props.event
+    txt = switch e.action
+      when 'added'   then <span>Storage bucket <b>{e.info.name}</b> was created.</span>
+      when 'locked' then <span>Storage bucket <b>{e.info.name}</b> has become unavailable.</span>
+      when 'unlocked' then <span>Storage bucket <b>{e.info.name}</b> has become available.</span>
+      when 'removed' then <span>Storage bucket <b>{e.info.name}</b> got removed.</span>
+    <Event message=txt timestamp=e.timestamp icon='storage' type=e.type />
+
 AppdefEvent = React.createClass
   displayName: 'AppdefEvent'
   propTypes: event: React.PropTypes.object.isRequired
@@ -51,6 +63,7 @@ exports.EventsList = EventsList = React.createClass
     switch eventItem.subject
       when 'appdef' then <AppdefEvent event=eventItem />
       when 'instance' then <InstanceEvent event=eventItem />
+      when 'storage' then <StorageEvent event=eventItem />
   render: ->
     <ul style={listStyleType:'none', padding: 0}>
       {@props.events and @props.events.map (eventItem) =>

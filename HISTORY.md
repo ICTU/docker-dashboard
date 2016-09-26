@@ -1,3 +1,6 @@
+### 4.3.7
+- Show storage related events
+
 ### 4.3.6
 - Show what instances are using each storage bucket
 
