@@ -107,8 +107,6 @@ findAppDef = (name, version) ->
           name: instance
           options: _.extend({}, options, { project: project })
           parameters: parameters
-          storage:
-            bucket: options.storageBucket
         bigboat:
           url: process.env.ROOT_URL
           statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instance}"
