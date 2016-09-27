@@ -14,5 +14,12 @@ Migrations.add
   up: ->
     Settings.set 'agentAuthToken', Meteor.settings.agentAuthToken
 
+Migrations.add
+  version: 4
+  name: 'Add storage buckets to existing instances.'
+  up: ->
+    Instances.find('meta.storageBucket': $exists: false).forEach (inst) ->
+      Instances.update {_id: inst._id}, $set:
+        'meta.storageBucket': inst.name
 
 Meteor.startup -> Migrations.migrateTo('latest')

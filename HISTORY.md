@@ -1,5 +1,6 @@
 ### 4.3.7
 - Show storage related events
+- Migrate existing instances to use instance name as a storage bucket
 
 ### 4.3.6
 - Show what instances are using each storage bucket
