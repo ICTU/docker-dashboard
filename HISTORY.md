@@ -1,3 +1,7 @@
+### 4.3.8
+- Fixed 3->4 db migration
+- Fixed 'New App' template
+
 ### 4.3.7
 - Show storage related events
 - Migrate existing instances to use instance name as a storage bucket
