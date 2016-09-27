@@ -73,25 +73,33 @@ module.exports =
     unless mappedState in SERVICE_STATES
       throw "Service state '#{mappedState}' is not supported."
     if name = labels['bigboat/instance/name']
-      updateDoc = name: name
+      if (type = labels['bigboat/container/type']) is 'service'
+        updateDoc = name: name
 
-      if (appName = labels['bigboat/application/name']) and
-        (appVersion = labels['bigboat/application/version'])
-          updateDoc.app = name: appName, version: appVersion
+        if (appName = labels['bigboat/application/name']) and
+          (appVersion = labels['bigboat/application/version'])
+            updateDoc.app = name: appName, version: appVersion
 
-      updateDoc.startedBy = startedBy if startedBy = labels['bigboat/startedBy']
-      updateDoc.storageBucket = storageBucket if storageBucket = labels['bigboat/storage/bucket']
+        updateDoc.startedBy = startedBy if startedBy = labels['bigboat/startedBy']
+        updateDoc.storageBucket = storageBucket if storageBucket = labels['bigboat/storage/bucket']
 
-      updateDoc['agent.url'] = val if val = labels['bigboat/agent/url']
+        updateDoc['agent.url'] = val if val = labels['bigboat/agent/url']
 
-      service = labels['bigboat/service/name']
-      search = {name: name}
+        service = labels['bigboat/service/name']
+        search = {name: name}
 
-      updateDoc["services.#{service}.state"] = mappedState
-      updateDoc.status = "Starting #{service}" if mappedState is 'starting'
-      updateDoc.status = "Stopping #{service}" if mappedState is 'stopping'
+        updateDoc["services.#{service}.state"] = mappedState
+        updateDoc.status = "Starting #{service}" if mappedState is 'starting'
+        updateDoc.status = "Stopping #{service}" if mappedState is 'stopping'
 
-      Instances.upsert search, $set: updateDoc
+        Instances.upsert search, $set: updateDoc
+      else if type is 'net'
+        updateDoc = name: name
+        service = labels['bigboat/service/name']
+        updateDoc["services.#{service}.network"] = mappedState
+        console.log 'WAAAA', type, updateDoc
+        Instances.upsert {name: name}, $set: updateDoc
+      else console.log 'unknown container type', type
 
   #
   # Updates the internal state based on image pulls
