@@ -80,6 +80,7 @@ module.exports =
           updateDoc.app = name: appName, version: appVersion
 
       updateDoc.startedBy = startedBy if startedBy = labels['bigboat/startedBy']
+      updateDoc.storageBucket = storageBucket if storageBucket = labels['bigboat/storage/bucket']
 
       updateDoc['agent.url'] = val if val = labels['bigboat/agent/url']
 
