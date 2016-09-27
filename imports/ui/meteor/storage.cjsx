@@ -6,11 +6,11 @@ StorageBucketList   = require '../storage/bucketList.cjsx'
 
 
 module.exports = createContainer (props) ->
-  instances = Instances?.find({}, {fields: {name: 1, 'meta.storageBucket': 1}}).fetch()
+  instances = Instances?.find({}, {fields: {name: 1, 'storageBucket': 1}}).fetch()
   usage = {}
-  for instance in instances when instance.meta.storageBucket
-    usage[instance.meta.storageBucket] ?= []
-    usage[instance.meta.storageBucket].push instance.name
+  for instance in instances when instance.storageBucket
+    usage[instance.storageBucket] ?= []
+    usage[instance.storageBucket].push instance.name
   buckets: StorageBuckets?.find({name: {$regex: props.filter or '', $options: 'i'}}, sort: name: 1).map (bucket) ->
     _.extend bucket,
       usedBy: usage[bucket.name]
