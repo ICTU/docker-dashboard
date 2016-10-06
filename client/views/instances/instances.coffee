@@ -1,4 +1,4 @@
-Instance = require '/imports/ui/instance.cjsx'
+InstancesPage = require '/imports/ui/pages/instancesPage.cjsx'
 activeLogs = new ReactiveVar null
 
 isStateOk = (instance) ->
@@ -17,7 +17,7 @@ Template.instances.helpers
       Instances.find {}, sort: key: 1
   isSearching: -> Session.get('queryName')?.length
   searchTerms: -> Session.get 'queryName'
-  Instance: -> Instance
+  InstancesPage: -> InstancesPage
   activityIcon: ->
     # else if "#{@meta?.state}".match /pulling/
     #   'download'

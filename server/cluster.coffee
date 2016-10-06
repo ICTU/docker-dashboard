@@ -88,7 +88,7 @@ findAppDef = (name, version) ->
         'bigboat/application/version': version
         'bigboat/agent/url': agentUrl
         'bigboat/startedBy': user._id
-        'bigboat/storage/bucket': options.storageBucket
+      service.labels['bigboat/storage/bucket'] = b if b = options.storageBucket
       service.restart = 'unless-stopped'
 
     console.log 'xxx', definition

@@ -1,0 +1,36 @@
+<template name="instances_back">
+<div class="container instances">
+  <div class="row">
+    <div class="col-sm-12">
+      <div id="searchbox-container" class="row">
+        <div class="col-md-8"><h1 class="pageTitle"><i class="material-icons">content_copy</i> Instances</h1></div>
+        <div class="col-md-4">
+          {{> filterBox sessionVar='queryName'}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="content-row" class="row">
+    <div id="page-menu" class="col-md-3">
+      {{#if isAuthenticated}}
+      <ul class="nav nav-stacked">
+        <li><a href="{{pathFor 'apps'}}"><i class="glyphicon glyphicon-lg glyphicon-plus"></i> New Instance</a></li>
+      </ul>
+      {{/if}}
+    </div>
+    <div id="instances-container" class="col-md-9">
+
+      {{#each instances}}
+        {{> instanceView }}
+      {{/each}}
+
+      {{#if isSearching}}
+      <div class="searchInfo">
+        Showing results for: "{{searchTerms}}" <br />
+        <button id="reset" type="button" class="btn btn-link">- reset -</button>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</div>
+</template>

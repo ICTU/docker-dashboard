@@ -1,102 +1,106 @@
 <template name="base-layout">
-  <!-- Header -->
-  <div id="top-nav" class="navbar navbar-default navbar-fixed-top"
-    style="box-shadow: 0px -10px 25px 1px #3A4862; background-color: white">
-    {{#if hellobar}}
-    <div id='hellobar'>
-      <p class='hellobar-text'>{{{hellobar}}}</p>
-    </div>
-    {{/if}}
-    <div class="container">
-      <div class="navbar-header" >
-        <a class="navbar-brand" style="margin-top: -10px;" href="/"><img title="Big Boat {{appVersion}} shipping for {{projectName}}" style="width: 95px;" src="/img/logo.png" /></a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li><a href="{{pathFor 'apps'}}">Apps</a></li>
-          <li><a href="{{pathFor 'instances'}}">Instances</a></li>
-          <li><a href="{{pathFor 'storage'}}">Storage</a></li>
-          <li><a href="{{pathFor 'appstore'}}">App Store</a></li>
-          <li><a href="{{pathFor 'config'}}">Configuration</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <li><div class="led {{statusColor}} pull-left" style="margin-top:21px"></div><a href="{{pathFor 'status'}}">Status</a></li>
-          {{#if isAdminBoard}}
-          {{#if isAuthenticated}}
-          <li class="dropdown">
-            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-              <i style="font-size:12px;" class="glyphicon glyphicon-king"></i>
-              SuperUser :: {{session 'targetHost'}}/{{session 'targetVlan'}}
-              <span class="caret"></span>
-            </a>
-            <form role="form" id="super-user-form" class="dropdown-menu dropdown-menu-right" style="padding:1em; width:250px;">
-                <div class="form-group">
-                  <label for="vlan">VLAN</label>
-                  <input name="vlan" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="targetHost">Target host</label>
-                  <input name="targetHost" class="form-control">
-                </div>
-                <button type="submit" hidden>Set</button>
-            </form>
-          </li>
-          {{/if}}
-          {{/if}}
-          <li class="dropdown">
-            <a id="messagesMenuItem" class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-              <i style="font-size:12px;" class="glyphicon glyphicon-list"></i> Events
-            </a>
-          </li>
-          {{#if userAccountsEnabled}}
-          <li class="dropdown">
-            {{#if currentUser}}
-            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-              <img class="avatar" src="{{gravatarUrl}}"> {{currentUser.username}} <span class="caret"></span>
-            </a>
-            <ul id="g-account-menu" class="dropdown-menu" role="menu">
-              <li><a id="logOut" href="#"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+  <div class="wrapper">
+    <!-- Header -->
+    <div class="main-panel" style="float:none; width:100%; overflow: visible;">
+
+      <div id="top-nav" class="navbar navbar-default navbar-fixed" style="margin:0px">
+        {{#if hellobar}}
+        <div id='hellobar'>
+          <p class='hellobar-text'>{{{hellobar}}}</p>
+        </div>
+        {{/if}}
+        <div class="container">
+          <div class="navbar-header" >
+            <a class="navbar-brand" style="margin-top: -10px;" href="/"><img title="Big Boat {{appVersion}} shipping for {{projectName}}" style="width: 95px;" src="/img/logo.png" /></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li><a href="{{pathFor 'apps'}}">Apps</a></li>
+              <li><a href="{{pathFor 'instances'}}">Instances</a></li>
+              <li><a href="{{pathFor 'storage'}}">Storage</a></li>
+              <li><a href="{{pathFor 'appstore'}}">App Store</a></li>
+              <li><a href="{{pathFor 'config'}}">Configuration</a></li>
             </ul>
-            {{else}}
-            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-              <i class="glyphicon glyphicon-user"></i> Log In <span class="caret"></span>
-            </a>
-            <div id="g-account-menu" class="dropdown-menu" style="padding-right:30px;padding-left:30px">
-              <form class="form" id="formLogin">
-                <div class="form-group row">
-                  <div class="col-sm-15" style="margin:5px">
-                    <input name="username" id="username" class="form-control" placeholder="Username" type="text">
-                  </div>
-                  <div class="col-sm-15" style="margin:5px">
-                    <input name="password" id="password" class="form-control" placeholder="Password" type="password"><br>
-                  </div>
-                  <div class="col-sm-offset-2 col-sm-15">
-                    <button type="submit" id="btnLogin" class="btn btn-info">Log In</button>
-                  </div>
+            <ul class="nav navbar-nav navbar-right">
+              <li><div class="led {{statusColor}} pull-left" style="margin-top:21px"></div><a href="{{pathFor 'status'}}">Status</a></li>
+              {{#if isAdminBoard}}
+              {{#if isAuthenticated}}
+              <li class="dropdown">
+                <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                  <i style="font-size:12px;" class="glyphicon glyphicon-king"></i>
+                  SuperUser :: {{session 'targetHost'}}/{{session 'targetVlan'}}
+                  <span class="caret"></span>
+                </a>
+                <form role="form" id="super-user-form" class="dropdown-menu dropdown-menu-right" style="padding:1em; width:250px;">
+                    <div class="form-group">
+                      <label for="vlan">VLAN</label>
+                      <input name="vlan" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label for="targetHost">Target host</label>
+                      <input name="targetHost" class="form-control">
+                    </div>
+                    <button type="submit" hidden>Set</button>
+                </form>
+              </li>
+              {{/if}}
+              {{/if}}
+              <li class="dropdown">
+                <a id="messagesMenuItem" class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                  <i style="font-size:12px;" class="glyphicon glyphicon-list"></i> Events
+                </a>
+              </li>
+              {{#if userAccountsEnabled}}
+              <li class="dropdown">
+                {{#if currentUser}}
+                <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                  <img class="avatar" src="{{gravatarUrl}}"> {{currentUser.username}} <span class="caret"></span>
+                </a>
+                <ul id="g-account-menu" class="dropdown-menu" role="menu">
+                  <li><a id="logOut" href="#"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+                </ul>
+                {{else}}
+                <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                  <i class="glyphicon glyphicon-user"></i> Log In <span class="caret"></span>
+                </a>
+                <div id="g-account-menu" class="dropdown-menu" style="padding-right:30px;padding-left:30px">
+                  <form class="form" id="formLogin">
+                    <div class="form-group row">
+                      <div class="col-sm-15" style="margin:5px">
+                        <input name="username" id="username" class="form-control" placeholder="Username" type="text">
+                      </div>
+                      <div class="col-sm-15" style="margin:5px">
+                        <input name="password" id="password" class="form-control" placeholder="Password" type="password"><br>
+                      </div>
+                      <div class="col-sm-offset-2 col-sm-15">
+                        <button type="submit" id="btnLogin" class="btn btn-info">Log In</button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
-              </form>
-            </div>
-            {{/if}}
-          </li>
-          {{/if}}
-        </ul>
+                {{/if}}
+              </li>
+              {{/if}}
+            </ul>
+          </div>
+        </div><!-- /container -->
       </div>
-    </div><!-- /container -->
+      <!-- /Header -->
+
+      {{> notices}}
+
+      {{> sAlert}}
+
+      <div class="content-container" style="height: calc(100% - 65px);">
+        {{#if hellobar}}<div class="hellobar-container-padding"></div>{{/if}}
+        {{> yield}}
+      </div>
+
+      <div>{{> React component=EventsListView onRender=_hack_getAccessToEventsListView }}</div>
+
+      <!-- footer class="text-center">Another awesome product of IQT</footer -->
+    </div>
   </div>
-  <!-- /Header -->
-
-  {{> notices}}
-
-  {{> sAlert}}
-
-  <div class="content-container">
-    {{#if hellobar}}<div class="hellobar-container-padding"></div>{{/if}}
-    {{> yield}}
-  </div>
-
-  <div>{{> React component=EventsListView onRender=_hack_getAccessToEventsListView }}</div>
-
-  <!-- footer class="text-center">Another awesome product of IQT</footer -->
 </template>
 
 <template name="open">
@@ -104,6 +108,7 @@
 </template>
 
 <template name="notices">
+    {{#if notices}}
     <div class="container">
         {{#each notices}}
             <div class="row">
@@ -113,4 +118,5 @@
             </div>
         {{/each}}
     </div>
+    {{/if}}
 </template>
