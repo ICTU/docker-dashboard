@@ -1,3 +1,5 @@
+# selectedAppDef = new ReactiveVar null
+
 appDefTemplate =
   name: 'appName'
   version: 'appVersion'
@@ -14,6 +16,7 @@ appSearch = ->
   filterObj
 
 Template.apps.helpers
+  # selectedAppDef: -> selectedAppDef.get()
   appNames: -> _.uniq(ApplicationDefs.find(appSearch(), sort: name: 1).map (ad) -> ad.name)
   appDefCount: -> ApplicationDefs.find(name: "#{@}").count()
   appDefs: -> ApplicationDefs.find {name: "#{@}"}, sort: version: 1
@@ -21,7 +24,6 @@ Template.apps.helpers
   filterByTag: -> Session.get 'filterByTag'
   multipleSearchTerms: -> Session.get('queryAppName')?.length and Session.get 'filterByTag'
   appDefTemplate: -> appDefTemplate
-  hash: -> CryptoJS.MD5 "#{@name}#{@version}"
   appTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find(name: "#{@}").map (ad) -> ad.tags if ad.tags)), undefined)
   allTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find().map (ad) -> ad.tags if ad.tags)), undefined)
   searchTerms: -> Session.get 'queryAppName'
@@ -35,7 +37,7 @@ Template.apps.events
     Session.set 'queryAppName', null
     Session.set 'filterByTag', null
   'save-app-def': (e, tpl) ->
-    Meteor.call 'saveApp', e.yaml.parsed.name, e.yaml.parsed.version, e.yaml.raw
+    Meteor.call 'saveApp', e.bigBoatCompose.parsed.name, e.bigBoatCompose.parsed.version, e.dockerCompose, e.bigBoatCompose
   'click .filterByTag': -> Session.set 'filterByTag', "#{@}"
 
 Template.appActions.helpers
@@ -54,6 +56,10 @@ Template.appActions.helpers
       []
 
 Template.appActions.events
+  'click #editButton': (e, tpl) ->
+    console.log 'editButton', @
+    Session.set 'selectedAppDef', (_.pick @, 'bigboatCompose', 'dockerCompose')
+
   'submit #start-app-form': (e, tpl) ->
     e.preventDefault()
     name = tpl.$('.instance-name').val()

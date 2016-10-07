@@ -161,12 +161,13 @@ findAppDef = (name, version) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
     Instances.remove project: project, name: instance
 
-  saveApp: (name, version, definition) ->
-    ApplicationDefs.upsert {name: "#{name}", version: "#{version}"},
+  saveApp: (name, version, dockerCompose, bigBoatCompose) ->
+    ApplicationDefs.upsert {name: "#{name}", version: "#{version}"}, $set:
       name: "#{name}"
       version: "#{version}"
-      def: definition
-      tags: Helper.extractTags definition
+      dockerCompose: dockerCompose.raw
+      bigBoatCompose: bigBoatCompose.raw
+      # tags: Helper.extractTags definition
 
   retrieveApp: (name, version) ->
     ApplicationDefs.find({name: "#{name}", version: "#{version}"}, {fields: {"def":1, "_id":0}}).map (app) -> app.def

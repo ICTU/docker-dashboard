@@ -1,3 +1,5 @@
+yaml      = require 'js-yaml'
+
 Migrations.add
   version: 1
   name: 'Gets instance info from ETCD.'
@@ -21,5 +23,30 @@ Migrations.add
     Instances.find('storageBucket': $exists: false).forEach (inst) ->
       Instances.update {_id: inst._id}, $set:
         'storageBucket': inst.name
+  down: ->
 
-Meteor.startup -> Migrations.migrateTo('latest')
+Migrations.add
+  version: 5
+  name: 'Separate Big Boat Compose from the Docker Compose'
+  down: ->
+  up: ->
+    ApplicationDefs.find().forEach (ad) ->
+      try
+        def = yaml.safeLoad ad.def
+        bigboatCompose = _.pick def, 'name', 'version', 'description', 'pic'
+
+        for service, val of _.omit def, 'name', 'version', 'description', 'pic'
+          bigBoatService = _.pick val, 'enable_ssh', 'endpoint', 'protocol', 'map_docker'
+          bigBoatService['map_docker'] = v if v = val.mapDocker
+          bigboatCompose[service] = bigBoatService if Object.keys(bigBoatService).length
+        ad.bigboatCompose = yaml.safeDump bigboatCompose
+
+        composeDef = _.filter ad.def.split('\n'), (line) ->
+          not line.match /(^name|^version|^description|^pic|enable_ssh|endpoint|protocol|mapDocker|map_docker): /
+        ad.dockerCompose = (composeDef.join '\n').trim()
+
+        ApplicationDefs.update ad._id, ad
+      catch err
+        console.error 'ERR', err
+
+Meteor.startup -> Migrations.migrateTo('5')
