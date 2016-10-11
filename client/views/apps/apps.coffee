@@ -1,4 +1,4 @@
-# selectedAppDef = new ReactiveVar null
+AppEditor = require '/imports/ui/apps/AppEditor.cjsx'
 
 appDefTemplate =
   name: 'appName'
@@ -16,7 +16,8 @@ appSearch = ->
   filterObj
 
 Template.apps.helpers
-  # selectedAppDef: -> selectedAppDef.get()
+  AppEditor: -> AppEditor
+  selectedAppDefId: -> Session.get 'selectedAppDefId'
   appNames: -> _.uniq(ApplicationDefs.find(appSearch(), sort: name: 1).map (ad) -> ad.name)
   appDefCount: -> ApplicationDefs.find(name: "#{@}").count()
   appDefs: -> ApplicationDefs.find {name: "#{@}"}, sort: version: 1
@@ -27,6 +28,7 @@ Template.apps.helpers
   appTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find(name: "#{@}").map (ad) -> ad.tags if ad.tags)), undefined)
   allTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find().map (ad) -> ad.tags if ad.tags)), undefined)
   searchTerms: -> Session.get 'queryAppName'
+  activeRowCss: -> if @_id is Session.get 'selectedAppDefId' then 'active' else ''
 
 
 Template.apps.events
@@ -39,6 +41,8 @@ Template.apps.events
   'save-app-def': (e, tpl) ->
     Meteor.call 'saveApp', e.bigBoatCompose.parsed.name, e.bigBoatCompose.parsed.version, e.dockerCompose, e.bigBoatCompose
   'click .filterByTag': -> Session.set 'filterByTag', "#{@}"
+  'click .appRow': -> Session.set 'selectedAppDefId', @_id
+
 
 Template.appActions.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
@@ -56,10 +60,6 @@ Template.appActions.helpers
       []
 
 Template.appActions.events
-  'click #editButton': (e, tpl) ->
-    console.log 'editButton', @
-    Session.set 'selectedAppDef', (_.pick @, 'bigboatCompose', 'dockerCompose')
-
   'submit #start-app-form': (e, tpl) ->
     e.preventDefault()
     name = tpl.$('.instance-name').val()

@@ -41,3 +41,7 @@
 .apps.container #content-row {
   margin-top: 75px;
 }
+
+.apps.container .appRow:hover {
+  cursor: pointer;
+}

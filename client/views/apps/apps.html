@@ -46,7 +46,7 @@
               <table class="table table-hover">
                 <tbody>
                   {{#each appDefs}}
-                  <tr id="controlPanel-{{name}}-{{version}}">
+                  <tr class="appRow {{activeRowCss}}" id="controlPanel-{{name}}-{{version}}">
                     <th scope="row" style="width:250px; padding: 20px;">
                       {{version}}
                     </th>
@@ -72,8 +72,6 @@
 
       {{/each}}
 
-      {{> editAppDefBox}}
-
       {{#if isSearching}}
       <div class="searchInfo">
         Showing apps matching:
@@ -93,7 +91,11 @@
 
     </div>
     <div class="col-md-8">
-      editor here
+      {{#if selectedAppDefId}}
+      <span>{{> React component=AppEditor appId=selectedAppDefId }}</span>
+      {{else}}
+        Select app def
+      {{/if}}
     </div>
 
   </div>
@@ -139,9 +141,7 @@
       </form>
 
     </li>
-    <li><a title="Edit" id="editButton" href="#" data-toggle="modal" data-target="#editbox"><i class="glyphicon glyphicon-lg glyphicon-cog"></i></a></li>
     <li class="btn-group">
-
       <a title="Remove" href="#" class="dropdown-toggle" data-toggle="dropdown">
         <i class="glyphicon glyphicon-lg glyphicon-trash"></i>
       </a>
