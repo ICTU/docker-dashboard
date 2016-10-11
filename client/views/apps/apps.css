@@ -28,11 +28,6 @@
   margin-right:5px;
 }
 
-.apps.container #page-menu {
-  position: fixed;
-  width: 300px;
-}
-
 .apps.container #searchbox-container {
   position: fixed;
   top: 50px;
@@ -45,8 +40,4 @@
 
 .apps.container #content-row {
   margin-top: 75px;
-}
-
-.apps.container #apps-container {
-  margin-left: 300px
 }
