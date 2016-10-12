@@ -1,4 +1,4 @@
-AppEditor = require '/imports/ui/apps/AppEditor.cjsx'
+AppEditor = require '/imports/ui/meteor/AppEditor.cjsx'
 
 appDefTemplate =
   name: 'appName'
