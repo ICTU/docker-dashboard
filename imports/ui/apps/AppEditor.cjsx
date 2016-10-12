@@ -9,9 +9,6 @@ require 'brace/theme/chrome'
 module.exports = React.createClass
   displayName: 'AppEditor'
 
-  getInitialState: ->
-    composeAnnotations: []
-
   onChange: (newValue) ->
     try
       parsed: jsyaml.load newValue
@@ -26,15 +23,12 @@ module.exports = React.createClass
       ]
 
   render: ->
-    console.log 'ace', AceEditor
-    console.log 'composeAnnotations', @state.composeAnnotations
     if @props.dockerCompose and @props.bigboatCompose
       <span>
         <h4>Docker Compose</h4>
         <AceEditor ref='composeEditor' name='composeEditor' width='100%' minLines=25 maxLines=25
           enableBasicAutocompletion=true enableLiveAutocompletion=true enableSnippets=true
-          mode='yaml' theme='chrome' value={@props.dockerCompose}
-          onChange={@onChange} annotations={@state.composeAnnotations}/>
+          mode='yaml' theme='chrome' value={@props.dockerCompose} onChange={@onChange} setOptions={wrap:true} />
 
         <h4>Bigboat Compose</h4>
         <AceEditor name='bigboatEditor' width='100%' minLines=25 maxLines=25 mode='yaml' theme='chrome' value={@props.bigboatCompose} onChange={@onChange}/>
