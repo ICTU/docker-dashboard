@@ -6,9 +6,21 @@ ComposeAceEditor    = require './ComposeAceEditor.cjsx'
 module.exports = React.createClass
   displayName: 'AppEditor'
 
-  getInitialState: ->
-    dockerCompose: raw: @props.dockerCompose
-    bigboatCompose: raw: @props.bigboatCompose
+  loadYaml: (yaml) ->
+    try
+      jsyaml.load yaml
+    catch error
+      console.error 'Error parsing compose yaml', err
+
+  determineState: (props) ->
+    dockerCompose:
+      raw: props.dockerCompose
+      parsed: @loadYaml props.dockerCompose
+    bigboatCompose:
+      raw: props.bigboatCompose
+      parsed: @loadYaml props.bigboatCompose
+
+  getInitialState: -> @determineState @props
 
   onDockerComposeChange: (err, value) ->
       @setState dockerCompose: value
@@ -19,6 +31,9 @@ module.exports = React.createClass
   saveButtonDisabledClass: ->
     'disabled' unless @state.bigboatCompose and @state.dockerCompose
 
+  componentWillReceiveProps: (nextProps) ->
+    @setState @determineState nextProps
+
   save: ->
     if @state.bigboatCompose and @state.dockerCompose
       @props.onSave
@@ -26,6 +41,7 @@ module.exports = React.createClass
         bigboatCompose: @state.bigboatCompose
 
   render: ->
+    console.log 'render', @props
     if not @props.isLoading
       <span>
         <div style={height:50}>

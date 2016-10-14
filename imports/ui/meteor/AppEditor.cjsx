@@ -13,4 +13,5 @@ module.exports = createContainer (props) ->
   isLoading: not app?
   onSave: (data) ->
     console.log 'onSave',data, app?._id
+    Meteor.call 'saveApp', data.bigboatCompose.parsed.name, data.bigboatCompose.parsed.version, data.dockerCompose, data.bigboatCompose
 , AppEditor
