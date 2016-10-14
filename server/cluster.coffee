@@ -56,15 +56,11 @@ findAppDef = (name, version) ->
     agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
 
     # replace deprecated parameter substition
-    def = (findAppDef app, version).def
+    def = (findAppDef app, version).dockerCompose
     def = def.replace (new RegExp "\{\{", 'g'), '_#_'
     def = def.replace (new RegExp "\}\}", 'g'), '_#_'
 
     definition = YAML.load def
-    delete definition.name
-    delete definition.version
-    delete definition.pic
-    delete definition.description
 
     Instances.upsert {name: instance}, $set:
       images: (service.image for serviceName, service of definition)
@@ -161,13 +157,13 @@ findAppDef = (name, version) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
     Instances.remove project: project, name: instance
 
-  saveApp: (name, version, dockerCompose, bigBoatCompose) ->
+  saveApp: (name, version, dockerCompose, bigboatCompose) ->
     ApplicationDefs.upsert {name: "#{name}", version: "#{version}"}, $set:
       name: "#{name}"
       version: "#{version}"
       dockerCompose: dockerCompose.raw
-      bigBoatCompose: bigBoatCompose.raw
-      # tags: Helper.extractTags definition
+      bigboatCompose: bigboatCompose.raw
+      tags: Helper.extractTags bigboatCompose.raw
 
   retrieveApp: (name, version) ->
     ApplicationDefs.find({name: "#{name}", version: "#{version}"}, {fields: {"def":1, "_id":0}}).map (app) -> app.def
