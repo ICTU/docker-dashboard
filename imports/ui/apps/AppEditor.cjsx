@@ -1,37 +1,45 @@
 { Meteor }          = require 'meteor/meteor'
 { createContainer } = require 'meteor/react-meteor-data'
 React               = require 'react'
-AceEditor           = (require 'react-ace').default
-
-require 'brace/mode/yaml'
-require 'brace/theme/chrome'
+ComposeAceEditor    = require './ComposeAceEditor.cjsx'
 
 module.exports = React.createClass
   displayName: 'AppEditor'
 
-  onChange: (newValue) ->
-    try
-      parsed: jsyaml.load newValue
-      raw: newValue
-    catch err
-      line = if err.mark.line == @refs.composeEditor.editor.session.doc.getAllLines().length then err.mark.line - 1 else err.mark.line
-      @refs.composeEditor.editor.getSession().setAnnotations [
-        row: line
-        column: err.mark.column
-        text: err.reason
-        type: 'error'
-      ]
+  getInitialState: ->
+    dockerCompose: raw: @props.dockerCompose
+    bigboatCompose: raw: @props.bigboatCompose
+
+  onDockerComposeChange: (err, value) ->
+      @setState dockerCompose: value
+
+  onBigboatComposeChange: (err, value) ->
+      @setState bigboatCompose: value
+
+  saveButtonDisabledClass: ->
+    'disabled' unless @state.bigboatCompose and @state.dockerCompose
+
+  save: ->
+    if @state.bigboatCompose and @state.dockerCompose
+      @props.onSave
+        dockerCompose: @state.dockerCompose
+        bigboatCompose: @state.bigboatCompose
 
   render: ->
-    if @props.dockerCompose and @props.bigboatCompose
+    if not @props.isLoading
       <span>
+        <div style={height:50}>
+          <h3 className="pull-left">{@props.name}:{@props.version}</h3>
+          <button onClick={@save} id="submitButton" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
+        </div>
+        <hr />
         <h4>Docker Compose</h4>
-        <AceEditor ref='composeEditor' name='composeEditor' width='100%' minLines=25 maxLines=25
-          enableBasicAutocompletion=true enableLiveAutocompletion=true enableSnippets=true
-          mode='yaml' theme='chrome' value={@props.dockerCompose} onChange={@onChange} setOptions={wrap:true} />
+        <ComposeAceEditor name='dockerCompose' compose={@props.dockerCompose} onChange={@onDockerComposeChange} />
 
+        <hr />
         <h4>Bigboat Compose</h4>
-        <AceEditor name='bigboatEditor' width='100%' minLines=25 maxLines=25 mode='yaml' theme='chrome' value={@props.bigboatCompose} onChange={@onChange}/>
+        <ComposeAceEditor name='bigboatCompose' compose={@props.bigboatCompose} onChange={@onBigboatComposeChange} />
+
       </span>
     else
       <span>loading...</span>
