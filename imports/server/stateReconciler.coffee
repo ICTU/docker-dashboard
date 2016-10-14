@@ -97,8 +97,7 @@ module.exports =
         updateDoc = name: name
         service = labels['bigboat/service/name']
         updateDoc["services.#{service}.network"] = mappedState
-        console.log 'WAAAA', type, updateDoc
-        Instances.upsert {name: name}, $set: updateDoc
+        Instances.update {name: name}, $set: updateDoc
       else console.log 'unknown container type', type
 
   #
