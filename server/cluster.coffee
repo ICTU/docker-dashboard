@@ -29,7 +29,7 @@ findAppDef = (name, version) ->
     HTTP.put "#{pickAgent()}/storage?access_token=#{Settings.get('agentAuthToken')}", data: name: destination, source: source
 
 
-  startApp: (app, version, instance, parameters, options = {}) ->
+  startApp: (app, version, instance, parameters = {}, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
       throw new Meteor.Error "Application #{app}:#{version} does not exist"
 
@@ -56,9 +56,13 @@ findAppDef = (name, version) ->
     agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
 
     # replace deprecated parameter substition
-    def = (findAppDef app, version).dockerCompose
-    def = def.replace (new RegExp "\{\{", 'g'), '_#_'
-    def = def.replace (new RegExp "\}\}", 'g'), '_#_'
+    appDef = (findAppDef app, version)
+    def = appDef.dockerCompose
+    bigboatCompose =  YAML.load  appDef.bigboatCompose
+
+    for key, value of parameters
+      rex = new RegExp "{{#{key}}}", 'g'
+      def = def.replace rex, value
 
     definition = YAML.load def
 
@@ -85,6 +89,8 @@ findAppDef = (name, version) ->
         'bigboat/agent/url': agentUrl
         'bigboat/startedBy': user._id
         'bigboat/storage/bucket': options.storageBucket
+        'bigboat/instance/endpoint': bigboatCompose[serviceName]?.endpoint
+        'bigboat/instance/endpoint/protocol': bigboatCompose[serviceName]?.protocol
       service.restart = 'unless-stopped'
 
     console.log 'xxx', definition
@@ -98,6 +104,7 @@ findAppDef = (name, version) ->
           name: app
           version: version
           definition: definition
+          bigboatCompose: bigboatCompose
           parameter_key: '_#_'
         instance:
           name: instance
