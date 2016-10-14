@@ -6,11 +6,9 @@
         <div id="searchbox-container" class="row">
           <div class="col-md-2"><h3 class="pageTitle"><i class="material-icons">apps</i> Apps</h3></div>
           <div class="col-md-6">
-            <ul class="nav">
+            <ul class="nav navbar-nav">
               {{#if isAuthenticated}}
-              {{#with appDefTemplate}}
-              <li><a title="New App" href="#" data-toggle="modal" data-target="#editbox"><i class="glyphicon glyphicon-lg glyphicon-plus"></i> New App</a></li>
-              {{/with}}
+              <li style='margin-top:10px'><a title="New App" id='newAppLink' href="#"><i class="glyphicon glyphicon-lg glyphicon-plus"></i> New App</a></li>
               <!-- <hr> -->
               {{/if}}
               {{#each allTags}}
@@ -92,7 +90,11 @@
     </div>
     <div class="col-md-8">
       {{#if selectedAppDefId}}
-      <span>{{> React component=AppEditor appId=selectedAppDefId }}</span>
+        {{#if isNewApp}}
+          <span>{{> React component=AppEditor newApp=true }}</span>
+        {{else}}
+        <span>{{> React component=AppEditor appId=selectedAppDefId }}</span>
+        {{/if}}
       {{else}}
         Select app def
       {{/if}}

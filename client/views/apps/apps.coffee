@@ -1,10 +1,5 @@
 AppEditor = require '/imports/ui/meteor/AppEditor.cjsx'
 
-appDefTemplate =
-  name: 'appName'
-  version: 'appVersion'
-  def: 'name: appName\nversion: appVersion\n\nservice:\n  image: image:version'
-
 appSearch = ->
   filterObj = {}
   if Session.get('queryAppName')?.length
@@ -18,6 +13,7 @@ appSearch = ->
 Template.apps.helpers
   AppEditor: -> AppEditor
   selectedAppDefId: -> Session.get 'selectedAppDefId'
+  isNewApp: ->  'newApp' is Session.get 'selectedAppDefId'
   appNames: -> _.uniq(ApplicationDefs.find(appSearch(), sort: name: 1).map (ad) -> ad.name)
   appDefCount: -> ApplicationDefs.find(name: "#{@}").count()
   appDefs: -> ApplicationDefs.find {name: "#{@}"}, sort: version: 1
@@ -42,6 +38,7 @@ Template.apps.events
     Meteor.call 'saveApp', e.bigBoatCompose.parsed.name, e.bigBoatCompose.parsed.version, e.dockerCompose, e.bigBoatCompose
   'click .filterByTag': -> Session.set 'filterByTag', "#{@}"
   'click .appRow': -> Session.set 'selectedAppDefId', @_id
+  'click #newAppLink': -> Session.set 'selectedAppDefId', 'newApp'
 
 
 Template.appActions.helpers
