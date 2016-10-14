@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/ICTU/docker-dashboard#readme",
   "dependencies": {
+    "brace": "^0.8.0",
     "bufferutil": "^1.2.1",
     "clipboard": "^1.5.10",
     "meteor-node-stubs": "^0.2.3",
@@ -31,6 +32,7 @@
     "mqtt": "^1.14.1",
     "node-etcd": "^4.2.1",
     "react": "^15.0.2",
+    "react-ace": "^3.6.1",
     "react-addons-create-fragment": "^15.0.2",
     "react-addons-css-transition-group": "^15.0.2",
     "react-addons-linked-state-mixin": "^15.0.2",
