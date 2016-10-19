@@ -39,8 +39,8 @@ ProductDetails = React.createClass
     @refs.applicationDefinition.setEditorValue app.def
   installApp: ->
     app = @state.selectedApp
-    Meteor.call 'saveApp', app.name, app.version, app.def, =>
-      console.log 'saveAppDone'
+    def = Utils.AppDef.toCompose app
+    Meteor.call 'saveApp', app.name, app.version, {raw: def.dockerCompose}, {raw: def.bigboatCompose}, =>
       $(@refs.modal).modal 'hide'
 
   componentDidMount: ->

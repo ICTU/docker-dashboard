@@ -41,7 +41,6 @@ module.exports = React.createClass
         bigboatCompose: @state.bigboatCompose
 
   render: ->
-    console.log 'render', @props
     if not @props.isLoading
       <span>
         <div style={height:50}>

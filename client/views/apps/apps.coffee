@@ -50,7 +50,9 @@ Template.appActions.helpers
     else
       ''
   parameters: ->
-    params = @dockerCompose.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
+    unless @dockerCompose
+      console.error "Cannot find Docker Compose content for #{@name}:#{@version}"
+    params = @dockerCompose?.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
     if params?.length
       _.uniq(params.map (p) -> p.replace('{{', '').trim())
     else
