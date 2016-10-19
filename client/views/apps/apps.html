@@ -6,9 +6,9 @@
         <div id="searchbox-container" class="row">
           <div class="col-md-2"><h3 class="pageTitle"><i class="material-icons">apps</i> Apps</h3></div>
           <div class="col-md-6">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" style='margin-top:10px'>
               {{#if isAuthenticated}}
-              <li style='margin-top:10px'><a title="New App" id='newAppLink' href="#"><i class="glyphicon glyphicon-lg glyphicon-plus"></i> New App</a></li>
+              <li><a title="New App" id='newAppLink' href="#"><i class="glyphicon glyphicon-lg glyphicon-plus"></i> New App</a></li>
               <!-- <hr> -->
               {{/if}}
               {{#each allTags}}
@@ -23,7 +23,7 @@
       </div>
   </div>
   <div id="content-row" class="row">
-    <div id="apps-container" class="col-md-4">
+    <div id="apps-container" class="col-md-4" style='margin-top:10px'>
       {{#each appNames}}
       <div class="panel panel-default">
         <div class="panel-heading">
