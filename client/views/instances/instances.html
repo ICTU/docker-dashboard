@@ -22,6 +22,8 @@
 
       {{#each instances}}
         {{> instanceView }}
+      {{else}}
+        <h3 style="text-align:center">Nothing to see, yet...</h3>
       {{/each}}
 
       {{#if isSearching}}
