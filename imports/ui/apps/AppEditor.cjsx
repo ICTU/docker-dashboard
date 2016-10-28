@@ -54,7 +54,12 @@ module.exports = React.createClass
         <hr />
         <h4>Bigboat Compose</h4>
         <ComposeAceEditor name='bigboatCompose' compose={@props.bigboatCompose} onChange={@onBigboatComposeChange} />
-
+        <hr />
+        <div style={height:50, marginBottom:25}>
+          <button onClick={@save} id="submitButtonBottom" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
+        </div>
       </span>
     else
-      <span>loading...</span>
+      <h3 style={textAlign: 'center'}>
+        Please, select an application definition from the list on the left.
+      </h3>
