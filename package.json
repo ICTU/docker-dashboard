@@ -28,6 +28,7 @@
     "bufferutil": "^1.2.1",
     "clipboard": "^1.5.10",
     "js-yaml": "^3.6.1",
+    "lodash": "^4.16.4",
     "meteor-node-stubs": "^0.2.3",
     "mongo-dot-notation": "^1.0.5",
     "mqtt": "^1.14.1",
