@@ -34,7 +34,6 @@ findAppDef = (name, version) ->
       throw new Meteor.Error "Application #{app}:#{version} does not exist"
 
     project = Settings.get('project')
-    options = _.extend {"dataDir": Settings.get('dataDir')}, options
 
     options.storageBucket =
       if bucket = options.storageBucket
@@ -66,6 +65,7 @@ findAppDef = (name, version) ->
 
     definition = YAML.load def
 
+
     Instances.upsert {name: instance}, $set:
       images: (service.image for serviceName, service of definition)
       compose: definition
@@ -80,36 +80,51 @@ findAppDef = (name, version) ->
     # though Docker events and inspect information.
     # This way we can relate containers and events
     for serviceName, service of definition
-      service.labels =
-        'bigboat/instance/name': instance
-        'bigboat/service/name': serviceName
-        'bigboat/container/type': 'service'
-        'bigboat/application/name': app
-        'bigboat/application/version': version
-        'bigboat/agent/url': agentUrl
-        'bigboat/startedBy': user._id
-        'bigboat/storage/bucket': options.storageBucket
-        'bigboat/instance/endpoint': bigboatCompose[serviceName]?.endpoint
-        'bigboat/instance/endpoint/protocol': bigboatCompose[serviceName]?.protocol
+      service.container_name = "#{project}-#{instance}-#{serviceName}"
       service.restart = 'unless-stopped'
+      service.labels =
+        'bigboat.instance.name': instance
+        'bigboat.service.name': serviceName
+        'bigboat.service.type': 'service'
+        'bigboat.application.name': app
+        'bigboat.application.version': version
+        'bigboat.agent.url': agentUrl
+        'bigboat.startedBy': user._id
+        'bigboat.storage.bucket': options.storageBucket
+        'bigboat.instance.endpoint.path': bigboatCompose[serviceName]?.endpoint
+        'bigboat.instance.endpoint.protocol': bigboatCompose[serviceName]?.protocol
+        'bigboat.container.map_docker':  if bigboatCompose[serviceName]?.map_docker then 'true' else undefined
+        'bigboat.container.enable_ssh':  if bigboatCompose[serviceName]?.enable_ssh then 'true' else undefined
+
+      if bigboatCompose[serviceName].enable_ssh
+        definition["bb-ssh-#{serviceName}"] =
+          image: 'jeroenpeeters/docker-ssh'
+          container_name: "#{project}-#{instance}-#{serviceName}-ssh"
+          environment:
+            CONTAINER: "#{project}-#{instance}-#{serviceName}"
+            AUTH_MECHANISM: 'noAuth'
+            HTTP_ENABLED: 'false'
+            CONTAINER_SHELL: 'bash'
+          labels:
+            'bigboat.instance.name': instance
+            'bigboat.service.name': serviceName
+            'bigboat.service.type': 'ssh'
+            'bigboat.container.map_docker': 'true'
+          restart: 'unless-stopped'
 
     console.log 'xxx', definition
 
     callOpts =
       responseType: "buffer"
       data:
-        dir: dir
-
         app:
           name: app
           version: version
           definition: definition
           bigboatCompose: bigboatCompose
-          parameter_key: '_#_'
         instance:
           name: instance
-          options: _.extend({}, options, { project: project })
-          parameters: parameters
+          options: options
         bigboat:
           url: process.env.ROOT_URL
           statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instance}"
