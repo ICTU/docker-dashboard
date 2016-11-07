@@ -1,0 +1,115 @@
+FORMAT: 1A
+HOST: http://localhost:3000
+
+# Apps
+
+## App [/api/v2/apps/{name}/{version}]
+An application is a logical unit of application configuration data.
+
++ Parameters
+  + name: `nginx` (string) - The name of the application
+  + version: `latest` (string) - The version of the application
+
++ Model (application/json)
+
+  ```js
+  {
+    "id": "MKMZCnLcEJmkjSenJ",
+    "name": "nginx",
+    "version": "latest"
+  }
+  ```
+
+### Retrieve an App [GET]
+Returns a specific application.
+
++ Response 200
+
+    [App][]
+
++ Response 404
+
+### Create an App [PUT]
+Creates a new application with the specified name and version. Returns the
+App when succesfully created or updated.
+
++ Response 201
+
+    [App][]
+
+### Delete an App [DELETE]
+Delete an application.
+
++ Response 204
++ Response 404
+
+## Docker Compose [/api/v2/apps/{name}/{version}/files/dockerCompose]
+A Docker compose file associated with an application.
+
++ Parameters
+  + name: `nginx` (string) - The name of the application
+  + version: `latest` (string) - The version of the application
+
++ Model (text/yaml)
+
+        www:
+          image: nginx:latest
+
+### Retrieve the Docker compose file [GET]
+
++ Response 200
+  [Docker Compose][]
+
+### Update the Docker compose file [PUT]
+
++ Request
+  [Docker Compose][]
++ Response 201
+
+## BigBoat Compose [/api/v2/apps/{name}/{version}/files/bigboatCompose]
+A BigBoat compose file associated with an application.
+
++ Parameters
+  + name: `nginx` (string) - The name of the application
+  + version: `latest` (string) - The version of the application
+
++ Model (text/yaml)
+
+        name: nginx
+        version: latest
+
+        www:
+          enable_ssh: true
+
+### Retrieve the BigBoat compose file [GET]
+
++ Response 200
+  [Docker Compose][]
+
+### Update the BigBoat compose file [PUT]
+
++ Request
+  [BigBoat Compose][]
++ Response 201
+
+## Applications [/api/v2/apps]
+
++ Model (application/json)
+
+  ```js
+      "id": "MKMZCnLcEJmkjSenJ",
+      ...
+    },
+    {
+      "id": "LENn6QcjnG8WRvAxf",
+      ...
+    }
+  ]
+  ```
+
+### Retrieve all Applications [GET]
+Returns all applications.
+
++ Response 200
+
+  [Applications][]
