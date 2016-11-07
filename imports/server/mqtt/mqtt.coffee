@@ -5,6 +5,7 @@ mqttTopicHandlerMap =
   '/docker/events': Meteor.bindEnvironment require './docker/events.coffee'
   '/docker/container/inspect': Meteor.bindEnvironment require './docker/inspect.coffee'
   '/agent/docker/pulling': Meteor.bindEnvironment require './agent/pulling.coffee'
+  '/agent/storage/buckets': Meteor.bindEnvironment require './agent/storage.coffee'
 
 client = mqtt.connect Meteor.settings.mqtt.url
 client.on 'connect', ->

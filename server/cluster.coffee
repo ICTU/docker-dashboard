@@ -31,8 +31,7 @@ substituteParameters = (def, parameters) ->
 
 @Cluster = @Agent =
   listStorageBuckets: ->
-    res = HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
-    JSON.parse res.content
+    HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
   deleteStorageBucket: (name) ->
     HTTP.del "#{pickAgent()}/storage/#{name}?access_token=#{Settings.get('agentAuthToken')}"
   createStorageBucket: (name) ->
