@@ -17,6 +17,18 @@ findAppDef = (name, version) ->
     name: name
     version: version
 
+getUser = (userId) ->
+  if userId
+    user = Meteor.user()
+  else
+    user = userId: null, username: 'API'
+
+substituteParameters = (def, parameters) ->
+  for key, value of parameters
+    rex = new RegExp "{{#{key}}}", 'g'
+    def = def.replace rex, value
+  def
+
 @Cluster = @Agent =
   listStorageBuckets: ->
     HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
@@ -43,42 +55,32 @@ findAppDef = (name, version) ->
       else
         instance
 
-    dir = "#{Settings.get('project')}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.get('project')}."
 
-    if @userId
-      user = Meteor.user()
-    else
-      user = userId: null, username: 'API'
-
+    user = getUser @userId
     agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
-
-    # replace deprecated parameter substition
-    appDef = (findAppDef app, version)
-    def = appDef.dockerCompose
-    bigboatCompose =  YAML.load  appDef.bigboatCompose
-
-    for key, value of parameters
-      rex = new RegExp "{{#{key}}}", 'g'
-      def = def.replace rex, value
-
-    definition = YAML.load def
-
+    appDef = findAppDef app, version
+    dockerCompose = YAML.load substituteParameters appDef.dockerCompose, parameters
+    bigboatCompose = YAML.load appDef.bigboatCompose
 
     Instances.upsert {name: instance}, $set:
-      images: (service.image for serviceName, service of definition)
-      compose: definition
-      steps: _.flatten (for serviceName, service of definition
+      images: (service.image for serviceName, service of dockerCompose)
+      app:
+        name: app
+        version: version
+        dockerCompose: YAML.dump dockerCompose
+        bigboatCompose: YAML.dump bigboatCompose
+        parameters: parameters
+      steps: _.flatten (for serviceName, service of dockerCompose
         [ {type: 'pull', image: service.image, completed: false}
           {type: 'service', name: serviceName, completed: false} ]
         )
-
 
     # augment the compose file with bigboat specific Labels
     # these labels are later communicated back to the dashboard
     # though Docker events and inspect information.
     # This way we can relate containers and events
-    for serviceName, service of definition
+    for serviceName, service of dockerCompose
       service.container_name = "#{project}-#{instance}-#{serviceName}"
       service.restart = 'unless-stopped'
       service.labels =
@@ -95,8 +97,8 @@ findAppDef = (name, version) ->
         'bigboat.container.map_docker':  if bigboatCompose[serviceName]?.map_docker then 'true' else undefined
         'bigboat.container.enable_ssh':  if bigboatCompose[serviceName]?.enable_ssh then 'true' else undefined
 
-      if bigboatCompose[serviceName].enable_ssh
-        definition["bb-ssh-#{serviceName}"] =
+      if bigboatCompose[serviceName]?.enable_ssh
+        dockerCompose["bb-ssh-#{serviceName}"] =
           image: 'jeroenpeeters/docker-ssh'
           container_name: "#{project}-#{instance}-#{serviceName}-ssh"
           environment:
@@ -111,7 +113,7 @@ findAppDef = (name, version) ->
             'bigboat.container.map_docker': 'true'
           restart: 'unless-stopped'
 
-    console.log 'xxx', definition
+    console.log 'dockerCompose', dockerCompose
 
     callOpts =
       responseType: "buffer"
@@ -119,7 +121,7 @@ findAppDef = (name, version) ->
         app:
           name: app
           version: version
-          definition: definition
+          definition: dockerCompose
           bigboatCompose: bigboatCompose
         instance:
           name: instance
@@ -133,7 +135,6 @@ findAppDef = (name, version) ->
     HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
-      # Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
 
   stopInstance: (instanceName) ->
@@ -142,16 +143,17 @@ findAppDef = (name, version) ->
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.get('project')}."
     instance = Instances.findOne name: instanceName
     agentUrl = instance.agent.url
-    console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
+
+    appDef = (findAppDef instance.app.name, instance.app.version)
+
     callOpts =
       responseType: "buffer"
       data:
-        dir: "#{Settings.get('project')}-#{instanceName}"
-
         app:
           name: instance.app.name
           version: instance.app.version
-          definition: YAML.safeLoad (findAppDef instance.app.name, instance.app.version).def
+          definition: YAML.load instance.app.dockerCompose
+          bigboatCompose: YAML.load instance.app.bigboatCompose
         instance:
           name: instanceName
           options: _.extend({}, { project: Settings.get('project') })
@@ -159,21 +161,18 @@ findAppDef = (name, version) ->
           url: process.env.ROOT_URL
           statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instanceName}"
 
-    if @userId
-      user = Meteor.user()
-    else
-      user = userId: null, username: 'API'
+    user = getUser @userId
 
     Instances.upsert {name: instanceName}, $set:
       desiredState: 'stopped'
-      'meta.stoppedBy':
-        userId: user._id
-        username: user.username
+      stoppedBy: user._id
 
+    console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
     HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err
       console.log "Sent request to stop instance. Response from the agent is #{result.content}"
     ""
+
   clearInstance: (project, instance) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
     Instances.remove project: project, name: instance
