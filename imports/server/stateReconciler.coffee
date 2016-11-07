@@ -85,9 +85,8 @@ module.exports =
         properties = labelsToObject labels
         updateDoc =
           name: name
-          app:
-            name: properties.bigboat?.application?.name
-            version: properties.bigboat?.application?.version
+          'app.name': properties.bigboat?.application?.name
+          'app.version': properties.bigboat?.application?.version
           startedBy: properties.bigboat?.startedBy
           storageBucket: properties.bigboat?.storage?.bucket
           agent:
