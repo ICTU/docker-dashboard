@@ -3,10 +3,10 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-ecmascript
-es5-shim
-coffeescript
-http
+ecmascript@0.5.9
+es5-shim@4.6.15
+coffeescript@1.11.1_2
+http@1.2.10
 zimme:iron-router-active
 matb33:collection-hooks
 twbs:bootstrap
@@ -18,15 +18,15 @@ juliancwirko:s-alert-slide
 aldeed:autoform
 dburles:collection-helpers
 aldeed:collection2
-accounts-base
-accounts-password
+accounts-base@1.2.14
+accounts-password@1.3.1
 alanning:roles
 iron:router
 pntbr:js-yaml-client
 vsivsi:job-collection
 fourseven:scss
 momentjs:moment
-reactive-var
+reactive-var@1.0.11
 meteorhacks:ssr
 aramk:topsort
 udondan:yml
@@ -35,22 +35,22 @@ froatsnook:request
 gadicohen:prism
 zenorocha:clipboard
 ongoworks:bunyan-logger
-meteor-base
-mobile-experience
-mongo
+meteor-base@1.0.4
+mobile-experience@1.0.4
+mongo@1.1.14
 blaze-html-templates
-session
-jquery
-tracker
-logging
-reload
-random
-ejson
+session@1.1.7
+jquery@1.11.10
+tracker@1.1.1
+logging@1.1.16
+reload@1.1.11
+random@1.0.10
+ejson@1.0.13
 spacebars
-check
+check@1.2.4
 stevezhu:lodash
-standard-minifier-css
-standard-minifier-js
+standard-minifier-css@1.3.2
+standard-minifier-js@1.2.1
 percolate:migrations
 react-template-helper
 jhartma:cjsx
@@ -58,3 +58,4 @@ react-meteor-data
 kadira:dochead
 typ:accounts-ldap
 theduke:bootstrap-modal-prompt
+shell-server
