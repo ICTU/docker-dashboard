@@ -84,9 +84,12 @@ A BigBoat compose file associated with an application.
 ### Retrieve the BigBoat compose file [GET]
 
 + Response 200
-  [Docker Compose][]
+  [BigBoat Compose][]
 
 ### Update the BigBoat compose file [PUT]
+
+The `name` amd `version` properties of the BigBoat compose file will be automatically
+set to the value of the name and version of the Apps API endpoint.
 
 + Request
   [BigBoat Compose][]
