@@ -50,6 +50,7 @@ Meteor.startup ->
       path: '/storage'
       subscriptions: -> [
         Meteor.subscribe 'storage'
+        Meteor.subscribe 'datastores'
       ]
 
     @route 'status',

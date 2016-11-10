@@ -18,6 +18,13 @@ findAppDef = (name, version) ->
     version: version
 
 @Cluster = @Agent =
+  getStorageUsage: () ->
+    res = HTTP.get "#{pickAgent()}/storage/usage?access_token=#{Settings.get('agentAuthToken')}"
+    JSON.parse res.content
+  getStorageBucketSize: (id) ->
+    name = StorageBuckets.findOne(id)?.name
+    res = HTTP.get "#{pickAgent()}/storage/#{name}/size?access_token=#{Settings.get('agentAuthToken')}"
+    StorageBuckets.upsert {name: name}, $set: JSON.parse res.content
   listStorageBuckets: ->
     res = HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
     JSON.parse res.content

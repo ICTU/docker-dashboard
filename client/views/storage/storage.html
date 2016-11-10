@@ -11,6 +11,15 @@
     </div>
   </div>
   <div id="content-row" class="row" style="margin-top: 10px;">
+
+    {{#if datastore.name }}
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{datastore.percentage}};">
+        {{ prettyValue datastore.used }}/{{ prettyValue datastore.total }}
+      </div>
+    </div>
+    {{/if}}
+
     <div id="page-menu" class="col-md-4">
       {{#if isAuthenticated}}
       <form id="create-bucket-form" role="form">
@@ -26,7 +35,10 @@
     </div>
     <div id="buckets-container" class="col-md-8">
 
-      <span>{{> React component=Storage filter=nameFilter}}</span>
+      <div>
+        <span>{{> React component=Storage filter=nameFilter}}</span>
+        {{#if storageBuckets.count}}<button class="size-buckets btn btn-mini" style="outline: none;">Get bucket sizes</button>{{/if}}
+      </div>
 
       {{#if isSearching}}
       <div class="searchInfo">

@@ -28,6 +28,8 @@
     "meteor-node-stubs": "^0.2.3",
     "mongo-dot-notation": "^1.0.5",
     "node-etcd": "^4.2.1",
+    "pretty": "^1.0.0",
+    "prettysize": "0.0.3",
     "react": "^15.0.2",
     "react-addons-create-fragment": "^15.0.2",
     "react-addons-css-transition-group": "^15.0.2",
