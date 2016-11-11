@@ -1,5 +1,5 @@
 updateDatastores = ->
-  datastore = Agent.getStorageUsage()
+  datastore = Agent.getDatastoreUsage()
   datastore.createdAt = new Date()
   Datastores.upsert {name: datastore.name}, $set: datastore
 

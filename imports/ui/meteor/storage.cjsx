@@ -3,6 +3,7 @@
 React               = require 'react'
 Helpers             = require '../../helpers.coffee'
 StorageBucketList   = require '../storage/bucketList.cjsx'
+pretty              = require 'prettysize'
 
 
 module.exports = createContainer (props) ->
@@ -12,7 +13,9 @@ module.exports = createContainer (props) ->
     usage[instance.meta.storageBucket] ?= []
     usage[instance.meta.storageBucket].push instance.name
   buckets: StorageBuckets?.find({name: {$regex: props.filter or '', $options: 'i'}}, sort: name: 1).map (bucket) ->
+    console.log "==========SIZE=#{bucket.size}"
     _.extend bucket,
+      size: pretty bucket.size
       usedBy: usage[bucket.name]
   onDelete: -> Meteor.call 'storage/buckets/delete', @_id
   onCopy: (source, dest) ->  Meteor.call 'storage/buckets/copy', source, dest
