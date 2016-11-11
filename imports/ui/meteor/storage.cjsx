@@ -13,7 +13,6 @@ module.exports = createContainer (props) ->
     usage[instance.meta.storageBucket] ?= []
     usage[instance.meta.storageBucket].push instance.name
   buckets: StorageBuckets?.find({name: {$regex: props.filter or '', $options: 'i'}}, sort: name: 1).map (bucket) ->
-    console.log "==========SIZE=#{bucket.size}"
     _.extend bucket,
       size: pretty bucket.size
       usedBy: usage[bucket.name]
