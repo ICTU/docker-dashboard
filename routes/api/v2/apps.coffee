@@ -6,27 +6,6 @@ Meteor.startup ->
       'api/v2/apps/bigboatCompose'
     ]
 
-  endWithHttpCode = (response, code) ->
-    response.writeHead code
-    response.end()
-
-  notFound = (response) ->
-    endWithHttpCode response, 404
-
-  foundJson = (response, doc) ->
-    response.setHeader 'content-type', 'application/json'
-    response.end EJSON.stringify doc
-
-  endWithError = (response, code, errorMessage) ->
-    response.setHeader 'content-type', 'application/json'
-    response.writeHead code
-    response.end EJSON.stringify message: errorMessage
-
-  foundYaml = (response, code, doc) ->
-    response.setHeader 'content-type', 'text/yaml'
-    response.writeHead code
-    response.end doc
-
   formatApp = (app) ->
     id: app._id
     name: app.name
@@ -37,6 +16,8 @@ Meteor.startup ->
 
   findApp = (params) -> ApplicationDefs.findOne name: params.name, version: params.version
 
+  lib = require './lib.coffee'
+
   Router.map ->
     @route 'api/v2/apps/details',
       where: 'server'
@@ -44,8 +25,8 @@ Meteor.startup ->
     .get ->
       check([@params.name, @params.version], [String])
       app = findApp @params
-      if app then foundJson @response, formatApp app
-      else notFound @response
+      if app then lib.foundJson @response, formatApp app
+      else lib.notFound @response
     .put ->
       check([@params.name, @params.version], [String])
       meta = ApplicationDefs.upsert {name: @params.name, version: @params.version},
@@ -60,8 +41,8 @@ Meteor.startup ->
       app = findApp @params
       if app
         ApplicationDefs.remove app._id
-        endWithHttpCode @response, 204
-      else notFound @response
+        lib.endWithHttpCode @response, 204
+      else lib.notFound @response
 
     fileEndpoint = (filePropertyName, putInputCheck) =>
       @route "api/v2/apps/#{filePropertyName}",
@@ -71,23 +52,23 @@ Meteor.startup ->
         check([@params.name, @params.version], [String])
         app = findApp @params
         if app and fileContents = app[filePropertyName]
-          foundYaml @response, 200, fileContents
-        else notFound @response
+          lib.foundYaml @response, 200, fileContents
+        else lib.notFound @response
       .put ->
         check([@params.name, @params.version, @request.body], [String])
         try
           yaml = YAML.safeLoad @request.body
           if msg = putInputCheck? @params.name, @params.version, yaml
-            endWithError @response, 400, msg
+            lib.endWithError @response, 400, msg
           else
             ApplicationDefs.upsert {name: @params.name, version: @params.version},
               $set:
                 name: @params.name
                 version: @params.version
                 "#{filePropertyName}": @request.body
-            foundYaml @response, 201, @request.body
+            lib.foundYaml @response, 201, @request.body
         catch e
-          endWithError @response, 400, e.message
+          lib.endWithError @response, 400, e.message
 
     fileEndpoint 'dockerCompose'
     fileEndpoint 'bigboatCompose', (name, version, yaml) ->
@@ -100,4 +81,4 @@ Meteor.startup ->
       where: 'server'
       path: '/api/v2/apps'
     .get ->
-      foundJson @response, ApplicationDefs.find({}).map formatApp
+      lib.foundJson @response, ApplicationDefs.find({}).map formatApp
