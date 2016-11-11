@@ -1,3 +1,6 @@
+### 4.4.2
+- Hide the "Get bucket sizes" button when not logged in
+
 ### 4.4.1
 - Remove unused package
 

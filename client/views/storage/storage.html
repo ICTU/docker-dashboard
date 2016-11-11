@@ -37,7 +37,9 @@
 
       <div>
         <span>{{> React component=Storage filter=nameFilter}}</span>
+        {{#if isAuthenticated}}
         {{#if storageBuckets.count}}<button class="size-buckets btn btn-mini" style="outline: none;">Get bucket sizes</button>{{/if}}
+        {{/if}}
       </div>
 
       {{#if isSearching}}
