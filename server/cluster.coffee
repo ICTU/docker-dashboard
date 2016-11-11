@@ -23,8 +23,9 @@ findAppDef = (name, version) ->
     JSON.parse res.content
   getStorageBucketSize: (id) ->
     name = StorageBuckets.findOne(id)?.name
-    res = HTTP.get "#{pickAgent()}/storage/#{name}/size?access_token=#{Settings.get('agentAuthToken')}"
-    StorageBuckets.upsert {name: name}, $set: JSON.parse res.content
+    HTTP.get "#{pickAgent()}/storage/#{name}/size?access_token=#{Settings.get('agentAuthToken')}", (err, res) ->
+      new Meteor.Error err if err
+      StorageBuckets.upsert {name: name}, $set: JSON.parse res.content
   listStorageBuckets: ->
     res = HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
     JSON.parse res.content
