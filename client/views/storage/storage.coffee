@@ -8,7 +8,12 @@ Template.storage.helpers
   datastore: -> Datastores?.findOne()
   storageBuckets: -> StorageBuckets?.find {}, sort: name: 1
   prettyValue: (value) -> pretty(value)
-
+  storageUsageClass: ->
+    ratio = parseInt(Datastores?.findOne().percentage[..-1])
+    switch
+      when ratio > 95 then 'progress-bar-danger'
+      when ratio > 80 then 'progress-bar-warning'
+      else ''
 Template.storage.events
   'submit #create-bucket-form': (e, tpl) ->
     e.preventDefault()

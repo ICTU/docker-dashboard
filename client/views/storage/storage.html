@@ -14,7 +14,7 @@
 
     {{#if datastore.name }}
     <div class="progress">
-      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{datastore.percentage}};">
+      <div class="progress-bar {{storageUsageClass}}" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{datastore.percentage}};">
         {{ prettyValue datastore.used }}/{{ prettyValue datastore.total }}
       </div>
     </div>
