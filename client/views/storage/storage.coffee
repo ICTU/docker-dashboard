@@ -1,6 +1,5 @@
 Storage = require '/imports/ui/meteor/storage.cjsx'
 pretty = require 'prettysize'
-_ = require 'lodash'
 
 Template.storage.helpers
   Storage: -> Storage
