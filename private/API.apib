@@ -1,9 +1,13 @@
 FORMAT: 1A
-HOST: http://localhost:3000
+HOST: http://localhost:3000/api/v2
 
-# Apps
+# Group Apps
 
-## App [/api/v2/apps/{name}/{version}]
+An App is a logical named and versioned entity. It serves as a template for
+an **Instance**. This ***API*** offers multiple resources to retrieve and modify
+different aspects of an App.
+
+## App [/apps/{name}/{version}]
 An application is a logical unit of application configuration data.
 
 + Parameters
@@ -43,7 +47,7 @@ Delete an application.
 + Response 204
 + Response 404
 
-## Docker Compose [/api/v2/apps/{name}/{version}/files/dockerCompose]
+## Docker Compose [/apps/{name}/{version}/files/dockerCompose]
 A Docker compose file associated with an application.
 
 + Parameters
@@ -65,8 +69,16 @@ A Docker compose file associated with an application.
 + Request
   [Docker Compose][]
 + Response 201
++ Response 400 (application/json)
 
-## BigBoat Compose [/api/v2/apps/{name}/{version}/files/bigboatCompose]
+  ```js
+  {
+    "message": "JS-YAML: end of the stream or a document separator is expected at line 2, column 1:....."
+  }
+  ```
+
+
+## BigBoat Compose [/apps/{name}/{version}/files/bigboatCompose]
 A BigBoat compose file associated with an application.
 
 + Parameters
@@ -88,18 +100,28 @@ A BigBoat compose file associated with an application.
 
 ### Update the BigBoat compose file [PUT]
 
-The `name` amd `version` properties of the BigBoat compose file will be automatically
-set to the value of the name and version of the Apps API endpoint.
+The BigBoat compose file should be a valid YAML file.
+The `name` and `version` properties of the BigBoat Compose file should equal to
+the name and version values of the App entity. The request is denied otherwise.
 
 + Request
   [BigBoat Compose][]
 + Response 201
++ Response 400 (application/json)
 
-## Applications [/api/v2/apps]
+  ```js
+  {
+    "message": "JS-YAML: end of the stream or a document separator is expected at line 2, column 1:....."
+  }
+  ```
+
+## Applications [/apps]
 
 + Model (application/json)
 
   ```js
+  [
+    {
       "id": "MKMZCnLcEJmkjSenJ",
       ...
     },
