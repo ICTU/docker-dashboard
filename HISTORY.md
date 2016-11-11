@@ -1,3 +1,6 @@
+### 4.4.0
+- Show StorageBuckets and Datastore stats on Storage page
+
 ### 4.3.8
 - Fixed 3->4 db migration
 - Fixed 'New App' template
