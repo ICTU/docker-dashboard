@@ -1,3 +1,6 @@
+### 4.4.1
+- Remove unused package
+
 ### 4.4.0
 - Show StorageBuckets and Datastore stats on Storage page
 
