@@ -1,5 +1,5 @@
 ### 4.5.0
-- Intances API endpoint now allows for omitting application name and version when listing instance names
+- Instances API endpoint now allows for omitting application name and version when listing instance names
 
 ### 4.4.3
 - Added a "stop all instances" endpoint to the admin API
