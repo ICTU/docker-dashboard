@@ -64,6 +64,7 @@ substituteParameters = (def, parameters) ->
     bigboatCompose = YAML.load appDef.bigboatCompose
 
     Instances.upsert {name: instance}, $set:
+      startedBy: user._id
       images: (service.image for serviceName, service of dockerCompose)
       app:
         name: app
