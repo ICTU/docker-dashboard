@@ -74,6 +74,10 @@ exports.EventsList = EventsList = React.createClass
 exports.EventsListContainer = EventsListContainer = createContainer (x) ->
   Meteor.subscribe 'events'
   events = Events.find({}, sort: timestamp: -1).fetch()
+  events = events.map (e) ->
+    if e.info.user
+      e.info.user = Meteor.users.findOne(e.info.user)
+    e
   events: events
 , EventsList
 
