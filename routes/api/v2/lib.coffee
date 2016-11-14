@@ -1,14 +1,15 @@
 
 module.exports =
-  endWithHttpCode: (response, code) ->
+  endWithHttpCode: endWithHttpCode = (response, code) ->
     response.writeHead code
     response.end()
 
   notFound: (response) ->
     endWithHttpCode response, 404
 
-  foundJson: (response, doc) ->
+  foundJson: (response, code, doc) ->
     response.setHeader 'content-type', 'application/json'
+    response.writeHead code
     response.end EJSON.stringify doc
 
   endWithError: (response, code, errorMessage) ->

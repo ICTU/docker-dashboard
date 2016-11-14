@@ -25,7 +25,7 @@ Meteor.startup ->
     .get ->
       check([@params.name, @params.version], [String])
       app = findApp @params
-      if app then lib.foundJson @response, formatApp app
+      if app then lib.foundJson @response, 200, formatApp app
       else lib.notFound @response
     .put ->
       check([@params.name, @params.version], [String])
@@ -81,4 +81,4 @@ Meteor.startup ->
       where: 'server'
       path: '/api/v2/apps'
     .get ->
-      lib.foundJson @response, ApplicationDefs.find({}).map formatApp
+      lib.foundJson @response, 200, ApplicationDefs.find({}).map formatApp
