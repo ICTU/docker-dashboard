@@ -50,7 +50,7 @@ See use case example for project 'innovation' and instance name 'test1' below.
 
     name: alpine
     version: var_exp_multi_service
-    
+
     os1:
       image: alpine
       command: sh -c "while true; do sleep 600; done"
@@ -60,7 +60,7 @@ See use case example for project 'innovation' and instance name 'test1' below.
         - MY_INSTANCE=$BIGBOAT_INSTANCE_NAME
         - MY_SERVICE=$BIGBOAT_SERVICE_NAME
         - MY_FQDN=${BIGBOAT_SERVICE_NAME}.${BIGBOAT_INSTANCE_NAME}.${BIGBOAT_PROJECT}.ictu
-        
+
     os2:
       image: alpine
       command: sh -c "while true; do sleep 600; done"
@@ -124,6 +124,21 @@ The example shows how to update an existing application definition. If the defin
 An existing application definition can be deleted with the _HTTP DELETE_ operation.
 
     curl -X DELETE http://BIG_BOAT/api/v1/appdef/myNewApp/1.0
+
+### Application instances
+You can get a list of instance names.
+
+All instances:
+
+    curl http://BIG_BOAT/api/v1/instances
+
+All versions of **myNewApp**:
+
+    curl http://BIG_BOAT/api/v1/instances/myNewApp
+
+Version **1.0** of **myNewApp**:
+
+    curl http://BIG_BOAT/api/v1/instances/myNewApp/1.0
 
 ### API Examples
 
