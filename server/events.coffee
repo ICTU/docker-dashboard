@@ -13,14 +13,14 @@ newInfoEvent    = (subject, action, info) -> newEvent 'info', subject, action, i
 starting = true
 Instances.find().observe
   changed: (newDoc, oldDoc) ->
-    if newDoc?.meta?.state == 'active' && oldDoc?.meta.state != 'active'
+    if newDoc?.state == 'running' && oldDoc?.state != 'running'
       newSuccessEvent 'instance', 'started', name: newDoc.name unless starting
-    if newDoc?.meta?.state == 'stopping' && oldDoc?.meta.state != 'stopping'
-      newInfoEvent 'instance', 'stopping', (name: newDoc.name, user: newDoc.meta?.stoppedBy) unless starting
+    if newDoc?.state == 'stopping' && oldDoc?.state != 'stopping'
+      newInfoEvent 'instance', 'stopping', (name: newDoc.name, user: newDoc.stoppedBy) unless starting
   removed:  (doc) -> newWarningEvent 'instance', 'stopped', name: doc.name unless starting
   added:    (doc) ->
     unless starting
-      newInfoEvent 'instance', 'starting', (name: doc.name, user: doc.meta?.startedBy)
+      newInfoEvent 'instance', 'starting', (name: doc.name, user: doc.startedBy)
 
 ApplicationDefs.find().observe
   changed: (doc) ->
