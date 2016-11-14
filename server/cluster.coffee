@@ -36,6 +36,8 @@ findAppDef = (name, version) ->
   copyStorageBucket: (source, destination) ->
     HTTP.put "#{pickAgent()}/storage?access_token=#{Settings.get('agentAuthToken')}", data: name: destination, source: source
 
+  stopAll: ->
+    Instances.find().forEach (inst) -> stopInstance inst.name
 
   startApp: (app, version, instance, parameters, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
@@ -106,7 +108,7 @@ findAppDef = (name, version) ->
       Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
     ""
 
-  stopInstance: (instanceName) ->
+  stopInstance: stopInstance = (instanceName) ->
     unless Instances.findOne {name: instanceName}
       throw new Meteor.Error "Instance #{@params.name} does not exist"
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.get('project')}."
@@ -140,8 +142,8 @@ findAppDef = (name, version) ->
         username: user.username
 
     HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
-      throw new Meteor.Error err if err
-      console.log "Sent request to stop instance. Response from the agent is #{result.content}"
+      throw new Meteor.Error result?.statusCode, result?.content?.toString() if err
+      console.log "Sent request to stop instance. Response from the agent is #{result?.content}"
     ""
   clearInstance: (project, instance) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"

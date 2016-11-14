@@ -1,3 +1,6 @@
+### 4.4.3
+- Added a "stop all instances" endpoint to the admin API
+
 ### 4.4.2
 - Hide the "Get bucket sizes" button when not logged in
 
