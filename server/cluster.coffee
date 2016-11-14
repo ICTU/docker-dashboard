@@ -135,7 +135,8 @@ substituteParameters = (def, parameters) ->
     HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
-    ""
+
+    Instances.findOne {name: instance}
 
   stopInstance: (instanceName) ->
     unless Instances.findOne {name: instanceName}
@@ -171,7 +172,8 @@ substituteParameters = (def, parameters) ->
     HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err
       console.log "Sent request to stop instance. Response from the agent is #{result.content}"
-    ""
+
+    Instances.findOne {name: instanceName}
 
   clearInstance: (project, instance) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
