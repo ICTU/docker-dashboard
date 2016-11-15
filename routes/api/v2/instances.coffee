@@ -39,7 +39,7 @@ Meteor.startup ->
         try
           check([name = @params.name], [String])
           instance = Agent.stopInstance name
-          lib.foundJson @response, 200, formatInstanceForOverview instance
+          lib.foundJson @response, 200, formatInstance instance
         catch e
           lib.endWithError @response, 400, (e.message or e.error)
 
