@@ -30,9 +30,6 @@ substituteParameters = (def, parameters) ->
   def
 
 @Cluster = @Agent =
-  getDatastoreUsage: ->
-    res = HTTP.get "#{pickAgent()}/datastore/usage?access_token=#{Settings.get('agentAuthToken')}"
-    JSON.parse res.content
   getStorageBucketSize: (id) ->
     name = StorageBuckets.findOne(id)?.name
     HTTP.get "#{pickAgent()}/storage/#{name}/size?access_token=#{Settings.get('agentAuthToken')}", (err, res) ->
