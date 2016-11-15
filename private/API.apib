@@ -7,6 +7,33 @@ An App is a logical named and versioned entity. It serves as a template for
 an **Instance**. This ***API*** offers multiple resources to retrieve and modify
 different aspects of an App.
 
+## Applications [/apps]
+
++ Model (application/json)
+
+  ```js
+  [
+    {
+        "id": "ERfrBncoPKSN9ampt",
+        "name": "nginx",
+        "version": "latest"
+    },
+    {
+        "id": "LENn6QcjnG8WRvAxf",
+        "name": "nginx",
+        "version": "1.11.4"
+    }
+
+  ]
+  ```
+
+### Retrieve all Applications [GET]
+Returns all applications.
+
++ Response 200
+
+  [Applications][]
+
 ## App [/apps/{name}/{version}]
 An application is a logical unit of application configuration data.
 
@@ -115,30 +142,6 @@ the name and version values of the App entity. The request is denied otherwise.
   }
   ```
 
-## Applications [/apps]
-
-+ Model (application/json)
-
-  ```js
-  [
-    {
-      "id": "MKMZCnLcEJmkjSenJ",
-      ...
-    },
-    {
-      "id": "LENn6QcjnG8WRvAxf",
-      ...
-    }
-  ]
-  ```
-
-### Retrieve all Applications [GET]
-Returns all applications.
-
-+ Response 200
-
-  [Applications][]
-
 # Group Instance
 
 An Instance is a parameterized App that is deployed for execution.
@@ -150,17 +153,105 @@ An Instance is a parameterized App that is deployed for execution.
   ```js
   [
     {
-      "id": "...",
-      ....
+        "id": "y7bzwghzP9ouM56g6",
+        "name": "nginx",
+        "state": {
+            "current": "running",
+            "desired": "running"
+        }
     },
     {
-      "id": "..."
+        "id": "ySYXNTPw2ry9XE6nu",
+        "name": "nginx2",
+        "state": {
+            "current": "starting",
+            "desired": "running"
+        }
     }
   ]
   ```
 
 ### Retrieve all Instances [GET]
-Returns all instances.
+Returns all instances along with their current and desired state attributes.
 
 + Response 200
   [Instances][]
+
+## Instance [/instances/{name}]
+
++ Parameters
+  + name: `nginx` (string) - The unique name of the instance
+
++ Model (application/json)
+
+  ```js
+  {
+    "id": "y7bzwghzP9ouM56g6",
+    "name": "nginx",
+    "state": {
+        "current": "starting",
+        "desired": "running"
+    },
+    "app": {
+        "name": "nginx",
+        "version": "latest"
+    },
+    "services": {
+        "www": {
+            "state": "starting"
+        }
+    }
+  }
+  ```
+
+### Retrieve a single instance [GET]
+Returns a single instance
+
++ Response 200
+
+    [Instance][]
+
++ Response 404
+
+### Create an instance [PUT]
+Requests a new instance to be created with a desired state of 'running'.
+
+The `parameters` and `options` properties of the posted document are required
+but can be left empty when no parameters are present or when you don't want to
+override the default storage bucket. See request example 2.
+
++ Request (application/json)
+
+  ```js
+  {
+    "app":"nginx",
+    "version":"latest",
+    "parameters":{
+      "version":"1.11.4"
+    },
+    "options": {
+      "storageBucket": "custom-storage-bucket"
+    }
+  }
+  ```
++ Request (application/json)
+
+  ```js
+  {
+    "app":"nginx",
+    "version":"latest",
+    "parameters":{},
+    "options": {}
+  }
+  ```
+
++ Response 201
+    [Instance][]
++ Response 400
+
+### Stop an instance [DELETE]
+Requests an instance to be stopped. Returns the instance when successful.
+
++ Response 200
+  [Instance][]
++ Response 404
