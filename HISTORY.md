@@ -1,3 +1,18 @@
+### 4.5.0
+- Instances API endpoint now allows for omitting application name and version when listing instance names
+
+### 4.4.3
+- Added a "stop all instances" endpoint to the admin API
+
+### 4.4.2
+- Hide the "Get bucket sizes" button when not logged in
+
+### 4.4.1
+- Remove unused package
+
+### 4.4.0
+- Show StorageBuckets and Datastore stats on Storage page
+
 ### 4.3.8
 - Fixed 3->4 db migration
 - Fixed 'New App' template

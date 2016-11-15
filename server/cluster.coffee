@@ -30,6 +30,14 @@ substituteParameters = (def, parameters) ->
   def
 
 @Cluster = @Agent =
+  getDatastoreUsage: ->
+    res = HTTP.get "#{pickAgent()}/datastore/usage?access_token=#{Settings.get('agentAuthToken')}"
+    JSON.parse res.content
+  getStorageBucketSize: (id) ->
+    name = StorageBuckets.findOne(id)?.name
+    HTTP.get "#{pickAgent()}/storage/#{name}/size?access_token=#{Settings.get('agentAuthToken')}", (err, res) ->
+      new Meteor.Error err if err
+      StorageBuckets.upsert {name: name}, $set: JSON.parse res.content
   listStorageBuckets: ->
     HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
   deleteStorageBucket: (name) ->
@@ -39,6 +47,8 @@ substituteParameters = (def, parameters) ->
   copyStorageBucket: (source, destination) ->
     HTTP.put "#{pickAgent()}/storage?access_token=#{Settings.get('agentAuthToken')}", data: name: destination, source: source
 
+  stopAll: ->
+    Instances.find().forEach (inst) -> stopInstance inst.name
 
   startApp: (app, version, instance, parameters = {}, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
@@ -139,7 +149,7 @@ substituteParameters = (def, parameters) ->
 
     Instances.findOne {name: instance}
 
-  stopInstance: (instanceName) ->
+  stopInstance: stopInstance = (instanceName) ->
     unless Instances.findOne {name: instanceName}
       throw new Meteor.Error "Instance #{@params.name} does not exist"
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.get('project')}."
@@ -171,8 +181,8 @@ substituteParameters = (def, parameters) ->
 
     console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
     HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
-      throw new Meteor.Error err if err
-      console.log "Sent request to stop instance. Response from the agent is #{result.content}"
+      throw new Meteor.Error result?.statusCode, result?.content?.toString() if err
+      console.log "Sent request to stop instance. Response from the agent is #{result?.content}"
 
     Instances.findOne {name: instanceName}
 

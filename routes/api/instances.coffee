@@ -5,13 +5,15 @@ Meteor.startup ->
   Router.map ->
     @route 'apiListInstances',
       where: 'server'
-      path: '/api/v1/instances/:app/:version'
+      path: '/api/v1/instances/:app?/:version?'
     .get ->
-      check([@params.app, @params.version], [String])
+      matchInstances = {}
+      matchInstances['meta.appName'] = @params.app if @params.app
+      matchInstances['meta.appVersion'] = @params.version if @params.version
 
       successResponse =
         statusCode: 200
-        instances: Instances.find("meta.appName": @params.app, "meta.appVersion": @params.version).map (inst) -> inst.name
+        instances: Instances.find(matchInstances).map (inst) -> inst.name
       failedResponse =
         statusCode: 404
         error: "Failed to retrieve instances for app '#{@params.app}:#{@params.version}'"

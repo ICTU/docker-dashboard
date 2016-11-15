@@ -1,6 +1,6 @@
 {
   "name": "dashboard",
-  "version": "4.3.8",
+  "version": "4.5.0",
   "description": "Docker dashboard",
   "main": "index.js",
   "directories": {
@@ -34,6 +34,8 @@
     "mongo-dot-notation": "^1.0.5",
     "mqtt": "^1.14.1",
     "node-etcd": "^4.2.1",
+    "pretty": "^1.0.0",
+    "prettysize": "0.0.3",
     "react": "^15.0.2",
     "react-ace": "^3.6.1",
     "react-addons-create-fragment": "^15.0.2",
