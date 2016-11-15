@@ -1,5 +1,7 @@
 Meteor.startup ->
 
+  yaml = require 'js-yaml'
+
   Router.onBeforeAction Iron.Router.bodyParser.text(), only: [ 'appdef/crud' ] if Meteor.isServer
 
   Router.map ->
@@ -9,17 +11,20 @@ Meteor.startup ->
     .put ->
       check([@params.name, @params.version, @request.body], [String])
       @response.writeHead 200, 'Content-Type': 'text/plain'
-      Cluster.saveApp @params.name, @params.version, @request.body
+      ad = Utils.AppDef.toCompose def: @request.body
+      Cluster.saveApp @params.name, @params.version, {raw: ad.dockerCompose}, {raw:ad.bigboatCompose}
       @response.end "App definition '#{@params.name}:#{@params.version}' succesfully saved."
     .get ->
       check([@params.name, @params.version], [String])
       @response.writeHead 200, 'Content-Type': 'text/plain'
-      appDef = Cluster.retrieveApp(@params.name, @params.version)
-      @response.end "#{appDef}"
+      ad = ApplicationDefs.findOne {name: "#{@params.name}", version: "#{@params.version}"}
+      merged = _.extend (yaml.safeLoad ad.bigboatCompose), (yaml.safeLoad ad.dockerCompose)
+      @response.end yaml.safeDump merged
     .post ->
       check([@params.name, @params.version, @request.body], [String])
       if ApplicationDefs.findOne(name: @params.name, version: @params.version)
-        Cluster.saveApp @params.name, @params.version, @request.body
+        ad = Utils.AppDef.toCompose def: @request.body
+        Cluster.saveApp @params.name, @params.version, {raw: ad.dockerCompose}, {raw:ad.bigboatCompose}
         @response.writeHead 200, 'Content-Type': 'text/plain'
         @response.end "App definition '#{@params.name}:#{@params.version}' succesfully updated."
       else
