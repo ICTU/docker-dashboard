@@ -6,13 +6,14 @@ Meteor.startup ->
       'api/v2/apps/bigboatCompose'
     ]
 
-  formatApp = (app) ->
+  formatAppForOverview = (app) ->
     id: app._id
     name: app.name
     version: app.version
-    # files:
-    #   dockerCompose: [app.dockerCompose]
-    #   bigboatCompose: [app.bigboatCompose]
+
+  formatApp = (app) ->
+    _.extend formatAppForOverview(app),
+      instances: Instances.find({'app.name': app.name, 'app.version': app.version}).map (i) -> i.name
 
   findApp = (params) -> ApplicationDefs.findOne name: params.name, version: params.version
 
@@ -29,12 +30,11 @@ Meteor.startup ->
       else lib.notFound @response
     .put ->
       check([@params.name, @params.version], [String])
-      meta = ApplicationDefs.upsert {name: @params.name, version: @params.version},
-        {name: @params.name, version: @params.version}
+      meta = ApplicationDefs.upsert @params, @params
 
       @response.setHeader 'content-type', 'application/json'
       @response.writeHead 201
-      @response.end EJSON.stringify formatApp ApplicationDefs.findOne {name: @params.name, version: @params.version}
+      @response.end EJSON.stringify formatApp findApp @params
 
     .delete ->
       check([@params.name, @params.version], [String])
@@ -77,8 +77,17 @@ Meteor.startup ->
       else if yaml.version isnt version
         'Version property of Bigboat compose needs to be equal to version property of App'
 
+    @route 'api/v2/apps/byName',
+      where: 'server'
+      path: '/api/v2/apps/:name'
+    .get ->
+      check([@params.name], [String])
+      app = findApp @params
+      if app then lib.foundJson @response, 200, formatApp app
+      else lib.notFound @response
+
     @route '/api/v2/apps',
       where: 'server'
       path: '/api/v2/apps'
     .get ->
-      lib.foundJson @response, 200, ApplicationDefs.find({}).map formatApp
+      lib.foundJson @response, 200, ApplicationDefs.find({}).map formatAppForOverview
