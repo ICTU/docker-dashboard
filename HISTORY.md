@@ -1,3 +1,8 @@
+### 5.0.0
+- MQTT is used to communicate container status information from the host to the dashboard
+- Introduced API v2
+- Removed unused settings from configuration and database
+
 ### 4.5.0
 - Instances API endpoint now allows for omitting application name and version when listing instance names
 
