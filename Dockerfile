@@ -1,1 +1,1 @@
-FROM jeroenpeeters/meteord:1.3.2.4pp
+FROM jeroenpeeters/meteord:1.4.2.3
