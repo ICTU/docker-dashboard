@@ -21,28 +21,6 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><div class="led {{statusColor}} pull-left" style="margin-top:21px"></div><a href="{{pathFor 'status'}}">Status</a></li>
-          {{#if isAdminBoard}}
-          {{#if isAuthenticated}}
-          <li class="dropdown">
-            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-              <i style="font-size:12px;" class="glyphicon glyphicon-king"></i>
-              SuperUser :: {{session 'targetHost'}}/{{session 'targetVlan'}}
-              <span class="caret"></span>
-            </a>
-            <form role="form" id="super-user-form" class="dropdown-menu dropdown-menu-right" style="padding:1em; width:250px;">
-                <div class="form-group">
-                  <label for="vlan">VLAN</label>
-                  <input name="vlan" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="targetHost">Target host</label>
-                  <input name="targetHost" class="form-control">
-                </div>
-                <button type="submit" hidden>Set</button>
-            </form>
-          </li>
-          {{/if}}
-          {{/if}}
           <li class="dropdown">
             <a id="messagesMenuItem" class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
               <i style="font-size:12px;" class="glyphicon glyphicon-list"></i> Events

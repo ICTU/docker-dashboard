@@ -67,8 +67,6 @@ Template.appActions.events
     parameters.tags = @tags
 
     options =
-      targetHost: Session.get 'targetHost'
-      targetVlan: Session.get 'targetVlan'
       storageBucket: tpl.$('.storage-bucket').val()
     tpl.$('li.open').removeClass('open')
     Meteor.call 'startApp', @name, @version, name, parameters, options

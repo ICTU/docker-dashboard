@@ -34,4 +34,18 @@ Migrations.add
       catch err
         console.error 'ERR', err
 
+Migrations.add
+  version: 6
+  name: 'Remote unused settings from the settings object'
+  down: ->
+  up: ->
+    key = key: (Meteor.settings.public?.key or 'default')
+    Settings.collection.upsert key, $unset:
+      etcdBaseUrl: 1
+      etcd: 1
+      dataDir: 1
+      sharedDataDir: 1
+      targetVlan: 1
+      syslogUrl: 1
+
 Meteor.startup -> Migrations.migrateTo('latest')
