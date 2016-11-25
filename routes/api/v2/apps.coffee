@@ -86,7 +86,7 @@ Meteor.startup ->
       if app then lib.foundJson @response, 200, formatApp app
       else lib.notFound @response
 
-    @route '/api/v2/apps',
+    @route 'api/v2/apps',
       where: 'server'
       path: '/api/v2/apps'
     .get ->
