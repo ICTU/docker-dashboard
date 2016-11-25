@@ -47,7 +47,7 @@ InstanceEvent = React.createClass
   propTypes: event: React.PropTypes.object.isRequired
   render: ->
     e = @props.event
-    user = e.info.user?.username
+    user = e.info.user?.username or 'API'
     txt = switch e.action
       when 'starting' then <span>Instance <b>{e.info.name}</b> is started by <i>{user}</i>.</span>
       when 'started'  then <span>Instance <b>{e.info.name}</b> has become active.</span>
