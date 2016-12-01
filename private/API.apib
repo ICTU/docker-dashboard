@@ -1,6 +1,10 @@
 FORMAT: 1A
 HOST: http://localhost:3000/api/v2
 
+All resource endpoints require authentication. An API key is user bound and can
+be obtained from the dashboard configuration page. The api key must be included
+in every request as either a header (***api-key***) or URL query parameter (***?api-key=...***).
+
 # Group Apps
 
 An App is a logical named and versioned entity. It serves as a template for
@@ -11,21 +15,21 @@ different aspects of an App.
 
 + Model (application/json)
 
-  ```js
-  [
-    {
-        "id": "ERfrBncoPKSN9ampt",
-        "name": "nginx",
-        "version": "latest"
-    },
-    {
-        "id": "LENn6QcjnG8WRvAxf",
-        "name": "nginx",
-        "version": "1.11.4"
-    }
+    ```js
+    [
+      {
+          "id": "ERfrBncoPKSN9ampt",
+          "name": "nginx",
+          "version": "latest"
+      },
+      {
+          "id": "LENn6QcjnG8WRvAxf",
+          "name": "nginx",
+          "version": "1.11.4"
+      }
 
-  ]
-  ```
+    ]
+    ```
 
 ### Retrieve all Applications [GET]
 Returns all applications.
