@@ -39,8 +39,8 @@ ProductDetails = React.createClass
     @refs.applicationDefinition.setEditorValue app.def
   installApp: ->
     app = @state.selectedApp
-    Meteor.call 'saveApp', app.name, app.version, app.def, =>
-      console.log 'saveAppDone'
+    def = Utils.AppDef.toCompose app
+    Meteor.call 'saveApp', app.name, app.version, {raw: def.dockerCompose}, {raw: def.bigboatCompose}, =>
       $(@refs.modal).modal 'hide'
 
   componentDidMount: ->
@@ -67,13 +67,13 @@ ProductDetails = React.createClass
                   <button type="button" className="btn btn-default" disabled=true>version: {@state.selectedApp.version}</button>
                   {if @props.definitions.length > 1
                     [
-                      <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <button key="button" type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span className="caret"></span>
                         <span className="sr-only">Select version</span>
                       </button>
-                      <ul className="dropdown-menu">
+                      <ul key="dropdown" className="dropdown-menu">
                       {@props.definitions.map (app) =>
-                        <li><a key=app.version href="#" onClick={@changeSelectedVersion app}>{app.version}</a></li>
+                        <li key=app.version><a href="#" onClick={@changeSelectedVersion app}>{app.version}</a></li>
                       }
                       </ul>
                     ]
@@ -83,8 +83,8 @@ ProductDetails = React.createClass
               <div className="col-md-2" style={paddingTop:25}>
                 {if Helpers.isAuthenticated()
                   [
-                    <button type="button" className="btn btn-success btn-lg dropdown-toggle" data-toggle="dropdown"><i className="material-icons">file_download</i> Install</button>
-                    <form role="form" className="dropdown-menu dropdown-menu-right" style={padding:10}>
+                    <button key="button" type="button" className="btn btn-success btn-lg dropdown-toggle" data-toggle="dropdown"><i className="material-icons">file_download</i> Install</button>
+                    <form key="form" role="form" className="dropdown-menu dropdown-menu-right" style={padding:10}>
                         <div className="form-group" style={width:350}>
                           <div className="alert alert-warning" role="alert">
                             Installing may overwrite an existing app called <strong>{@state.selectedApp.name}</strong> with version <strong>{@state.selectedApp.version}</strong>.

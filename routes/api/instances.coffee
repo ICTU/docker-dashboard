@@ -8,8 +8,8 @@ Meteor.startup ->
       path: '/api/v1/instances/:app?/:version?'
     .get ->
       matchInstances = {}
-      matchInstances['meta.appName'] = @params.app if @params.app
-      matchInstances['meta.appVersion'] = @params.version if @params.version
+      matchInstances['app.name'] = @params.app if @params.app
+      matchInstances['app.version'] = @params.version if @params.version
 
       successResponse =
         statusCode: 200
@@ -26,10 +26,9 @@ Meteor.startup ->
     .get ->
         check(@params.name, String)
         instance = Instances.findOne name: @params.name
-        console.log instance.meta.state
         if instance
           @response.writeHead 200, 'Content-Type': 'application/json'
-          @response.end instance.meta.state
+          @response.end instance.state
         else
           @response.writeHead 404, 'Content-Type': 'application/json'
           @response.end '{"message": "Instance not found"}'

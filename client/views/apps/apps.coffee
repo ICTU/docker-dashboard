@@ -1,7 +1,4 @@
-appDefTemplate =
-  name: 'appName'
-  version: 'appVersion'
-  def: 'name: appName\nversion: appVersion\n\nservice:\n  image: image:version'
+AppEditor = require '/imports/ui/meteor/AppEditor.cjsx'
 
 appSearch = ->
   filterObj = {}
@@ -14,6 +11,9 @@ appSearch = ->
   filterObj
 
 Template.apps.helpers
+  AppEditor: -> AppEditor
+  selectedAppDefId: -> Session.get 'selectedAppDefId'
+  isNewApp: ->  'newApp' is Session.get 'selectedAppDefId'
   appNames: -> _.uniq(ApplicationDefs.find(appSearch(), sort: name: 1).map (ad) -> ad.name)
   appDefCount: -> ApplicationDefs.find(name: "#{@}").count()
   appDefs: -> ApplicationDefs.find {name: "#{@}"}, sort: version: 1
@@ -21,10 +21,10 @@ Template.apps.helpers
   filterByTag: -> Session.get 'filterByTag'
   multipleSearchTerms: -> Session.get('queryAppName')?.length and Session.get 'filterByTag'
   appDefTemplate: -> appDefTemplate
-  hash: -> CryptoJS.MD5 "#{@name}#{@version}"
   appTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find(name: "#{@}").map (ad) -> ad.tags if ad.tags)), undefined)
   allTags: -> _.without(_.uniq(_.flatten(ApplicationDefs.find().map (ad) -> ad.tags if ad.tags)), undefined)
   searchTerms: -> Session.get 'queryAppName'
+  activeRowCss: -> if @_id is Session.get 'selectedAppDefId' then 'active' else ''
 
 
 Template.apps.events
@@ -35,8 +35,11 @@ Template.apps.events
     Session.set 'queryAppName', null
     Session.set 'filterByTag', null
   'save-app-def': (e, tpl) ->
-    Meteor.call 'saveApp', e.yaml.parsed.name, e.yaml.parsed.version, e.yaml.raw
+    Meteor.call 'saveApp', e.bigBoatCompose.parsed.name, e.bigBoatCompose.parsed.version, e.dockerCompose, e.bigBoatCompose
   'click .filterByTag': -> Session.set 'filterByTag', "#{@}"
+  'click .appRow': -> Session.set 'selectedAppDefId', @_id
+  'click #newAppLink': -> Session.set 'selectedAppDefId', 'newApp'
+
 
 Template.appActions.helpers
   hash: -> CryptoJS.MD5 "#{@name}#{@version}"
@@ -47,7 +50,9 @@ Template.appActions.helpers
     else
       ''
   parameters: ->
-    params = @def.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
+    unless @dockerCompose
+      console.error "Cannot find Docker Compose content for #{@name}:#{@version}"
+    params = @dockerCompose?.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
     if params?.length
       _.uniq(params.map (p) -> p.replace('{{', '').trim())
     else
@@ -62,8 +67,6 @@ Template.appActions.events
     parameters.tags = @tags
 
     options =
-      targetHost: Session.get 'targetHost'
-      targetVlan: Session.get 'targetVlan'
       storageBucket: tpl.$('.storage-bucket').val()
     tpl.$('li.open').removeClass('open')
     Meteor.call 'startApp', @name, @version, name, parameters, options

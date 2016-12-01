@@ -17,18 +17,26 @@ findAppDef = (name, version) ->
     name: name
     version: version
 
+getUser = (userId) ->
+  if userId
+    user = Meteor.user()
+  else
+    user = userId: null, username: 'API'
+
+substituteParameters = (def, parameters) ->
+  for key, value of parameters
+    rex = new RegExp "{{#{key}}}", 'g'
+    def = def.replace rex, value
+  def
+
 @Cluster = @Agent =
-  getDatastoreUsage: ->
-    res = HTTP.get "#{pickAgent()}/datastore/usage?access_token=#{Settings.get('agentAuthToken')}"
-    JSON.parse res.content
   getStorageBucketSize: (id) ->
     name = StorageBuckets.findOne(id)?.name
     HTTP.get "#{pickAgent()}/storage/#{name}/size?access_token=#{Settings.get('agentAuthToken')}", (err, res) ->
       new Meteor.Error err if err
       StorageBuckets.upsert {name: name}, $set: JSON.parse res.content
   listStorageBuckets: ->
-    res = HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
-    JSON.parse res.content
+    HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
   deleteStorageBucket: (name) ->
     HTTP.del "#{pickAgent()}/storage/#{name}?access_token=#{Settings.get('agentAuthToken')}"
   createStorageBucket: (name) ->
@@ -39,12 +47,11 @@ findAppDef = (name, version) ->
   stopAll: ->
     Instances.find().forEach (inst) -> stopInstance inst.name
 
-  startApp: (app, version, instance, parameters, options = {}) ->
+  startApp: (app, version, instance, parameters = {}, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
       throw new Meteor.Error "Application #{app}:#{version} does not exist"
 
     project = Settings.get('project')
-    options = _.extend {"dataDir": Settings.get('dataDir')}, options
 
     options.storageBucket =
       if bucket = options.storageBucket
@@ -55,47 +62,78 @@ findAppDef = (name, version) ->
       else
         instance
 
-    dir = "#{Settings.get('project')}-#{instance}"
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.get('project')}."
 
-    if @userId
-      user = Meteor.user()
-    else
-      user = userId: null, username: 'API'
-
+    user = getUser @userId
     agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
-    Instances.upsert {project: project, name: instance}, $set:
-      key: "#{project}/#{app}/#{instance}"
-      parameters: parameters
-      meta:
-        appName: app
-        appVersion: version
-        agentUrl: agentUrl
-        storageBucket: options.storageBucket
-        startedBy:
-          userId: user._id
-          username: user.username
+    appDef = findAppDef app, version
+    dockerCompose = YAML.load substituteParameters appDef.dockerCompose, parameters
+    bigboatCompose = YAML.load appDef.bigboatCompose
 
-    # replace deprecated parameter substition
-    def = (findAppDef app, version).def
-    def = def.replace (new RegExp "\{\{", 'g'), '_#_'
-    def = def.replace (new RegExp "\}\}", 'g'), '_#_'
-    definition = YAML.load def
+    Instances.upsert {name: instance}, $set:
+      startedBy: user._id
+      images: (service.image for serviceName, service of dockerCompose)
+      app:
+        name: app
+        version: version
+        dockerCompose: YAML.dump dockerCompose
+        bigboatCompose: YAML.dump bigboatCompose
+        parameters: parameters
+      steps: _.flatten (for serviceName, service of dockerCompose
+        [ {type: 'pull', image: service.image, completed: false}
+          {type: 'service', name: serviceName, completed: false} ]
+        )
+
+    # augment the compose file with bigboat specific Labels
+    # these labels are later communicated back to the dashboard
+    # though Docker events and inspect information.
+    # This way we can relate containers and events
+    for serviceName, service of dockerCompose
+      service.container_name = "#{project}-#{instance}-#{serviceName}"
+      service.restart = 'unless-stopped'
+      service.labels =
+        'bigboat.instance.name': instance
+        'bigboat.service.name': serviceName
+        'bigboat.service.type': 'service'
+        'bigboat.application.name': app
+        'bigboat.application.version': version
+        'bigboat.agent.url': agentUrl
+        'bigboat.startedBy': user._id
+        'bigboat.storage.bucket': options.storageBucket
+        'bigboat.instance.endpoint.path': bigboatCompose[serviceName]?.endpoint
+        'bigboat.instance.endpoint.protocol': bigboatCompose[serviceName]?.protocol
+        'bigboat.container.map_docker':  if bigboatCompose[serviceName]?.map_docker then 'true' else undefined
+        'bigboat.container.enable_ssh':  if bigboatCompose[serviceName]?.enable_ssh then 'true' else undefined
+
+      if bigboatCompose[serviceName]?.enable_ssh
+        dockerCompose["bb-ssh-#{serviceName}"] =
+          image: 'jeroenpeeters/docker-ssh'
+          container_name: "#{project}-#{instance}-#{serviceName}-ssh"
+          environment:
+            CONTAINER: "#{project}-#{instance}-#{serviceName}"
+            AUTH_MECHANISM: 'noAuth'
+            HTTP_ENABLED: 'false'
+            CONTAINER_SHELL: 'bash'
+          labels:
+            'bigboat.instance.name': instance
+            'bigboat.service.name': serviceName
+            'bigboat.service.type': 'ssh'
+            'bigboat.container.map_docker': 'true'
+          restart: 'unless-stopped'
+
+    console.log 'dockerCompose', dockerCompose
 
     callOpts =
       responseType: "buffer"
       data:
-        dir: dir
-
         app:
           name: app
           version: version
-          definition: definition
-          parameter_key: '_#_'
+          definition: dockerCompose
+          bigboatCompose: bigboatCompose
         instance:
           name: instance
-          options: _.extend({}, options, { project: project })
-          parameters: parameters
+          options: options
         bigboat:
           url: process.env.ROOT_URL
           statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instance}"
@@ -105,25 +143,26 @@ findAppDef = (name, version) ->
     HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
-      Instances.update {name: instance}, $set: {'logs.bootstrapLog': "#{result.content}"}
-    ""
+
+    Instances.findOne {name: instance}
 
   stopInstance: stopInstance = (instanceName) ->
     unless Instances.findOne {name: instanceName}
       throw new Meteor.Error "Instance #{@params.name} does not exist"
     console.log "Cluster.stopInstance #{instanceName} in project #{Settings.get('project')}."
     instance = Instances.findOne name: instanceName
-    agentUrl = instance.meta.agentUrl
-    console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
+    agentUrl = instance.agent.url
+
+    appDef = (findAppDef instance.app.name, instance.app.version)
+
     callOpts =
       responseType: "buffer"
       data:
-        dir: "#{Settings.get('project')}-#{instanceName}"
-
         app:
-          name: instance.meta.appName
-          version: instance.meta.appVersion
-          definition: YAML.safeLoad (findAppDef instance.meta.appName, instance.meta.appVersion).def
+          name: instance.app.name
+          version: instance.app.version
+          definition: YAML.load instance.app.dockerCompose
+          bigboatCompose: YAML.load instance.app.bigboatCompose
         instance:
           name: instanceName
           options: _.extend({}, { project: Settings.get('project') })
@@ -131,30 +170,30 @@ findAppDef = (name, version) ->
           url: process.env.ROOT_URL
           statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instanceName}"
 
-    if @userId
-      user = Meteor.user()
-    else
-      user = userId: null, username: 'API'
+    user = getUser @userId
 
     Instances.upsert {name: instanceName}, $set:
-      'meta.stoppedBy':
-        userId: user._id
-        username: user.username
+      desiredState: 'stopped'
+      stoppedBy: user._id
 
+    console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
     HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error result?.statusCode, result?.content?.toString() if err
       console.log "Sent request to stop instance. Response from the agent is #{result?.content}"
-    ""
+
+    Instances.findOne {name: instanceName}
+
   clearInstance: (project, instance) ->
     console.log "Cluster.clearInstance #{project}, #{instance}"
     Instances.remove project: project, name: instance
 
-  saveApp: (name, version, definition) ->
-    ApplicationDefs.upsert {name: "#{name}", version: "#{version}"},
+  saveApp: (name, version, dockerCompose, bigboatCompose) ->
+    ApplicationDefs.upsert {name: "#{name}", version: "#{version}"}, $set:
       name: "#{name}"
       version: "#{version}"
-      def: definition
-      tags: Helper.extractTags definition
+      dockerCompose: dockerCompose.raw
+      bigboatCompose: bigboatCompose.raw
+      tags: Helper.extractTags bigboatCompose.raw
 
   retrieveApp: (name, version) ->
     ApplicationDefs.find({name: "#{name}", version: "#{version}"}, {fields: {"def":1, "_id":0}}).map (app) -> app.def

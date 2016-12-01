@@ -1,5 +1,5 @@
 <template name="editAppDefBox">
-  <div id="editbox-{{hash}}" class="editbox modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div id="editbox" class="editbox modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content {{name}}:{{version}}">
         <div class="modal-header">
@@ -7,9 +7,16 @@
           <h4 class="modal-title" id="myModalLabel">Edit {{name}}:{{version}}</h4>
         </div>
         <div class="modal-body">
-          <div class="app-def-form">
-            {{> editAppDefForm}}
-          </div>
+          <form class="form-horizontal">
+            <div class="row">
+              <div class="col-md-7 app-def-form">
+                {{> editAppDefForm}}
+              </div>
+              <div class="col-md-5">
+                {{> editBigBoatDefForm}}
+              </div>
+            </div>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-toggle="modal" data-target="#helpModal">Help</button>
@@ -28,7 +35,7 @@
           <h4 class="modal-title" id="myModalLabel">Help</h4>
         </div>
         <div class="modal-body">
-          <div class="app-def-form">
+          <div class="app-def-help">
             {{> editAppDefHelp}}
           </div>
         </div>
@@ -41,14 +48,16 @@
 </template>
 
 <template name="editAppDefForm">
+  <h4 style="margin-top:0px">Docker Compose</h4>
   <div class="editAppDefForm-{{name}}:{{version}}">
-    <form class="form-horizontal">
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div id=ace-{{name}}:{{version}} class="appDefEditor" style="height:600px;">{{def}}</div>
-        </div>
-      </div>
-    </form>
+    <div id=ace-{{name}}:{{version}} class="yamlEditor" style="height:600px;">{{dockerCompose}}</div>
+  </div>
+</template>
+
+<template name="editBigBoatDefForm">
+  <h4 style="margin-top:0px">Big Boat Compose</h4>
+  <div class="editBigBoatDefForm-{{name}}:{{version}}">
+    <div id=ace-bigboat-{{name}}:{{version}} class="yamlEditor" style="height:600px;">{{bigboatCompose}}</div>
   </div>
 </template>
 

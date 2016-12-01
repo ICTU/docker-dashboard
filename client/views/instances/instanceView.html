@@ -13,8 +13,8 @@
       </a>
       {{#if showProgressbar}}
       <div class="progress">
-        <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{progressPercentage}}%;">
-          <span>{{meta.stateDescription}}</span>
+        <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{progressPercentage}}%;">
+          <span>{{status}}</span>
         </div>
       </div>
       {{/if}}
@@ -74,19 +74,21 @@
 
         <table class="table table-condensed">
           <tbody>
-          {{#with meta}}
-            <tr><th scope="row" style="width:250px;">Application name</th><td>{{appName}}</td></tr>
-            <tr><th scope="row">Application version</th><td>{{appVersion}}</td></tr>
-            <tr><th scope="row">State</th><td>{{stateDescription}}</td></tr>
-            {{#if isAdminBoard}}
-            <tr><th scope="row">Agent URL</th><td>{{agentUrl}}</td></tr>
+            <tr><th scope="row" style="width:250px;">State</th><td>{{state}}</td></tr>
+            {{#with app}}
+            <tr><th scope="row" >Application name</th><td>{{name}}</td></tr>
+            <tr><th scope="row">Application version</th><td>{{version}}</td></tr>
+            {{/with}}
+            {{#if isAuthenticated}}
+            <tr><th scope="row">Agent URL</th><td>{{agent.url}}</td></tr>
             {{/if}}
+            {{#if startedByUser}}
             <tr><th scope="row">Started by</th><td>{{startedByUser}}</td></tr>
+            {{/if}}
             {{#if stoppedByUser}}
               <tr><th scope="row">Stopped by</th><td>{{stoppedByUser}}</td></tr>
             {{/if}}
             <tr><th scope="row">Storage bucket</th><td>{{storageBucket}}</td></tr>
-          {{/with}}
           {{#if params}}
             <tr><th scope="row">Parameters</th>
               <td>
@@ -98,6 +100,10 @@
           {{/if}}
           </tbody>
         </table>
+
+        <!-- {{#with steps}}
+          <span>{{> React component=Steps items=this}}</span>
+        {{/with}} -->
 
         {{#each services}}
           {{> serviceView}}

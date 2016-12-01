@@ -1,32 +1,30 @@
 <template name="apps">
-{{> editAppDefBox appDefTemplate}}
+<!-- {{> editAppDefBox appDefTemplate}} -->
 <div class="apps container">
   <div class="row">
-      <div class="col-sm-12">
+      <div class="col-md-12">
         <div id="searchbox-container" class="row">
-          <div class="col-md-8"><h3 class="pageTitle"><i class="material-icons">apps</i> Apps</h3></div>
-          <div class="col-md-4">
+          <div class="col-md-2"><h3 class="pageTitle"><i class="material-icons">apps</i> Apps</h3></div>
+          <div class="col-md-2" style='margin-top:25px'>
+            {{#if isAuthenticated}}
+            <a title="New App" id='newAppLink' href="#"><i class="glyphicon glyphicon-lg glyphicon-plus"></i> New App</a>
+            {{/if}}
+          </div>
+          <div class="col-md-5 .col-md-offset-3" style='margin-top:10px'>
+            <ul class="nav navbar-nav">
+              {{#each allTags}}
+              <li><a title="{{this}}" class="filterByTag" href="#"><i class="glyphicon glyphicon-lg glyphicon-zoom-in"></i> {{this}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+          <div class="col-md-3">
             {{> filterBox sessionVar='queryAppName'}}
           </div>
         </div>
       </div>
   </div>
   <div id="content-row" class="row">
-    <div id="page-menu" class="col-md-3">
-      <ul class="nav nav-stacked">
-        {{#if isAuthenticated}}
-        <hr>
-        {{#with appDefTemplate}}
-        <li><a title="New App" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-lg glyphicon-plus"></i> New App</a></li>
-        {{/with}}
-        <hr>
-        {{/if}}
-        {{#each allTags}}
-        <li><a title="{{this}}" class="filterByTag" href="#"><i class="glyphicon glyphicon-lg glyphicon-zoom-in"></i> {{this}}</a></li>
-        {{/each}}
-      </ul>
-    </div>
-    <div id="apps-container" class="col-md-9">
+    <div id="apps-container" class="col-md-4" style='margin-top:10px'>
       {{#each appNames}}
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -47,7 +45,7 @@
               <table class="table table-hover">
                 <tbody>
                   {{#each appDefs}}
-                  <tr id="controlPanel-{{name}}-{{version}}">
+                  <tr class="appRow {{activeRowCss}}" id="controlPanel-{{name}}-{{version}}">
                     <th scope="row" style="width:250px; padding: 20px;">
                       {{version}}
                     </th>
@@ -69,9 +67,7 @@
         </div>
       </div>
 
-      {{#each appDefs}}
-      {{> editAppDefBox}}
-      {{/each}}
+
 
       {{/each}}
 
@@ -92,6 +88,19 @@
       </div>
       {{/if}}
 
+    </div>
+    <div class="col-md-8">
+      {{#if selectedAppDefId}}
+        {{#if isNewApp}}
+          <span>{{> React component=AppEditor newApp=true }}</span>
+        {{else}}
+        <span>{{> React component=AppEditor appId=selectedAppDefId }}</span>
+        {{/if}}
+      {{else}}
+        <h3 style="text-align: center;">
+          Please, select an application definition from the list on the left.
+        </h3>
+      {{/if}}
     </div>
 
   </div>
@@ -137,9 +146,7 @@
       </form>
 
     </li>
-    <li><a title="Edit" href="#" data-toggle="modal" data-target="#editbox-{{hash}}"><i class="glyphicon glyphicon-lg glyphicon-cog"></i></a></li>
     <li class="btn-group">
-
       <a title="Remove" href="#" class="dropdown-toggle" data-toggle="dropdown">
         <i class="glyphicon glyphicon-lg glyphicon-trash"></i>
       </a>

@@ -4,7 +4,7 @@ Meteor.startup ->
   LDAP_DEFAULTS.base = Meteor.settings?.ldap?.baseDn
   LDAP_DEFAULTS.superDn = Meteor.settings?.ldap?.superDn
   LDAP_DEFAULTS.superPass = Meteor.settings?.ldap?.superPass
-  LDAP_DEFAULTS.admins = Meteor.settings?.ldap?.admins 
+  LDAP_DEFAULTS.admins = Meteor.settings?.ldap?.admins
   LDAP_DEFAULTS.searchResultsProfileMap = [
     {
       resultKey: "uid"
@@ -17,5 +17,13 @@ Meteor.startup ->
     {
       resultKey: "mail"
       profileProperty: "email"
+    }
+    {
+      resultKey: "givenName"
+      profileProperty: "firstname"
+    }
+    {
+      resultKey: "sn"
+      profileProperty: "lastname"
     }
   ]

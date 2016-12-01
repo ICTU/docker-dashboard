@@ -28,14 +28,6 @@ Template['base-layout'].helpers
 Template['base-layout'].events
   'click #messagesMenuItem': ->
     Template.instance().EventsListViewComponent.toggle()
-  'submit #super-user-form': (e, t) ->
-    e.preventDefault()
-    Session.set 'targetVlan', e.target.vlan.value
-    Session.set 'targetHost', e.target.targetHost.value
-    Meteor.setTimeout ->
-      InstanceMeta.notify = true
-    , 5000
-    t.$('li.dropdown.open').removeClass('open')
   'submit #formLogin': (e) ->
     e.preventDefault()
     username = e.target.username.value
