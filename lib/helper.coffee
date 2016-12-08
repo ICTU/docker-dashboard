@@ -1,5 +1,13 @@
 packageJson = require '/package.json'
+yaml = require 'js-yaml'
+
 
 @Helper =
-  extractTags: (appDef) -> appDef?.match(/#\s?tags:\s?([\w \d]+)\n/)?[1]?.split(' ').filter (x) -> x != null && x.length > 0
+  extractTags: (appDef) ->
+    try
+      def = yaml.safeLoad appDef
+      return def.tags if def?.tags
+    catch error
+      console.log error
+    []
   appVersion: -> packageJson.version
