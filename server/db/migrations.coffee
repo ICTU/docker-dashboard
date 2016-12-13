@@ -1,3 +1,5 @@
+yaml = require 'js-yaml'
+
 Migrations.add
   version: 1
   name: 'Gets instance info from ETCD.'
@@ -36,11 +38,11 @@ Migrations.add
 
 Migrations.add
   version: 6
-  name: 'Remote unused settings from the settings object'
+  name: 'Remove unused settings from the settings object'
   down: ->
   up: ->
     key = key: (Meteor.settings.public?.key or 'default')
-    Settings.collection.upsert key, $unset:
+    Settings.collection.rawCollection().update key, $unset:
       etcdBaseUrl: 1
       etcd: 1
       dataDir: 1
