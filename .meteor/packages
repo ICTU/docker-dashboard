@@ -59,3 +59,4 @@ typ:accounts-ldap
 theduke:bootstrap-modal-prompt
 shell-server@0.2.1
 meteortypescript:compiler
+practicalmeteor:mocha

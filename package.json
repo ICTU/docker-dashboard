@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "meteor test --driver-package practicalmeteor:mocha --port 3100"
   },
   "repository": {
     "type": "git",

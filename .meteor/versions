@@ -95,6 +95,11 @@ ongoworks:bunyan-logger@2.6.1
 ordered-dict@1.0.9
 percolate:migrations@0.9.8
 pntbr:js-yaml-client@0.0.1
+practicalmeteor:chai@2.1.0_1
+practicalmeteor:loglevel@1.2.0_2
+practicalmeteor:mocha@2.4.5_6
+practicalmeteor:mocha-core@1.0.1
+practicalmeteor:sinon@1.14.1_2
 promise@0.8.8
 raix:eventemitter@0.1.3
 random@1.0.10
@@ -122,6 +127,7 @@ templating-runtime@1.2.15
 templating-tools@1.0.5
 theduke:bootstrap-modal-prompt@0.0.2
 tmeasday:check-npm-versions@0.3.1
+tmeasday:test-reporter-helpers@0.2.1
 tracker@1.1.1
 twbs:bootstrap@3.3.6
 typ:accounts-ldap@1.0.1
