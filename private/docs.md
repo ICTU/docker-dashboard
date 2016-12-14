@@ -12,7 +12,7 @@
   - [<a href="/docs/api/v2" target="_blank">API v2 documentation</a>](#api)
 
 ## What's changed in BigBoat 5.0
-Practically all (breaking) changes in **BigBoat 5.0** are motivated by its increased alignement with Docker Compose.
+Practically all (breaking) changes in **BigBoat 5.0** are motivated by its increased alignment with Docker Compose.
 ### Data persistence
 With BigBoat 5.0 volume persistence becomes explicit, which is to say that if you want the data in a volume to be persisted it is no longer enough to just declare said volume. Just like with Docker and Docker Compose you have to explicitly map it to an external "host" directory. This directory is rooted in the storage bucket, that the instance uses.
 ```
