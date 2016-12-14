@@ -1,4 +1,20 @@
-## What's changed in **BigBoat 5.0**
+## Table of contents
+  - [What's changed in BigBoat 5.0](#whats-changed-in-bigboat-50)
+    - [Persistence](#persistence)
+    - [Networking](#networking)
+    - [Environment variables](#environment-variables)
+  - [Core concepts](#core-concepts)
+    - [Application definitions](#application-definitions)
+      - [Docker compose](#docker-compose)
+      - [BigBoat compose](#bigboat-compose)
+    - [Instances](#instances)
+    - [Storage buckets](#storage-buckets)
+  - [<a href="/docs/api/v2" target="_blank">API v2 documentation</a>](#api)
+
+## What's changed in BigBoat 5.0
+### Persistence
+### Networking
+### Environment variables
 
 ## Core concepts
 
@@ -30,5 +46,3 @@ Instances are running applications.
 Storage buckets remain after you stop the instance and the data in them is persisted. This means, that next time you create an instance you can use the persisted data by simple attaching the same storage bucket to that instance.
 
 Storage buckets can be created, copied and deleted on the [Storage](/storage) page of BigBoat.
-
-## <a href="/docs/api/v2" target="_blank">API v2 documentation</a>
