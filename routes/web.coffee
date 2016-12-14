@@ -63,6 +63,9 @@ Meteor.startup ->
         Meteor.subscribe 'datastores'
       ]
 
+    @route 'docs',
+      path: '/docs'
+
     @route 'status',
       path: '/status'
       data: ->

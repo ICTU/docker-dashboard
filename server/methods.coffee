@@ -65,6 +65,7 @@ Meteor.methods logInvocation
     else []
 
 Meteor.methods
+  getDocs: -> Assets?.getText 'docs.md'
   getRolesForUser: (targetUser) ->
     loggedInUser = Meteor.user
     unless loggedInUser and Roles.userIsInRole(loggedInUser, ['admin'], Roles.GLOBAL_GROUP)
