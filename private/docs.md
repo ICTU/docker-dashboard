@@ -14,7 +14,7 @@
 ## What's changed in BigBoat 5.0
 Practically all (breaking) changes in **BigBoat 5.0** are motivated by its increased alignment with Docker Compose.
 ### Data persistence
-With BigBoat 5.0 volume persistence becomes explicit, which is to say that if you want the data in a volume to be persisted it is no longer enough to just declare said volume. Just like with Docker and Docker Compose you have to explicitly map it to an external "host" directory. This directory is rooted in the storage bucket, that the instance uses.
+With BigBoat 5.0 volume persistence becomes explicit. If you want the data in a volume to be persisted it is no longer enough to just declare a volume. Just like with Docker and Docker Compose you have to explicitly map it to an external directory. This directory is rooted in the storage bucket, that the instance uses.
 ```
 www:
   image: abiosoft/caddy
@@ -40,10 +40,23 @@ www:
 ```
 
 ### Networking
-**BigBoat** will no longer wait for containers to acquire IP address before starting dependent containers. This is also in line with Docker Compose.
+**BigBoat** will no longer wait for containers to acquire an IP address before starting dependent containers. This is also in line with Docker Compose. Additionally all containers are now automatically started with a `restart: unless-stopped` policy. If a container fails to start because the network is not ready, it will be automatically restarted.
 
 ### Environment variables
-TODO
+The usage of environment variables inside the compose definition has changed slightly to be in line with Docker Compose.
+Previously the special `BigBoat_` environment variables where automatically added to the environment of every container. This made it possible to use these variables inside the containers. Since **BigBoat 5.0** variables are resolved inside the Docker Compose file. This means that they won't be automatically available inside the container.
+Furthermore the `BIGBOAT_SERVICE_NAME` variable is no longer present for two reasons; 1. The environment variable is global to the compose file, thus it cannot have a different value in each service. 2. When defining the compose file you already know the service name.
+Additionally a couple of new variables got introduced: APPLICATION_VERSION and INSTANCE_NAME.
+
+| Environment Variable  | Value                      |  Example  |
+|:----------------------|----------------------------|-----------|
+|BIGBOAT_PROJECT        | Name of the project        | ACC       |
+|BIGBOAT_DOMAIN         | Domain name                | acc       |
+|BIGBOAT_TLD            | Top level domain           | nl        |
+|BIGBOAT_APPLICATION_NAME | |
+|BIGBOAT_APPLICATION_VERSION | |
+|BIGBOAT_INSTANCE_NAME | |
+
 
 ## Core concepts
 
