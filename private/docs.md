@@ -85,12 +85,12 @@ The application level properties are:
 
   - **name** - the name of the application
   - **version** - the version of the application
+  - **tags** - list of application tags
 
 The service level properties can be specified for each service in the Docker Compose and can be:
 
   - **enable_ssh** - enable SSH connectivity to the container implementing this service
   - **endpoint** - the service endpoint; has the format of *:port/path* and will be used by BigBoat to provide a more meaningful link to your service
-
 
   Example BigBoat Compose adding SSH connectivity to the www service:
 ```
