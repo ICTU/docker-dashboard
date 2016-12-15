@@ -46,28 +46,36 @@ www:
 The usage of environment variables inside the compose definition has changed slightly to be in line with Docker Compose.
 Previously the special `BigBoat_` environment variables where automatically added to the environment of every container. This made it possible to use these variables inside the containers. Since **BigBoat 5.0** variables are resolved inside the Docker Compose file. This means that they won't be automatically available inside the container.
 Furthermore the `BIGBOAT_SERVICE_NAME` variable is no longer present for two reasons; 1. The environment variable is global to the compose file, thus it cannot have a different value in each service. 2. When defining the compose file you already know the service name.
-Additionally a couple of new variables got introduced: APPLICATION_VERSION and INSTANCE_NAME.
+Additionally a couple of new variables got introduced: BIGBOAT_APPLICATION_VERSION and BIGBOAT_INSTANCE_NAME.
 
-| Environment Variable  | Value                      |  Example  |
-|:----------------------|----------------------------|-----------|
-|BIGBOAT_PROJECT        | Name of the project        | ACC       |
-|BIGBOAT_DOMAIN         | Domain name                | acc       |
-|BIGBOAT_TLD            | Top level domain           | nl        |
-|BIGBOAT_APPLICATION_NAME | |
-|BIGBOAT_APPLICATION_VERSION | |
-|BIGBOAT_INSTANCE_NAME | |
+| Environment Variable  | Value                      |  Example |
+|:----------------------|----------------------------|---------:|
+|BIGBOAT_PROJECT        | Name of the project        | ACC      |
+|BIGBOAT_DOMAIN         | Domain name                | acc      |
+|BIGBOAT_TLD            | Top level domain           | nl       |
+|BIGBOAT_APPLICATION_NAME | ||
+|BIGBOAT_APPLICATION_VERSION || |
+|BIGBOAT_INSTANCE_NAME | |||
 
 
 ## Core concepts
 
 ### Application definitions
-Application definitions in **BigBoat** are a way of describing what are the different arts of your application and how they fit together. The application definition consists of two parts - a *Docker Compose* part and a *BigBoat Compose* part.
+[Application definitions](/apps) in **BigBoat** are a way of describing what are the different arts of your application and how they fit together. The application definition consists of two parts - a *Docker Compose* part and a *BigBoat Compose* part.
 
 #### Docker compose
 The *Docker Compose* part of the application definition is for all engineering purposes what it says in the tin - a Docker Compose (version 1) file. However, not all Docker Compose features are allowed/supported and some work slightly differently than Docker Compose ran directly. There are also additional features, that **BigBoat** provides, that have no Docker Compose counterparts.
 
+Example Docker Compose:
 ```
-TODO: Example docker compose
+www:
+  image: jenkins:2.7.1-alpine
+  volumes:
+    - /var/jenkins_home:/var/jenkins_home
+  environment:
+    - "JAVA_OPTS=-Duser.timezone=Europe/Amsterdam"
+  mem_limit: 4g
+  stop_signal: SIGKILL
 ```
 
 #### BigBoat compose
@@ -83,12 +91,17 @@ The service level properties can be specified for each service in the Docker Com
   - **enable_ssh** - enable SSH connectivity to the container implementing this service
   - **endpoint** - the service endpoint; has the format of *:port/path* and will be used by BigBoat to provide a more meaningful link to your service
 
+
+  Example BigBoat Compose adding SSH connectivity to the www service:
 ```
-TODO: Example bigboat compose
+name: jenkins
+version: 2.7.1
+www:
+   enable_ssh: true
 ```
 
 ### Instances
-Instances are running applications.
+[Instances](/instances) are running applications. **TODO: Add docs**.
 
 ### Storage buckets
 **BigBoat** abstracts persistent storage via the concept of **storage buckets**. For all practical purposes storage buckets can be thought of as separate file systems. When creating an instance (starting an application) you can attach it to a storage bucket. All the usual docker volume bind mapping of each of the services comprising this application will be done inside (at the root level) of the storage bucket.
