@@ -16,8 +16,29 @@ Practically all (breaking) changes in **BigBoat 5.0** are motivated by its incre
 ### Data persistence
 With BigBoat 5.0 volume persistence becomes explicit, which is to say that if you want the data in a volume to be persisted it is no longer enough to just declare said volume. Just like with Docker and Docker Compose you have to explicitly map it to an external "host" directory. This directory is rooted in the storage bucket, that the instance uses.
 ```
-TODO: Example
+www:
+  image: abiosoft/caddy
+  volumes:
+    - /etc/Caddyfile:/etc/Caddyfile
+    - /root/.caddy
 ```
+In the example above only the first volume (the */etc/Caddyfile*) will be persisted in the storage bucket.
+
+Prior to BigBoat 5.0 the volumes were implicitly persisted, but data in a single storage bucket was segregated by services. For example if you had a (part of) definition like:
+```
+www:
+  image: abiosoft/caddy
+  volumes:
+    - /etc/Caddyfile
+```
+the *Caddyfile* in question would be stored in the */www/etc/Caddyfile* path in the storage bucket. BigBoat 5.0 has migrated all existing application definitions to the new, Docker Compose aligned, style of declaring volumes, taking care that you can still make use of existing data. This means, that the above fragment has become:
+```
+www:
+  image: abiosoft/caddy
+  volumes:
+    - /www/etc/Caddyfile:/etc/Caddyfile
+```
+
 ### Networking
 **BigBoat** will no longer wait for containers to acquire IP address before starting dependent containers. This is also in line with Docker Compose.
 
