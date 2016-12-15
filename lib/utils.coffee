@@ -26,7 +26,6 @@ yaml = require 'js-yaml'
       partitionByService = (content) ->
         serviceRegex = /^(?:(.+?):|(?:.+))\s(?:(?!^\w)(?:.*?)\s?)+/gm
         while match = serviceRegex.exec content
-          console.log 'byService', match
           data: match[0]
           name: match[1]
 
@@ -50,18 +49,12 @@ yaml = require 'js-yaml'
         (services.map (s) ->
           data = s.data
           partitions = partitionByVolume data
-          console.log 'partitions', partitions
           if partitions.length
             [all, pre, volumes, post] = partitions
-            console.log '!pre', pre
-            console.log '!volumes', volumes
-            console.log '!post', post
-            console.log '!name', s.name
-            console.log '~volumes', partitionVolumes(volumes)
+
             if s.name then partitionVolumes(volumes).forEach (vol) ->
               volumes = volumes.replace vol, (migrateVolume s.name, vol)
             data = "#{pre or ''}#{volumes or ''}#{post or ''}"
-            console.log 'aaaa!', data
           data
         ).join '\n'
 
