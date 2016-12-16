@@ -3,50 +3,72 @@
 
 testAppDef =
   def: """
-    name: ava
-    version: rocketchat
+    name: nginx
+    version: latest
 
-    ava:
-      image: ictu/rocketbot:1
+    #tags: autorun infra
+
+    www:
+      image: nginx
+      endpoint: :80
       environment:
-        - EXPRESS_PORT=5000
-        - ROCKETCHAT_URL=http://rocketchat.isd.ictu
-        - ROCKETCHAT_ROOM=iqt-integration
-        - LISTEN_ON_ALL_PUBLIC=true
-        - ROCKETCHAT_USER=ava
-        - ROCKETCHAT_PASSWORD=pat3qrC8B5hqnxnS
-        - ROCKETCHAT_AUTH=password
-        - BOT_NAME=ava
-        - RESPOND_TO_DM=true
-        - JENKINS_URL=http://www.jenkins.infra.ictu:8080
-        - SEMANTIQL_URL=http://www.semantiql.infra.ictu
-        - MONGO_URL=mongodb://10.25.88.240:27017/meteor
-        - ADMINS=gakoj,giren,jepee
-"""
+        - PORT=5000
+        - URL=http://www.nginx.project.ictu
+      depends_on:
+        - db
+      volumes:
+        - /simple/path
+        - /with/qualifier:ro
+        - /with/mapping:/internal/path
+        - /with/deprecated/shared/qualifier:shared
+        - /with/deprecated/do_not_persist/qualifier:do_not_persist
+
+    db:
+      image: mysql:5.6
+      environment:
+        USER: root
+        PASS: really_secret
+      volumes:
+        - /var/lib/mysql
+      enable_ssh: true
+  """
 
 expected =
   bigboatCompose: """
-    name: ava
-    version: rocketchat
+    name: nginx
+    version: latest
+    www:
+      endpoint: ':80'
+    db:
+      enable_ssh: true
+    tags:
+      - autorun
+      - infra
 
   """
   dockerCompose: """
-    ava:
-      image: ictu/rocketbot:1
+    www:
+      image: nginx
       environment:
-        - EXPRESS_PORT=5000
-        - ROCKETCHAT_URL=http://rocketchat.isd.ictu
-        - ROCKETCHAT_ROOM=iqt-integration
-        - LISTEN_ON_ALL_PUBLIC=true
-        - ROCKETCHAT_USER=ava
-        - ROCKETCHAT_PASSWORD=pat3qrC8B5hqnxnS
-        - ROCKETCHAT_AUTH=password
-        - BOT_NAME=ava
-        - RESPOND_TO_DM=true
-        - JENKINS_URL=http://www.jenkins.infra.ictu:8080
-        - SEMANTIQL_URL=http://www.semantiql.infra.ictu
-        - MONGO_URL=mongodb://10.25.88.240:27017/meteor
-        - ADMINS=gakoj,giren,jepee
+        - PORT=5000
+        - URL=http://www.nginx.project.ictu
+      depends_on:
+        - db
+      volumes:
+        - /www/simple/path:/simple/path
+        - /www/with/qualifier:/with/qualifier:ro
+        - /www/with/mapping:/internal/path
+        - /www/with/deprecated/shared/qualifier:/with/deprecated/shared/qualifier
+        - /www/with/deprecated/do_not_persist/qualifier:/with/deprecated/do_not_persist/qualifier
+
+
+    db:
+      image: mysql:5.6
+      environment:
+        USER: root
+        PASS: really_secret
+      volumes:
+        - /db/var/lib/mysql:/var/lib/mysql
   """
 
 
