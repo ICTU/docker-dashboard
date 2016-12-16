@@ -20,6 +20,7 @@ testAppDef =
         - /simple/path
         - /with/qualifier:ro
         - /with/mapping:/internal/path
+        - /with/mapping/and/qualifier:/internal/path:rw
         - /with/deprecated/shared/qualifier:shared
         - /with/deprecated/do_not_persist/qualifier:do_not_persist
 
@@ -58,6 +59,7 @@ expected =
         - /www/simple/path:/simple/path
         - /www/with/qualifier:/with/qualifier:ro
         - /www/with/mapping:/internal/path
+        - /www/with/mapping/and/qualifier:/internal/path:rw
         - /www/with/deprecated/shared/qualifier:/with/deprecated/shared/qualifier
         - /www/with/deprecated/do_not_persist/qualifier:/with/deprecated/do_not_persist/qualifier
 
