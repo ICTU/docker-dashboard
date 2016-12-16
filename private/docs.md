@@ -45,23 +45,22 @@ www:
 ### Environment variables
 The usage of environment variables inside the compose definition has changed slightly to be in line with Docker Compose.
 Previously the special `BigBoat_` environment variables where automatically added to the environment of every container. This made it possible to use these variables inside the containers. Since **BigBoat 5.0** variables are resolved inside the Docker Compose file. This means that they won't be automatically available inside the container.
-Furthermore the `BIGBOAT_SERVICE_NAME` variable is no longer present for two reasons; 1. The environment variable is global to the compose file, thus it cannot have a different value in each service. 2. When defining the compose file you already know the service name.
-Additionally a couple of new variables got introduced: BIGBOAT_APPLICATION_VERSION and BIGBOAT_INSTANCE_NAME.
+Furthermore the `BIGBOAT_SERVICE_NAME` variable is no longer present for two reasons; 1. The environment variable is global to the compose file, thus it cannot have a different value in each service. 2. When defining the compose file you already know the service name. Additionally a couple of new variables got introduced: BIGBOAT_APPLICATION_VERSION and BIGBOAT_INSTANCE_NAME.
 
-| Environment Variable  | Value                      |  Example |
-|:----------------------|----------------------------|---------:|
-|BIGBOAT_PROJECT        | Name of the project        | ACC      |
-|BIGBOAT_DOMAIN         | Domain name                | acc      |
-|BIGBOAT_TLD            | Top level domain           | nl       |
-|BIGBOAT_APPLICATION_NAME | ||
-|BIGBOAT_APPLICATION_VERSION || |
-|BIGBOAT_INSTANCE_NAME | |||
+| Environment Variable       | Description                 |  Example |
+|:---------------------------|-----------------------------|---------:|
+|BIGBOAT_PROJECT             | Name of the project         | ACC      |
+|BIGBOAT_DOMAIN              | Domain name                 | acc      |
+|BIGBOAT_TLD                 | Top level domain            | nl       |
+|BIGBOAT_APPLICATION_NAME    | The name of the application | nginx    |
+|BIGBOAT_APPLICATION_VERSION | The application version     | 1.0      |
+|BIGBOAT_INSTANCE_NAME       | The given instance name     | myname   |
 
 
 ## Core concepts
 
 ### Application definitions
-[Application definitions](/apps) in **BigBoat** are a way of describing what are the different arts of your application and how they fit together. The application definition consists of two parts - a *Docker Compose* part and a *BigBoat Compose* part.
+[Application definitions](/apps) in **BigBoat** describe the different parts of your application and how they fit together. The application definition consists of two parts - a *Docker Compose* part and a *BigBoat Compose* part.
 
 #### Docker compose
 The *Docker Compose* part of the application definition is for all engineering purposes what it says in the tin - a Docker Compose (version 1) file. However, not all Docker Compose features are allowed/supported and some work slightly differently than Docker Compose ran directly. There are also additional features, that **BigBoat** provides, that have no Docker Compose counterparts.
