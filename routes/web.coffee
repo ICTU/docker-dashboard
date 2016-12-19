@@ -5,6 +5,11 @@ connections = {}
 
 Meteor.startup ->
 
+  if Meteor.isServer
+    WebApp.connectHandlers.use "/docs", (req, res, next) ->
+      res.writeHead 302, 'Location': '/docs/index.html'
+      res.end()
+
   Router.configure
     layoutTemplate: 'base-layout'
 
@@ -62,9 +67,6 @@ Meteor.startup ->
         Meteor.subscribe 'storage'
         Meteor.subscribe 'datastores'
       ]
-
-    @route 'docs',
-      path: '/docs'
 
     @route 'status',
       path: '/status'
