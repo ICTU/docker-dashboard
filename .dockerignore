@@ -1,2 +1,5 @@
+.git/
 .meteor/local/
 node_modules
+docs
+*.md
