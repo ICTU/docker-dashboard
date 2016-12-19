@@ -1,0 +1,14 @@
+.meteor
+node_modules
+*.coffee
+*.html
+*.css
+*.scss
+*.yml
+*.js
+*.cjsx
+*.apib
+Dockerfile
+.gitignore
+.dockerignore
+.bookignore

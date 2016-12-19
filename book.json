@@ -1,0 +1,8 @@
+{
+  "title": "BigBoat Documentation",
+  "description": "Some notes on BigBoat",
+  "author": "ICTU IQ-Team",
+  "structure": {
+    "readme": "INTRO.md"
+  }
+}
