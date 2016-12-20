@@ -4,3 +4,5 @@
 Storage buckets remain after you stop the instance and the data in them is persisted. This means, that next time you create an instance you can use the persisted data by simple attaching the same storage bucket to that instance.
 
 Storage buckets can be created, copied and deleted on the [Storage](/storage) page of BigBoat.
+
+![Storage Buckets page](../screenshots/storage.png)

@@ -1,5 +1,7 @@
-# Application definitions
+# Apps
 [Application definitions](/apps) in **BigBoat** describe the different parts of your application and how they fit together. The application definition consists of two parts - a *Docker Compose* part and a *BigBoat Compose* part.
+
+![Apps page](../screenshots/apps.png)
 
 ## Docker compose
 The *Docker Compose* part of the application definition is for all engineering purposes what it says in the tin - a Docker Compose (version 1) file. However, not all Docker Compose features are allowed/supported and some work slightly differently than Docker Compose ran directly. There are also additional features, that **BigBoat** provides, that have no Docker Compose counterparts.
