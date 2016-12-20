@@ -31,11 +31,14 @@ The service level properties can be specified for each service in the Docker Com
 
   - **enable_ssh** - enable SSH connectivity to the container implementing this service
   - **endpoint** - the service endpoint; has the format of *:port/path* and will be used by BigBoat to provide a more meaningful link to your service
+  - **protocol** - the service protocol; example *http,https,tcp,udp*.
 
   Example BigBoat Compose adding SSH connectivity to the www service:
-```
-name: jenkins
-version: 2.7.1
-www:
-   enable_ssh: true
-```
+  ```
+  name: jenkins
+  version: 2.7.1
+  www:
+      enable_ssh: true
+      endpoint: :8080/startScreen
+      protocol: https
+  ```
