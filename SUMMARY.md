@@ -7,4 +7,3 @@
   * [Apps](docs/core-concepts/application-definitions.md)
   * [Instances](docs/core-concepts/instances.md)
   * [Storage](docs/core-concepts/storage-buckets.md)
-* [API v2](/docs/api/v2)
