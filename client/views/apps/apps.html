@@ -19,7 +19,7 @@
       </div>
   </div>
   <div id="content-row" class="row">
-    <div id="apps-container" class="col-md-4" style='margin-top:10px; overflow-y: auto; height: calc(100vh - 150px);'>
+    <div id="apps-container" class="col-md-5" style='margin-top:10px; overflow-y: auto; height: calc(100vh - 150px);'>
       {{#each appNames}}
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -84,7 +84,7 @@
       {{/if}}
 
     </div>
-    <div class="col-md-8" style='overflow-y: auto; height: calc(100vh - 150px);'>
+    <div class="col-md-7" style='overflow-y: auto; height: calc(100vh - 150px);'>
       {{#if selectedAppDefId}}
         {{#if isNewApp}}
           <span>{{> React component=AppEditor newApp=true }}</span>
@@ -109,7 +109,7 @@
         <i class="glyphicon glyphicon-lg glyphicon-play"></i>
       </a>
       <form id="start-app-form" role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
-          <div class="form-group" style="width:30em">
+          <div class="form-group" style="width:25em">
               <label>Instance name (must match [a-zA-Z0-9_-]+)</label>
               <input required pattern="[a-zA-Z0-9_-]+" type="text"
                 class="form-control instance-name"
@@ -136,7 +136,7 @@
                 {{/each}}
               {{/if}}
           </div>
-          <button type="submit" class="start-app btn btn-mini">Go!</button>
+          <button type="submit" class="start-app btn btn-mini pull-right">Go!</button>
       </form>
 
     </li>
@@ -145,12 +145,12 @@
         <i class="glyphicon glyphicon-lg glyphicon-trash"></i>
       </a>
       <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
-          <div class="form-group" style="width:20em">
+          <div class="form-group" style="width:25em">
             <div class="alert alert-warning" role="alert">
               <strong>Warning!</strong> Do you really want to remove this application?
             </div>
           </div>
-          <button type="button" class="remove-app btn btn-mini btn-danger pull-right">Yes!</button>
+          <button type="button" class="remove-app btn btn-mini btn-danger">Yes destroy it!</button>
       </form>
     </li>
   </ul>
