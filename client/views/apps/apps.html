@@ -19,7 +19,7 @@
       </div>
   </div>
   <div id="content-row" class="row">
-    <div id="apps-container" class="col-md-4" style='margin-top:10px'>
+    <div id="apps-container" class="col-md-4" style='margin-top:10px; overflow-y: auto; height: calc(100vh - 150px);'>
       {{#each appNames}}
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -84,7 +84,7 @@
       {{/if}}
 
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8" style='overflow-y: auto; height: calc(100vh - 150px);'>
       {{#if selectedAppDefId}}
         {{#if isNewApp}}
           <span>{{> React component=AppEditor newApp=true }}</span>
@@ -97,7 +97,6 @@
         </h3>
       {{/if}}
     </div>
-
   </div>
 </div>
 </template>

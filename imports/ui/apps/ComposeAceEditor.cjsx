@@ -31,6 +31,6 @@ module.exports = React.createClass
     if @refs.editor then @refs.editor.editor.setValue @props.compose, -1
 
   render: ->
-    <AceEditor ref='editor' name={@props.name} width='100%' minLines=25 maxLines=25
+    <AceEditor ref='editor' name={@props.name} width='100%' minLines={@props.minLines} maxLines={@props.maxLines}
       enableBasicAutocompletion=true enableLiveAutocompletion=true enableSnippets=true
       mode='yaml' theme='chrome' value={@props.compose} onChange={@onChange} setOptions={wrap:true}/>

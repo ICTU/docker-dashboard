@@ -47,16 +47,16 @@ module.exports = React.createClass
           <h3 className="pull-left">{@state.bigboatCompose?.parsed.name}:{@state.bigboatCompose?.parsed.version}</h3>
           <button onClick={@save} id="submitButton" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
         </div>
-        <hr />
+        <hr style={marginTop:10, marginBottom:10}/>
         <h4>Docker Compose</h4>
-        <ComposeAceEditor name='dockerCompose' compose={@props.dockerCompose} onChange={@onDockerComposeChange} />
+        <ComposeAceEditor name='dockerCompose' compose={@props.dockerCompose} onChange={@onDockerComposeChange} minLines={20} maxLines={30}/>
 
-        <hr />
+        <hr style={marginTop:10, marginBottom:10}/>
         <h4>Bigboat Compose</h4>
-        <ComposeAceEditor name='bigboatCompose' compose={@props.bigboatCompose} onChange={@onBigboatComposeChange} />
-        <hr />
-        <div style={height:50, marginBottom:25}>
-          <button onClick={@save} id="submitButtonBottom" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
+        <ComposeAceEditor name='bigboatCompose' compose={@props.bigboatCompose} onChange={@onBigboatComposeChange} minLines={15} maxLines={20}/>
+        <hr style={marginTop:0, marginBottom:0}/>
+        <div style={height:50, marginBottom:0}>
+          <button onClick={@save} id="submitButtonBottom" type="button" style={marginTop:10} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
         </div>
       </span>
     else
