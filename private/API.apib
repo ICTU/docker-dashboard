@@ -1,0 +1,261 @@
+FORMAT: 1A
+HOST: http://localhost:3000/api/v2
+
+All resource endpoints require authentication. An API key is user bound and can
+be obtained from the dashboard configuration page. The api key must be included
+in every request as either a header (***api-key***) or URL query parameter (***?api-key=...***).
+
+# Group Apps
+
+An App is a logical named and versioned entity. It serves as a template for
+an **Instance**. This ***API*** offers multiple resources to retrieve and modify
+different aspects of an App.
+
+## Applications [/apps]
+
++ Model (application/json)
+
+    ```js
+    [
+      {
+          "id": "ERfrBncoPKSN9ampt",
+          "name": "nginx",
+          "version": "latest"
+      },
+      {
+          "id": "LENn6QcjnG8WRvAxf",
+          "name": "nginx",
+          "version": "1.11.4"
+      }
+
+    ]
+    ```
+
+### Retrieve all Applications [GET]
+Returns all applications.
+
++ Response 200
+
+  [Applications][]
+
+## App [/apps/{name}/{version}]
+An application is a logical unit of application configuration data.
+
++ Parameters
+  + name: `nginx` (string) - The name of the application
+  + version: `latest` (string) - The version of the application
+
++ Model (application/json)
+
+  ```js
+  {
+    "id": "MKMZCnLcEJmkjSenJ",
+    "name": "nginx",
+    "version": "latest"
+  }
+  ```
+
+### Retrieve an App [GET]
+Returns a specific application.
+
++ Response 200
+
+    [App][]
+
++ Response 404
+
+### Create an App [PUT]
+Creates a new application with the specified name and version. Returns the
+App when succesfully created or updated.
+
++ Response 201
+
+    [App][]
+
+### Delete an App [DELETE]
+Delete an application.
+
++ Response 204
++ Response 404
+
+## Docker Compose [/apps/{name}/{version}/files/dockerCompose]
+A Docker compose file associated with an application.
+
++ Parameters
+  + name: `nginx` (string) - The name of the application
+  + version: `latest` (string) - The version of the application
+
++ Model (text/yaml)
+
+        www:
+          image: nginx:latest
+
+### Retrieve the Docker compose file [GET]
+
++ Response 200
+  [Docker Compose][]
+
+### Update the Docker compose file [PUT]
+
++ Request
+  [Docker Compose][]
++ Response 201
++ Response 400 (application/json)
+
+  ```js
+  {
+    "message": "JS-YAML: end of the stream or a document separator is expected at line 2, column 1:....."
+  }
+  ```
+
+
+## BigBoat Compose [/apps/{name}/{version}/files/bigboatCompose]
+A BigBoat compose file associated with an application.
+
++ Parameters
+  + name: `nginx` (string) - The name of the application
+  + version: `latest` (string) - The version of the application
+
++ Model (text/yaml)
+
+        name: nginx
+        version: latest
+
+        www:
+          enable_ssh: true
+
+### Retrieve the BigBoat compose file [GET]
+
++ Response 200
+  [BigBoat Compose][]
+
+### Update the BigBoat compose file [PUT]
+
+The BigBoat compose file should be a valid YAML file.
+The `name` and `version` properties of the BigBoat Compose file should equal to
+the name and version values of the App entity. The request is denied otherwise.
+
++ Request
+  [BigBoat Compose][]
++ Response 201
++ Response 400 (application/json)
+
+  ```js
+  {
+    "message": "JS-YAML: end of the stream or a document separator is expected at line 2, column 1:....."
+  }
+  ```
+
+# Group Instance
+
+An Instance is a parameterized App that is deployed for execution.
+
+## Instances [/instances]
+
++ Model (application/json)
+
+  ```js
+  [
+    {
+        "id": "y7bzwghzP9ouM56g6",
+        "name": "nginx",
+        "state": {
+            "current": "running",
+            "desired": "running"
+        }
+    },
+    {
+        "id": "ySYXNTPw2ry9XE6nu",
+        "name": "nginx2",
+        "state": {
+            "current": "starting",
+            "desired": "running"
+        }
+    }
+  ]
+  ```
+
+### Retrieve all Instances [GET]
+Returns all instances along with their current and desired state attributes.
+
++ Response 200
+  [Instances][]
+
+## Instance [/instances/{name}]
+
++ Parameters
+  + name: `nginx` (string) - The unique name of the instance
+
++ Model (application/json)
+
+  ```js
+  {
+    "id": "y7bzwghzP9ouM56g6",
+    "name": "nginx",
+    "state": {
+        "current": "starting",
+        "desired": "running"
+    },
+    "app": {
+        "name": "nginx",
+        "version": "latest"
+    },
+    "services": {
+        "www": {
+            "state": "starting"
+        }
+    }
+  }
+  ```
+
+### Retrieve a single instance [GET]
+Returns a single instance
+
++ Response 200
+
+    [Instance][]
+
++ Response 404
+
+### Create an instance [PUT]
+Requests a new instance to be created with a desired state of 'running'.
+
+The `parameters` and `options` properties of the posted document are required
+but can be left empty when no parameters are present or when you don't want to
+override the default storage bucket. See request example 2.
+
++ Request (application/json)
+
+  ```js
+  {
+    "app":"nginx",
+    "version":"latest",
+    "parameters":{
+      "version":"1.11.4"
+    },
+    "options": {
+      "storageBucket": "custom-storage-bucket"
+    }
+  }
+  ```
++ Request (application/json)
+
+  ```js
+  {
+    "app":"nginx",
+    "version":"latest",
+    "parameters":{},
+    "options": {}
+  }
+  ```
+
++ Response 201
+    [Instance][]
++ Response 400
+
+### Stop an instance [DELETE]
+Requests an instance to be stopped. Returns the instance when successful.
+
++ Response 200
+  [Instance][]
++ Response 404

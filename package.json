@@ -1,13 +1,13 @@
 {
   "name": "dashboard",
-  "version": "4.3.8",
+  "version": "5.0.5",
   "description": "Docker dashboard",
   "main": "index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "meteor test --driver-package practicalmeteor:mocha --port 3100"
   },
   "repository": {
     "type": "git",
@@ -24,13 +24,21 @@
   },
   "homepage": "https://github.com/ICTU/docker-dashboard#readme",
   "dependencies": {
+    "aglio": "^2.3.0",
+    "babel-runtime": "^6.18.0",
+    "bcrypt": "^0.8.7",
+    "brace": "^0.8.0",
     "bufferutil": "^1.2.1",
     "clipboard": "^1.5.10",
+    "js-yaml": "^3.6.1",
+    "lodash": "^4.16.4",
     "meteor-node-stubs": "^0.2.3",
     "mongo-dot-notation": "^1.0.5",
     "mqtt": "^1.14.1",
-    "node-etcd": "^4.2.1",
+    "pretty": "^1.0.0",
+    "prettysize": "0.0.3",
     "react": "^15.0.2",
+    "react-ace": "^3.6.1",
     "react-addons-create-fragment": "^15.0.2",
     "react-addons-css-transition-group": "^15.0.2",
     "react-addons-linked-state-mixin": "^15.0.2",

@@ -74,5 +74,11 @@ module.exports = React.createClass
         else
           " | Not in use"
         }
+        {if bucket.size
+          if bucket.isSizeLocked
+            <strong> | Retrieving size ...</strong>
+          else
+            " | Size #{bucket.size}"
+        }
       </span>
     </div>

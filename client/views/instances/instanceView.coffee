@@ -54,10 +54,10 @@ Template.instanceView.helpers
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
     port = findWebPort @services?.www
-    endpoint = @services?.www?.endpoint or ":" + port
-    protocol = @services?.www?.protocol or determineProtocol port
-    if @services?.www?.fqdn
-      "#{protocol}://#{@services?.www?.fqdn}#{endpoint}"
+    endpoint = @services?.www?.properties?.bigboat?.instance?.endpoint?.path or ":" + port
+    protocol = @services?.www?.properties?.bigboat?.instance?.endpoint?.protocol or determineProtocol port
+    if fqdn = @services?.www?.fqdn
+      "#{protocol}://#{fqdn}#{endpoint}"
   params: -> key: k, value: v for k, v of @parameters when k isnt 'tags' if @parameters
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2

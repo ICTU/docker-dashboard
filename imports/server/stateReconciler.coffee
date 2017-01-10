@@ -1,3 +1,5 @@
+_ = require 'lodash'
+
 SERVICE_STATES = ['starting', 'restarting', 'running', 'stopping', 'stopped', 'removed']
 
 atLeastOneWithState = (services, states...) ->
@@ -58,8 +60,15 @@ setStateDescription = (instanceName, stateDescription) ->
 f = true
 
 setServiceField = (fieldName, fieldValue, labels) ->
-  if (name = labels['bigboat/instance/name']) and (service = labels['bigboat/service/name'])
+  if (name = labels['bigboat.instance.name']) and (service = labels['bigboat.service.name']) and labels['bigboat.service.type'] is 'service'
     Instances.upsert {name: name}, $set: {"services.#{service}.#{fieldName}": fieldValue}
+
+labelsToObject = (labels) ->
+  obj = {}
+  for label, val of labels
+    _.set obj, label, val
+  obj
+
 
 module.exports =
   updateServiceFQDN: (fqdn, labels) -> setServiceField 'fqdn', fqdn, labels
@@ -68,38 +77,39 @@ module.exports =
 
   updateContainerName: (name, labels) -> setServiceField 'container.name', name, labels
 
+  updateContainerId: (contId, labels) -> setServiceField 'container.id', contId, labels
 
   updateServiceState: (mappedState, labels) ->
     unless mappedState in SERVICE_STATES
       throw "Service state '#{mappedState}' is not supported."
-    if name = labels['bigboat/instance/name']
-      if (type = labels['bigboat/container/type']) is 'service'
-        updateDoc = name: name
+    if name = labels['bigboat.instance.name']
+      if (type = labels['bigboat.service.type']) is 'service'
+        properties = labelsToObject labels
+        updateDoc =
+          name: name
+          'app.name': properties.bigboat?.application?.name
+          'app.version': properties.bigboat?.application?.version
+          startedBy: properties.bigboat?.startedBy
+          storageBucket: properties.bigboat?.storage?.bucket
+          agent:
+            url: properties.bigboat?.agent?.url
 
-        if (appName = labels['bigboat/application/name']) and
-          (appVersion = labels['bigboat/application/version'])
-            updateDoc.app = name: appName, version: appVersion
-
-        updateDoc.startedBy = startedBy if startedBy = labels['bigboat/startedBy']
-        updateDoc.storageBucket = storageBucket if storageBucket = labels['bigboat/storage/bucket']
-
-        updateDoc['agent.url'] = val if val = labels['bigboat/agent/url']
-
-        service = labels['bigboat/service/name']
-        search = {name: name}
+        service = labels['bigboat.service.name']
 
         updateDoc["services.#{service}.state"] = mappedState
+        updateDoc["services.#{service}.properties"] = properties
         updateDoc.status = "Starting #{service}" if mappedState is 'starting'
         updateDoc.status = "Stopping #{service}" if mappedState is 'stopping'
 
-        Instances.upsert search, $set: updateDoc
-      else if type is 'net'
-        updateDoc = name: name
-        service = labels['bigboat/service/name']
-        updateDoc["services.#{service}.network"] = mappedState
-        console.log 'WAAAA', type, updateDoc
         Instances.upsert {name: name}, $set: updateDoc
-      else console.log 'unknown container type', type
+      else
+        updateDoc = name: name
+        auxUpdateDoc =
+          state: mappedState
+          properties: labelsToObject labels
+        service = labels['bigboat.service.name']
+        updateDoc["services.#{service}.aux.#{type}"] = auxUpdateDoc
+        Instances.update {name: name}, $set: updateDoc
 
   #
   # Updates the internal state based on image pulls

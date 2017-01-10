@@ -36,6 +36,7 @@ Meteor.methods logInvocation
   clearInstance: Cluster.clearInstance
   saveApp: Cluster.saveApp
   deleteApp: Cluster.deleteApp
+  'storage/buckets/size': (id) -> Agent.getStorageBucketSize id
   'storage/buckets/delete': (id) -> Agent.deleteStorageBucket StorageBuckets.findOne(id)?.name
   'storage/buckets/create': (name) -> Agent.createStorageBucket name
   'storage/buckets/copy': (source, destination) -> Agent.copyStorageBucket source, destination
@@ -64,6 +65,7 @@ Meteor.methods logInvocation
     else []
 
 Meteor.methods
+  getDocs: -> Assets?.getText 'docs.md'
   getRolesForUser: (targetUser) ->
     loggedInUser = Meteor.user
     unless loggedInUser and Roles.userIsInRole(loggedInUser, ['admin'], Roles.GLOBAL_GROUP)

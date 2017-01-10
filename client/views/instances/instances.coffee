@@ -11,10 +11,10 @@ isStateOk = (instance) ->
 
 Template.instances.helpers
   instances: ->
-    if Session.get('queryName')?.length
-      Instances.find {name: {$regex: Session.get('queryName'), $options: 'i'}}, sort: key: 1
-    else
-      Instances.find {}, sort: key: 1
+    filter = if Session.get('queryName')?.length
+      {name: {$regex: Session.get('queryName'), $options: 'i'}}
+    else {}
+    Instances.find filter, sort: name: 1
   isSearching: -> Session.get('queryName')?.length
   searchTerms: -> Session.get 'queryName'
   InstancesPage: -> InstancesPage

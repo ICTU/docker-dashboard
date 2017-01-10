@@ -19,3 +19,16 @@ Meteor.startup ->
         error: "Failed to start '#{@request.body.name}' instance '#{@request.body.instanceName}'"
 
       API.handleAuthRequest @, Cluster.startApp, args, successResponse, failedResponse
+
+    @route 'apiAdminStopAllInstances',
+      where: 'server'
+      path: '/api/v1/admin/instances/'
+    .delete ->
+      successResponse =
+        statusCode: 200
+        message: "Stopping all instances"
+      failedResponse =
+        statusCode: 403
+        error: "Failed to stop all instances"
+
+      API.handleAuthRequest @, Cluster.stopAll, [], successResponse, failedResponse

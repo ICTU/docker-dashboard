@@ -21,6 +21,8 @@ module.exports = (msg) ->
       reconciler.updateServicePorts (_.keys ports), labels
     if name = msg.Name
       reconciler.updateContainerName name[1..], labels
+    if id = msg.Id
+      reconciler.updateContainerId id, labels
 
 ###
 {
