@@ -1,4 +1,4 @@
-### 5.0.0
+### 5.0.0 - 5.0.6
 - MQTT is used to communicate container status information from the host to the dashboard
 - Introduced API v2
 - Removed unused settings from configuration and database
