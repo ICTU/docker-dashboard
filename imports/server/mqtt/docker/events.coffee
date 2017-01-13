@@ -14,9 +14,13 @@ handleContainerEvent = (msg) ->
     when 'top'    then ignore
     else console.log 'events:unknown container status', msg.status
 
-  if mappedState
+  if mappedState and (labels = msg.Actor?.Attributes)
     console.log 'eventmsg', msg
-    reconciler.updateServiceState mappedState, msg.Actor?.Attributes
+    reconciler.updateServiceState mappedState, labels
+
+    if id = msg.id
+      console.log 'updateContainer id from event', id, labels
+      reconciler.updateContainerId id, labels
 
 handleImageEvent = (msg) ->
   if msg.status is 'pull' and (image = msg.Actor?.Attributes?.name)
