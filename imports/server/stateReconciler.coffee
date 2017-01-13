@@ -79,6 +79,8 @@ module.exports =
 
   updateContainerId: (contId, labels) -> setServiceField 'container.id', contId, labels
 
+  updateCreated: (created, labels) -> setServiceField 'container.created', created, labels
+
   updateServiceState: (mappedState, labels) ->
     unless mappedState in SERVICE_STATES
       throw "Service state '#{mappedState}' is not supported."
