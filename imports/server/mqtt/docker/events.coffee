@@ -19,7 +19,6 @@ handleContainerEvent = (msg) ->
     reconciler.updateServiceState mappedState, labels
 
     if id = msg.id
-      console.log 'updateContainer id from event', id, labels
       reconciler.updateContainerId id, labels
 
 handleImageEvent = (msg) ->
