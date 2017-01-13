@@ -23,6 +23,8 @@ module.exports = (msg) ->
       reconciler.updateContainerName name[1..], labels
     if id = msg.Id
       reconciler.updateContainerId id, labels
+    if created = msg.Created
+      reconciler.updateCreated created, labels
 
 ###
 {
