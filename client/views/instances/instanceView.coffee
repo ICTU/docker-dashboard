@@ -1,13 +1,5 @@
 Steps = require '/imports/ui/instance/steps.cjsx'
 
-isStateOk = (instance) ->
-  if instance.meta?.state is 'active'
-    for i, service of instance.services
-      return false unless service.dockerContainerInfo?.service?.State?.Running
-    true
-  else
-    false
-
 HTTPS_PORTS = ['443', '8443']
 HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
 
