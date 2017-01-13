@@ -3,7 +3,7 @@ Template.serviceView.onCreated ->
     target: (trigger) -> trigger.parentNode.nextElementSibling
 
 Template.serviceView.helpers
-  createdSince: -> moment(@data.dockerContainerInfo?.service?.Created).fromNow()
+  createdSince: -> moment(@data.container?.created).fromNow() if @data.container?.created
   hasSshSettings: -> @data.aux.ssh
   stateIcon: ->
     if @data.state is 'running'
