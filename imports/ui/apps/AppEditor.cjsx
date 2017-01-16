@@ -45,7 +45,9 @@ module.exports = React.createClass
       <span>
         <div style={height:50}>
           <h3 className="pull-left">{@state.bigboatCompose?.parsed.name}:{@state.bigboatCompose?.parsed.version}</h3>
-          <button onClick={@save} id="submitButton" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
+          {if @props.canSave
+            <button onClick={@save} id="submitButton" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
+          }
         </div>
         <hr style={marginTop:10, marginBottom:10}/>
         <h4>Docker Compose</h4>
@@ -55,9 +57,11 @@ module.exports = React.createClass
         <h4>Bigboat Compose</h4>
         <ComposeAceEditor name='bigboatCompose' compose={@props.bigboatCompose} onChange={@onBigboatComposeChange} minLines={15} maxLines={20}/>
         <hr style={marginTop:0, marginBottom:0}/>
-        <div style={height:50, marginBottom:0}>
-          <button onClick={@save} id="submitButtonBottom" type="button" style={marginTop:10} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
-        </div>
+        {if @props.canSave
+          <div style={height:50, marginBottom:0}>
+            <button onClick={@save} id="submitButtonBottom" type="button" style={marginTop:10} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
+          </div>
+        }
       </span>
     else
       <h3 style={textAlign: 'center'}>
