@@ -30,7 +30,11 @@ module.exports = React.createClass
   componentDidUpdate: ->
     if @refs.editor then @refs.editor.editor.setValue @props.compose, -1
 
+  # making the editor readonly when the user logs out with
+  # readOnly={@props.readOnly}
+  # does not work
+  # the ace editor does not update it's props reactively
   render: ->
     <AceEditor ref='editor' name={@props.name} width='100%' minLines={@props.minLines} maxLines={@props.maxLines}
-      enableBasicAutocompletion=true enableLiveAutocompletion=true enableSnippets=true readOnly={@props.readOnly}
+      enableBasicAutocompletion=true enableLiveAutocompletion=true enableSnippets=true
       mode='yaml' theme='chrome' value={@props.compose} onChange={@onChange} setOptions={wrap:true}/>
