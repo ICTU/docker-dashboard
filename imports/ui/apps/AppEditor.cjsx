@@ -48,7 +48,7 @@ module.exports = React.createClass
           {if @props.canEdit
             <button onClick={@save} id="submitButton" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
           else
-            <span className="pull-right" style={marginTop: 20, color: "red"}>LOGIN TO EDIT</span>
+            <span className="pull-right" style={marginTop: 20, color: "red"}>LOG IN TO EDIT</span>
           }
         </div>
         <hr style={marginTop:10, marginBottom:10}/>
