@@ -34,7 +34,7 @@ module.exports = createContainer (props) ->
   name: app?.name
   version: app?.version
   isLoading: not app?
-  canSave: Meteor.user() isnt null
+  canEdit: Meteor.user() isnt null
   onSave: (data) ->
     Meteor.call 'saveApp', data.bigboatCompose.parsed.name, data.bigboatCompose.parsed.version, data.dockerCompose, data.bigboatCompose
 , AppEditor

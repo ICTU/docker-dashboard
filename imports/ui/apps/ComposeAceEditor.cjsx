@@ -32,5 +32,5 @@ module.exports = React.createClass
 
   render: ->
     <AceEditor ref='editor' name={@props.name} width='100%' minLines={@props.minLines} maxLines={@props.maxLines}
-      enableBasicAutocompletion=true enableLiveAutocompletion=true enableSnippets=true
+      enableBasicAutocompletion=true enableLiveAutocompletion=true enableSnippets=true readOnly={@props.readOnly}
       mode='yaml' theme='chrome' value={@props.compose} onChange={@onChange} setOptions={wrap:true}/>
