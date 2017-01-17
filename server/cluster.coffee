@@ -88,7 +88,9 @@ substituteParameters = (def, parameters) ->
     # these labels are later communicated back to the dashboard
     # though Docker events and inspect information.
     # This way we can relate containers and events
-    for serviceName, service of dockerCompose
+    services = dockerCompose
+    services = dockerCompose.services if dockerCompose.services
+    for serviceName, service of services
       service.container_name = "#{project}-#{instance}-#{serviceName}"
       service.restart = 'unless-stopped'
       service.labels =
@@ -106,7 +108,7 @@ substituteParameters = (def, parameters) ->
         'bigboat.container.enable_ssh':  if bigboatCompose[serviceName]?.enable_ssh then 'true' else undefined
 
       if bigboatCompose[serviceName]?.enable_ssh
-        dockerCompose["bb-ssh-#{serviceName}"] =
+        services["bb-ssh-#{serviceName}"] =
           image: 'jeroenpeeters/docker-ssh'
           container_name: "#{project}-#{instance}-#{serviceName}-ssh"
           environment:
