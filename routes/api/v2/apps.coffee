@@ -1,4 +1,5 @@
 Meteor.startup ->
+  yaml = require 'js-yaml'
 
   if Meteor.isServer
     Router.onBeforeAction Iron.Router.bodyParser.text(), only: [
@@ -30,7 +31,12 @@ Meteor.startup ->
       else lib.notFound @response
     .put ->
       check([@params.name, @params.version], [String])
-      meta = ApplicationDefs.upsert @params, @params
+      selector =
+        name: @params.name
+        version: @params.version
+      doc = _.extend {}, selector,
+        bigboatCompose: yaml.safeDump selector
+      ApplicationDefs.upsert selector, doc
 
       @response.setHeader 'content-type', 'application/json'
       @response.writeHead 201
