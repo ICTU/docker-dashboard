@@ -34,8 +34,10 @@ Meteor.startup ->
       selector =
         name: @params.name
         version: @params.version
-      doc = _.extend {}, selector,
-        bigboatCompose: yaml.safeDump selector
+      doc = _.extend {}, $set: selector,
+        $setOnInsert:
+          bigboatCompose: (yaml.safeDump selector)
+          dockerCompose: ''
       ApplicationDefs.upsert selector, doc
 
       @response.setHeader 'content-type', 'application/json'
@@ -62,12 +64,18 @@ Meteor.startup ->
         else lib.notFound @response
       .put ->
         check([@params.name, @params.version, @request.body], [String])
+        selector =
+          name: @params.name
+          version: @params.version
         try
-          yaml = YAML.safeLoad @request.body
-          if msg = putInputCheck? @params.name, @params.version, yaml
+          doc = YAML.safeLoad @request.body
+          if msg = putInputCheck? @params.name, @params.version, doc
             lib.endWithError @response, 400, msg
           else
-            ApplicationDefs.upsert {name: @params.name, version: @params.version},
+            ApplicationDefs.upsert selector,
+              $setOnInsert:
+                bigboatCompose: (yaml.safeDump selector)
+                dockerCompose: ''
               $set:
                 name: @params.name
                 version: @params.version
