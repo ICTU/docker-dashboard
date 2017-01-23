@@ -20,10 +20,15 @@ Meteor.startup ->
 
   lib = require './lib.coffee'
 
+  notAllowed = (curr, allowed) -> ->
+    @response.setHeader 'Allow', allowed
+    lib.endWithError @response, 405, "Method #{curr} is not allowed. We are very sorry for the inconvenience. Allowed methods are #{allowed}. Please refer to the API documentation at #{process.env.ROOT_URL}docs/api/v2"
+
   Router.map ->
     @route 'api/v2/apps/details',
       where: 'server'
       path: '/api/v2/apps/:name/:version'
+    .post notAllowed 'POST', 'GET, PUT, DELETE'
     .get ->
       check([@params.name, @params.version], [String])
       app = findApp @params
@@ -56,6 +61,7 @@ Meteor.startup ->
       @route "api/v2/apps/#{filePropertyName}",
         where: 'server'
         path: "/api/v2/apps/:name/:version/files/#{filePropertyName}"
+      .post notAllowed 'POST', 'GET, PUT'
       .get ->
         check([@params.name, @params.version], [String])
         app = findApp @params
@@ -82,7 +88,7 @@ Meteor.startup ->
                 "#{filePropertyName}": @request.body
             lib.foundYaml @response, 201, @request.body
         catch e
-          lib.endWithError @response, 400, e.message
+          lib.endWithError @response, 400, "An error was encountered. Please check the validity of your file. When using curl, be sure to use --data-binary in order to preserve line endings. The error is: #{e.message}"
 
     fileEndpoint 'dockerCompose'
     fileEndpoint 'bigboatCompose', (name, version, yaml) ->
@@ -94,6 +100,7 @@ Meteor.startup ->
     @route 'api/v2/apps/byName',
       where: 'server'
       path: '/api/v2/apps/:name'
+    .post notAllowed 'POST', 'GET'
     .get ->
       check([@params.name], [String])
       app = findApp @params
@@ -103,5 +110,6 @@ Meteor.startup ->
     @route 'api/v2/apps',
       where: 'server'
       path: '/api/v2/apps'
+    .post notAllowed 'POST', 'GET'
     .get ->
       lib.foundJson @response, 200, ApplicationDefs.find({}).map formatAppForOverview
