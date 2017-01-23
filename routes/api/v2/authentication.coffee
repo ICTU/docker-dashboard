@@ -5,7 +5,6 @@ Meteor.startup ->
 
     authenticationHandler = ->
       if (key = @params.query?['api-key']) or (key = @request.headers?['api-key'])
-        console.log 'apikey is', key
         if (apiKey = APIKeys.findOne key: key)
           user = Meteor.users.findOne(apiKey.owner)
           # @authenticatedUSer = user
