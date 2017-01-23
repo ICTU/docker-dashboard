@@ -1,9 +1,44 @@
 FORMAT: 1A
 HOST: http://localhost:3000/api/v2
 
+# Big Boat API
+
+## Concepts
+
+BigBoat and the BigBoat API use the concepts of Apps and Instances. An App is a
+blueprint for an Instance. An app is comprised of a Docker Compose file and
+a bit of meta information stored in the BigBoat Compose file. The full work-flow
+to create a new App and to create a new Instance from it is:
+
+1. Create an App
+2. Update the Docker Compose file
+3. Update the BigBoat Compose file (optional, default file is created)
+4. Create an Instance
+
+## Authentication
+
 All resource endpoints require authentication. An API key is user bound and can
 be obtained from the dashboard configuration page. The api key must be included
 in every request as either a header (***api-key***) or URL query parameter (***?api-key=...***).
+
+## Consume the API
+
+When consuming the API please note that
+
+- The HTTP PUT operation is used to create and update objects directly
+- An API key should be present on every request
+- Compose files must be uploaded with `Content-Type:text/plain`
+- Line endings in Compose files should be preserved (use `--data-binary` with curl)
+
+### Curl Example
+
+```bash
+curl -H "api-key:my-apy-key" -H "Content-Type:text/plain" \
+  -X PUT http://bigboat/api/v2/apps/nginx/latest/files/dockerCompose \
+  --data-binary @docker-compose.yaml
+```
+
+------
 
 # Group Apps
 
@@ -85,7 +120,7 @@ A Docker compose file associated with an application.
   + name: `nginx` (string) - The name of the application
   + version: `latest` (string) - The version of the application
 
-+ Model (text/yaml)
++ Model (text/plain)
 
         www:
           image: nginx:latest
@@ -116,7 +151,7 @@ A BigBoat compose file associated with an application.
   + name: `nginx` (string) - The name of the application
   + version: `latest` (string) - The version of the application
 
-+ Model (text/yaml)
++ Model (text/plain)
 
         name: nginx
         version: latest
