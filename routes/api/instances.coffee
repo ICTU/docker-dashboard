@@ -42,7 +42,7 @@ Meteor.startup ->
             @response.writeHead 404, 'Content-Type': 'application/json'
             @response.end '{"message": "Instance not found"}'
           else
-            @response.writeHead 200, 'Content-Type': 'application/json'
+            @response.writeHead 200, 'Content-Type': 'text/plain'
             @response.end "Instance '#{@params.name}' has been updated"
     .delete ->
         check(@params.name, String)
@@ -52,5 +52,5 @@ Meteor.startup ->
             @response.writeHead 404, 'Content-Type': 'application/json'
             @response.end '{"message": "Instance not found"}'
           else
-            @response.writeHead 200, 'Content-Type': 'application/json'
+            @response.writeHead 200, 'Content-Type': 'text/plain'
             @response.end "#{@params.name} removed"
