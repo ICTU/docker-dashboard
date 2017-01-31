@@ -27,8 +27,9 @@ Meteor.startup ->
         check(@params.name, String)
         instance = Instances.findOne name: @params.name
         if instance
-          @response.writeHead 200, 'Content-Type': 'application/json'
-          @response.end instance.state
+          state = if instance.state is 'running' then 'active' else instance.state
+          @response.writeHead 200, 'Content-Type': 'text/plain'
+          @response.end state
         else
           @response.writeHead 404, 'Content-Type': 'application/json'
           @response.end '{"message": "Instance not found"}'

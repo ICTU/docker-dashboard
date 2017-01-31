@@ -1,4 +1,7 @@
-### 5.0.0 - 5.0.7
+### 5.1.2
+- Fixed backwards incompatibility in API v1 - when the instance is running the returned state should be 'active'
+
+### 5.0.0 - 5.1.1
 - MQTT is used to communicate container status information from the host to the dashboard
 - Introduced API v2
 - Removed unused settings from configuration and database
