@@ -81,6 +81,18 @@ module.exports =
 
   updateCreated: (created, labels) -> setServiceField 'container.created', created, labels
 
+  updateStartupLogs: (instanceName, logData) ->
+    console.log 'updateStartupLogs', instanceName, logData
+    Instances.update {name: instanceName},
+      $push: 'logs.startup': logData
+      $set: status: logData
+
+  updateTeardownLogs: (instanceName, logData) ->
+    console.log 'updateTeardownLogs', instanceName, logData
+    Instances.update {name: instanceName},
+      $push: 'logs.teardown': logData
+      $set: status: logData
+
   updateServiceState: (mappedState, labels) ->
     unless mappedState in SERVICE_STATES
       throw "Service state '#{mappedState}' is not supported."
