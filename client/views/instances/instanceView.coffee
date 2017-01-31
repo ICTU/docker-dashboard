@@ -1,4 +1,6 @@
 Steps = require '/imports/ui/instance/steps.cjsx'
+ansi_up = require('ansi_up')
+
 
 HTTPS_PORTS = ['443', '8443']
 HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
@@ -18,6 +20,9 @@ determineProtocol = (port) ->
     "http"
 
 Template.instanceView.helpers
+  hasLogs: -> @logs.startup? or @logs.teardown?
+  logs: -> _.union @logs?.startup, @logs?.teardown
+  ansiToHtml: -> ansi_up.ansi_to_html @
   Steps: -> Steps
   activityIcon: ->
     if @state is 'running'
