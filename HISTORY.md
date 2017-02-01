@@ -1,5 +1,6 @@
 ### 5.1.4
 - Removed obsolete 'Show instance startup logs' button.
+- Prevent page reload when restarting apps by tag.
 
 ### 5.1.3
 - Fixed regression of missing instance startup logs.
