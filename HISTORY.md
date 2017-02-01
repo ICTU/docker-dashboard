@@ -1,3 +1,9 @@
+### 5.1.4
+- Removed obsolete 'Show instance startup logs' button.
+
+### 5.1.3
+- Fixed regression of missing instance startup logs.
+
 ### 5.1.2
 - Fixed backwards incompatibility in API v1 - when the instance is running the returned state should be 'active'
 
