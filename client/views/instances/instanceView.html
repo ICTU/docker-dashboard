@@ -32,19 +32,7 @@
         <ul class="nav nav-justified pull-right" style="margin-bottom:5px">
           {{#if isAuthenticated}}
           <li class="btn-group">
-            <a title="Stop" href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="glyphicon glyphicon-lg glyphicon-stop"></i>
-            </a>
-            <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
-                <div class="form-group" style="width:20em">
-                  Do you really want to stop this application?
-                </div>
-                <button type="button" class="stop-instance btn btn-mini btn-danger pull-right">Yes!</button>
-            </form>
-
-          </li>
-          <li class="btn-group">
-
+            {{#if isAdminBoard}}
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="glyphicon glyphicon-lg glyphicon-trash"></i>
             </a>
@@ -58,9 +46,22 @@
                 </div>
                 <button type="button" class="clear-instance btn btn-mini btn-danger pull-right">Yes!</button>
             </form>
+            {{/if}}
 
           </li>
           {{/if}}
+          <li class="btn-group">
+            <a title="Stop" href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="glyphicon glyphicon-lg glyphicon-stop"></i>
+            </a>
+            <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
+                <div class="form-group" style="width:20em">
+                  Do you really want to stop this application?
+                </div>
+                <button type="button" class="stop-instance btn btn-mini btn-danger pull-right">Yes!</button>
+            </form>
+
+          </li>
         </ul>
 
         <table class="table table-condensed">
