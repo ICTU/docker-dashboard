@@ -92,7 +92,7 @@ substituteParameters = (def, parameters) ->
     services = dockerCompose.services if dockerCompose.services
     for serviceName, service of services
       service.container_name = "#{project}-#{instance}-#{serviceName}"
-      service.restart = 'unless-stopped'
+      service.restart = 'unless-stopped' unless service.restart
       service.labels =
         'bigboat.instance.name': instance
         'bigboat.service.name': serviceName
