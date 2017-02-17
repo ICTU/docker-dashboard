@@ -60,7 +60,7 @@ setStateDescription = (instanceName, stateDescription) ->
 f = true
 
 setServiceField = (fieldName, fieldValue, labels) ->
-  if (name = labels['bigboat.instance.name']) and (service = labels['bigboat.service.name']) and labels['bigboat.service.type'] is 'service'
+  if (name = labels['bigboat.instance.name']) and (service = labels['bigboat.service.name']) and labels['bigboat.service.type'] in ['service', 'oneoff']
     Instances.upsert {name: name}, $set: {"services.#{service}.#{fieldName}": fieldValue}
 
 labelsToObject = (labels) ->
@@ -97,7 +97,7 @@ module.exports =
     unless mappedState in SERVICE_STATES
       throw "Service state '#{mappedState}' is not supported."
     if name = labels['bigboat.instance.name']
-      if (type = labels['bigboat.service.type']) is 'service'
+      if (type = labels['bigboat.service.type']) in ['service', 'oneoff']
         properties = labelsToObject labels
         updateDoc =
           name: name
@@ -111,6 +111,9 @@ module.exports =
         service = labels['bigboat.service.name']
 
         updateDoc["services.#{service}.state"] = mappedState
+        updateDoc["services.#{service}.desiredState"] = switch type
+          when 'service' then ['running']
+          when 'oneoff' then ['running', 'stopped']
         updateDoc["services.#{service}.properties"] = properties
         updateDoc.status = "Starting #{service}" if mappedState is 'starting'
         updateDoc.status = "Stopping #{service}" if mappedState is 'stopping'
