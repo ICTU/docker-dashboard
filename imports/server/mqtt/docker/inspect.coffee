@@ -4,7 +4,7 @@ reconciler  = require '../../stateReconciler.coffee'
 getExitedMappedState = (msg) ->
   if msg.State?.ExitCode is 0
     'stopped'
-  else 'stopped-with-failure'
+  else 'failed'
 
 module.exports = (msg) ->
   if labels = msg.Config?.Labels
