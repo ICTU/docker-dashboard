@@ -91,12 +91,17 @@ substituteParameters = (def, parameters) ->
     services = dockerCompose
     services = dockerCompose.services if dockerCompose.services
     for serviceName, service of services
+      serviceType = 'service'
+      if bigboatCompose[serviceName]?.type is 'oneoff'
+        service.restart = 'no' unless service.restart
+        serviceType = 'oneoff'
+
       service.container_name = "#{project}-#{instance}-#{serviceName}"
       service.restart = 'unless-stopped' unless service.restart
       service.labels =
         'bigboat.instance.name': instance
         'bigboat.service.name': serviceName
-        'bigboat.service.type': 'service'
+        'bigboat.service.type': serviceType
         'bigboat.application.name': app
         'bigboat.application.version': version
         'bigboat.agent.url': agentUrl
