@@ -1,12 +1,16 @@
 _           = require 'underscore'
 reconciler  = require '../../stateReconciler.coffee'
 
+getExitedMappedState = (msg) ->
+  if msg.State?.ExitCode is 0
+    'stopped'
+  else 'stopped-with-failure'
 
 module.exports = (msg) ->
   if labels = msg.Config?.Labels
     mappedState = switch msg.State?.Status
       when 'running' then 'running'
-      when 'exited'  then 'stopped'
+      when 'exited'  then getExitedMappedState msg
       when 'restarting' then 'restarting'
       else console.log 'inspect:unknown container status', msg.State?.Status
 
