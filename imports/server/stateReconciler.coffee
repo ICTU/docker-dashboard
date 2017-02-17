@@ -134,7 +134,7 @@ module.exports =
   # Updates the internal state based on image pulls
   #
   imagePull: (image) ->
-    updated = Instances.update {'steps.image': image}, {$set: {'steps.$.completed': true}}
+    # nop
 
   imagePulling: (image, instance) ->
     Instances.upsert {name: instance}, $set: status: "Pulling #{image}"
