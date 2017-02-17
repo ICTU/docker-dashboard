@@ -1,14 +1,16 @@
 _ = require 'lodash'
 
-SERVICE_STATES = ['starting', 'restarting', 'running', 'stopping', 'stopped', 'removed']
+SERVICE_STATES = ['starting', 'restarting', 'running', 'stopping', 'stopped', 'removed', 'failed']
 
 atLeastOneWithState = (services, states...) ->
   _.reduce services, ((memo, service) -> memo or service.state in states), false
 allWithState =  (services, states...) ->
   _.reduce services, ((memo, service) -> memo and service.state in states), true
+allMeetDesiredState = (services) ->
+  _.reduce services, ((memo, service) -> memo and service.state in service.desiredState), true
 
 runningIsDesired = (doc, services) ->
-  if allWithState services, 'running'
+  if allMeetDesiredState services
     'running'
   else if atLeastOneWithState services, 'starting'
     'starting'
