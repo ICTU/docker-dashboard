@@ -79,14 +79,11 @@ substituteParameters = (def, parameters) ->
         dockerCompose: YAML.dump dockerCompose
         bigboatCompose: YAML.dump bigboatCompose
         parameters: parameters
-      steps: _.flatten (for serviceName, service of dockerCompose
-        [ {type: 'pull', image: service.image, completed: false}
-          {type: 'service', name: serviceName, completed: false} ]
-        )
+        numberOfServices: _.keys(dockerCompose).length
 
     # augment the compose file with bigboat specific Labels
     # these labels are later communicated back to the dashboard
-    # though Docker events and inspect information.
+    # through Docker events and inspect information.
     # This way we can relate containers and events
     services = dockerCompose
     services = dockerCompose.services if dockerCompose.services
