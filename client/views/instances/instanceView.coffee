@@ -1,4 +1,3 @@
-Steps = require '/imports/ui/instance/steps.cjsx'
 ansi_up = require('ansi_up')
 
 
@@ -22,8 +21,7 @@ determineProtocol = (port) ->
 Template.instanceView.helpers
   hasLogs: -> @logs.startup? or @logs.teardown?
   logs: -> _.union @logs?.startup, @logs?.teardown
-  ansiToHtml: -> ansi_up.ansi_to_html @
-  Steps: -> Steps
+  ansiToHtml: -> if @.split then ansi_up.ansi_to_html @ else ''
   activityIcon: ->
     if @state is 'running'
       'ok-sign'
@@ -36,18 +34,18 @@ Template.instanceView.helpers
     else
       'exclamation-sign'
   showProgressbar: -> @desiredState is 'stopped' or !("#{@state}" in ['running', 'failing', 'removed'])
-  totalSteps: -> @steps?.length
+  totalSteps: -> @app.numberOfServices * 4
   progressPercentage: ->
-    progress = (@steps.map (s) -> if s.completed then 1 else 0).reduce (prev, curr) -> prev+curr
-    totalSteps = @steps.length
+    progress = @logs.startup?.length or 0
+    totalSteps = @app.numberOfServices * 4
+
     if @state in ['stopping', 'stopped']
       services = _.values @services
       totalSteps = services.length
       progress = totalSteps - (services.map (s) -> if !(s.state in ['running', 'stopping']) then 1 else 0).reduce (prev, curr) -> prev+curr
 
-    x = (parseInt(progress + 1)/parseInt(totalSteps + 1))*100
-    console.log 'progress', totalSteps, progress, x, @
-    x
+    (parseInt(progress + 1)/parseInt(totalSteps + 1))*100
+
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
     port = findWebPort @services?.www
