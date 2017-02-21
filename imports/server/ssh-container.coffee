@@ -18,14 +18,13 @@ module.exports =
         'bigboat.container.map_docker': 'true'
       restart: 'unless-stopped'
 
-    if serviceBigboatCompose?.enable_ssh
-      config 'noAuth', 'bash'
-
-    else if ssh = serviceBigboatCompose?.ssh
+    if (ssh = serviceBigboatCompose?.ssh) and (typeof ssh is 'object')
       shell = ssh.shell or 'bash'
       auth = 'noAuth'
       authTuples = null
-      if authentication = ssh.authentication
+      if users = ssh.users
         auth = 'multiUser'
-        authTuples = (_.pairs(authentication).map ([key, val]) -> "#{key}:#{val}").join ';'
+        authTuples = (_.pairs(users).map ([key, val]) -> "#{key}:#{val}").join ';'
       config auth, shell, authTuples
+    else if serviceBigboatCompose?.enable_ssh or serviceBigboatCompose?.ssh is true
+        config 'noAuth', 'bash'
