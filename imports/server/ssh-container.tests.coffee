@@ -18,7 +18,14 @@ describe 'SshContainer', ->
       config = SshContainer.buildComposeConfig 'projectName', 'instanceName', 'serviceName', {}
       assert.equal config, undefined
 
-    it 'should return default configuration when enable_ssh is true', ->
+    it 'should return default configuration when `enable_ssh` is true (backwards compatibility)', ->
+      config = SshContainer.buildComposeConfig 'projectName', 'instanceName', 'serviceName', enable_ssh: true
+      assertBasicProperties config
+      assert.equal config.environment.AUTH_MECHANISM, 'noAuth'
+      assert.equal config.environment.HTTP_ENABLED, 'false'
+      assert.equal config.environment.CONTAINER_SHELL, 'bash'
+
+    it 'should return default configuration when `ssh` is true', ->
       config = SshContainer.buildComposeConfig 'projectName', 'instanceName', 'serviceName', enable_ssh: true
       assertBasicProperties config
       assert.equal config.environment.AUTH_MECHANISM, 'noAuth'
@@ -33,9 +40,14 @@ describe 'SshContainer', ->
       assert.equal config.environment.CONTAINER_SHELL, '/bin/sh'
 
     it 'should allow to set authentication credentials', ->
-      config = SshContainer.buildComposeConfig 'projectName', 'instanceName', 'serviceName', ssh: authentication: {user1: 'passw1', user2: 'passw2'}
+      config = SshContainer.buildComposeConfig 'projectName', 'instanceName', 'serviceName', ssh: users: {user1: 'passw1', user2: 'passw2'}
       assertBasicProperties config
       assert.equal config.environment.AUTH_MECHANISM, 'multiUser'
       assert.equal config.environment.HTTP_ENABLED, 'false'
       assert.equal config.environment.CONTAINER_SHELL, 'bash'
       assert.equal config.environment.AUTH_TUPLES, 'user1:passw1;user2:passw2'
+
+    it 'should give presidence to `ssh` when both `enable_ssh` and `ssh` are defined',->
+      config = SshContainer.buildComposeConfig 'projectName', 'instanceName', 'serviceName', ssh: {shell: 'someshell'}, enable_ssh: true
+      assertBasicProperties config
+      assert.equal config.environment.CONTAINER_SHELL, 'someshell'
