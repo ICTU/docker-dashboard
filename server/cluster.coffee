@@ -1,3 +1,5 @@
+SshContainer = require '/imports/server/ssh-container'
+
 loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
   console.log(error) if error
   console.log stdout, stderr
@@ -106,24 +108,10 @@ substituteParameters = (def, parameters) ->
         'bigboat.storage.bucket': options.storageBucket
         'bigboat.instance.endpoint.path': bigboatCompose[serviceName]?.endpoint
         'bigboat.instance.endpoint.protocol': bigboatCompose[serviceName]?.protocol
-        'bigboat.container.map_docker':  if bigboatCompose[serviceName]?.map_docker then 'true' else undefined
         'bigboat.container.enable_ssh':  if bigboatCompose[serviceName]?.enable_ssh then 'true' else undefined
 
-      if bigboatCompose[serviceName]?.enable_ssh
-        services["bb-ssh-#{serviceName}"] =
-          image: 'jeroenpeeters/docker-ssh'
-          container_name: "#{project}-#{instance}-#{serviceName}-ssh"
-          environment:
-            CONTAINER: "#{project}-#{instance}-#{serviceName}"
-            AUTH_MECHANISM: 'noAuth'
-            HTTP_ENABLED: 'false'
-            CONTAINER_SHELL: 'bash'
-          labels:
-            'bigboat.instance.name': instance
-            'bigboat.service.name': serviceName
-            'bigboat.service.type': 'ssh'
-            'bigboat.container.map_docker': 'true'
-          restart: 'unless-stopped'
+      sshCompose = SshContainer.buildComposeConfig project, instance, serviceName, bigboatCompose[serviceName]
+      services["bb-ssh-#{serviceName}"] = sshCompose if sshCompose
 
     console.log 'dockerCompose', dockerCompose
 
