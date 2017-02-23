@@ -19,7 +19,7 @@ determineProtocol = (port) ->
     "http"
 
 Template.instanceView.helpers
-  hasLogs: -> @logs.startup? or @logs.teardown?
+  hasLogs: -> @logs?.startup? or @logs?.teardown?
   logs: -> _.union @logs?.startup, @logs?.teardown
   ansiToHtml: -> if @.split then ansi_up.ansi_to_html @ else ''
   activityIcon: ->
