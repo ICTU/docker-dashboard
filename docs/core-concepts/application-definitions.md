@@ -32,6 +32,8 @@ The service level properties can be specified for each service in the Docker Com
   - **enable_ssh** - enable SSH connectivity to the container implementing this service
   - **endpoint** - the service endpoint; has the format of *:port/path* and will be used by BigBoat to provide a more meaningful link to your service
   - **protocol** - the service protocol; example *http,https,tcp,udp*.
+  - **type** - the type of the service; possible values are *service* and *oneoff*; defaults to *service*.
+  When set to *oneoff* BigBoat will not try to restart the service if it exits. The instance will enter *failing* state if the service exits with code other than *0*. If the type of the service is *service* (the default value) BigBoat will keep trying to restart the service container, exponentially backing away. The *oneoff* services are meant as a way to initialize/bootstrap other services in the application.
 
   Example BigBoat Compose adding SSH connectivity to the www service:
   ```
