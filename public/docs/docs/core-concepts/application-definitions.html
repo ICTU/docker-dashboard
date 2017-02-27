@@ -272,7 +272,20 @@
 </ul>
 <p>The service level properties can be specified for each service in the <a href="../../GLOSSARY.html#docker-compose" class="glossary-term" title="Compose is a tool for defining and running multi-container Docker applications. See https://docs.docker.com/compose/.">Docker Compose</a> and can be:</p>
 <ul>
-<li><strong>enable_ssh</strong> - enable SSH connectivity to the container implementing this service</li>
+<li><strong>enable_ssh</strong> - <strong>DEPRECATED</strong>, please use <strong>ssh</strong>. Enables SSH connectivity to the container implementing this service</li>
+<li><strong>ssh</strong> - enables SSH connectivity to the container implementing this service. The value of this option is an object with the following attributes:<ul>
+<li><strong>shell</strong> - (path to) the shell binary in the container; optional, defaults to <em>bash</em>. Set this attribute if for example there is no <em>bash</em> in the target container, i.e. in <em>alpine</em>-based containers.</li>
+<li><strong>users</strong> - login credentials; optional, defaults to empty list (no authentication is enforced). The users are specified as a YAML object where the keys are usernames and the values - passwords. For example:<pre><code>serviceName:
+  ssh:
+    shell: /bin/sh
+    user:
+      myself: secret-pass
+      someone: 123456
+</code></pre>This option has a shortcut form:<pre><code>serviceName:
+  ssh: true
+</code></pre>that provides unauthenticated <em>root</em> access using <em>bash</em> as a shell.</li>
+</ul>
+</li>
 <li><strong>endpoint</strong> - the service endpoint; has the format of <em>:port/path</em> and will be used by BigBoat to provide a more meaningful link to your service</li>
 <li><strong>protocol</strong> - the service protocol; example <em>http,https,tcp,udp</em>.</li>
 <li><p><strong>type</strong> - the type of the service; possible values are <em>service</em> and <em>oneoff</em>; defaults to <em>service</em>.
@@ -281,7 +294,7 @@ When set to <em>oneoff</em> BigBoat will not try to restart the service if it ex
 <pre><code>name: jenkins
 version: 2.7.1
 www:
-  enable_ssh: true
+  ssh: true
   endpoint: :8080/startScreen
   protocol: https
 </code></pre></li>
@@ -325,7 +338,7 @@ www:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Apps","level":"1.3.1","depth":2,"next":{"title":"Instances","level":"1.3.2","depth":2,"path":"docs/core-concepts/instances.md","ref":"docs/core-concepts/instances.md","articles":[]},"previous":{"title":"Core concepts","level":"1.3","depth":1,"ref":"","articles":[{"title":"Apps","level":"1.3.1","depth":2,"path":"docs/core-concepts/application-definitions.md","ref":"docs/core-concepts/application-definitions.md","articles":[]},{"title":"Instances","level":"1.3.2","depth":2,"path":"docs/core-concepts/instances.md","ref":"docs/core-concepts/instances.md","articles":[]},{"title":"Storage","level":"1.3.3","depth":2,"path":"docs/core-concepts/storage-buckets.md","ref":"docs/core-concepts/storage-buckets.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"ICTU IQ-Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"INTRO.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"BigBoat Documentation","gitbook":"*","description":"Some notes on BigBoat"},"file":{"path":"docs/core-concepts/application-definitions.md","mtime":"2017-02-27T14:49:16.024Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-27T14:49:21.455Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Apps","level":"1.3.1","depth":2,"next":{"title":"Instances","level":"1.3.2","depth":2,"path":"docs/core-concepts/instances.md","ref":"docs/core-concepts/instances.md","articles":[]},"previous":{"title":"Core concepts","level":"1.3","depth":1,"ref":"","articles":[{"title":"Apps","level":"1.3.1","depth":2,"path":"docs/core-concepts/application-definitions.md","ref":"docs/core-concepts/application-definitions.md","articles":[]},{"title":"Instances","level":"1.3.2","depth":2,"path":"docs/core-concepts/instances.md","ref":"docs/core-concepts/instances.md","articles":[]},{"title":"Storage","level":"1.3.3","depth":2,"path":"docs/core-concepts/storage-buckets.md","ref":"docs/core-concepts/storage-buckets.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"ICTU IQ-Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"INTRO.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"BigBoat Documentation","gitbook":"*","description":"Some notes on BigBoat"},"file":{"path":"docs/core-concepts/application-definitions.md","mtime":"2017-02-27T15:21:43.284Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-27T15:35:58.020Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

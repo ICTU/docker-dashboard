@@ -29,7 +29,24 @@ The application level properties are:
 
 The service level properties can be specified for each service in the Docker Compose and can be:
 
-  - **enable_ssh** - enable SSH connectivity to the container implementing this service
+  - **enable_ssh** - **DEPRECATED**, please use **ssh**. Enables SSH connectivity to the container implementing this service
+  - **ssh** - enables SSH connectivity to the container implementing this service. The value of this option is an object with the following attributes:
+    - **shell** - (path to) the shell binary in the container; optional, defaults to *bash*. Set this attribute if for example there is no *bash* in the target container, i.e. in *alpine*-based containers.
+    - **users** - login credentials; optional, defaults to empty list (no authentication is enforced). The users are specified as a YAML object where the keys are usernames and the values - passwords. For example:
+    ```
+      serviceName:
+        ssh:
+          shell: /bin/sh
+          user:
+            myself: secret-pass
+            someone: 123456
+    ```
+    This option has a shortcut form:
+    ```
+      serviceName:
+        ssh: true
+    ```
+    that provides unauthenticated *root* access using *bash* as a shell.
   - **endpoint** - the service endpoint; has the format of *:port/path* and will be used by BigBoat to provide a more meaningful link to your service
   - **protocol** - the service protocol; example *http,https,tcp,udp*.
   - **type** - the type of the service; possible values are *service* and *oneoff*; defaults to *service*.
@@ -40,7 +57,7 @@ The service level properties can be specified for each service in the Docker Com
   name: jenkins
   version: 2.7.1
   www:
-      enable_ssh: true
+      ssh: true
       endpoint: :8080/startScreen
       protocol: https
   ```
