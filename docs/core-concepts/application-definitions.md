@@ -37,7 +37,7 @@ The service level properties can be specified for each service in the Docker Com
       serviceName:
         ssh:
           shell: /bin/sh
-          user:
+          users:
             myself: secret-pass
             someone: 123456
     ```
