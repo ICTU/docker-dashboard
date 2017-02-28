@@ -1,3 +1,9 @@
+### 5.4.2
+- Introduced 'ssh' property to BigBoat Compose. It allows to fine tune the configuration of the ssh service.
+- Introduced 'type' property to BigBoat Compose.
+- The 'remove instance meta data' button is only shown to administrators.
+- Bugfix: Display app tags on instances page.
+
 ### 5.1.4
 - Removed obsolete 'Show instance startup logs' button.
 - Prevent page reload when restarting apps by tag.
