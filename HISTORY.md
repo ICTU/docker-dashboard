@@ -1,3 +1,6 @@
+### 5.4.3
+- Fixes invalid instance name. Underscore is no longer allowed in instance name.
+
 ### 5.4.2
 - Introduced 'ssh' property to BigBoat Compose. It allows to fine tune the configuration of the ssh service.
 - Introduced 'type' property to BigBoat Compose.
