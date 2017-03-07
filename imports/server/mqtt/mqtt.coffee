@@ -15,7 +15,10 @@ mqttTopicHandlerMap =
   '/agent/storage/buckets':     mbe storage.buckets
   '/agent/storage/size':        mbe storage.size
 
-client = mqtt.connect Meteor.settings.mqtt.url
+mqst = Meteor.settings.mqtt
+client = mqtt.connect mqst.url,
+  username: mqst.username
+  password: mqst.password
 client.on 'connect', ->
   for topicName, handler of mqttTopicHandlerMap
     client.subscribe topicName

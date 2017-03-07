@@ -1,6 +1,6 @@
 {
   "name": "dashboard",
-  "version": "5.4.3",
+  "version": "5.5.0",
   "description": "Docker dashboard",
   "main": "index.js",
   "directories": {
@@ -35,7 +35,7 @@
     "lodash": "^4.16.4",
     "meteor-node-stubs": "^0.2.3",
     "mongo-dot-notation": "^1.0.5",
-    "mqtt": "^1.14.1",
+    "mqtt": "^2.4.0",
     "pretty": "^1.0.0",
     "prettysize": "0.0.3",
     "react": "^15.0.2",
