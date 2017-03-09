@@ -1,3 +1,15 @@
+### 5.5.0
+- Added MQTT authentication. Set it in the Meteor settings file:
+```
+  ...
+  "mqtt": {
+    "url": "mqtt://localhost",
+    "username": "user",
+    "password": "pass"
+  }
+  ...
+```
+
 ### 5.4.3
 - Fixes invalid instance name. Underscore is no longer allowed in instance name.
 
