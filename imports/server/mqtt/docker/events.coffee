@@ -2,21 +2,25 @@ dot         = require 'mongo-dot-notation'
 reconciler  = require '../../stateReconciler.coffee'
 ignore = false
 
+updateServiceState = (state) -> (labels) -> reconciler.updateServiceState state, labels
+updateHealthStatus = (status) -> (labels) -> reconciler.updateHealthStatus status, labels
+
 handleContainerEvent = (msg) ->
-  mappedState = switch msg.status
-    when 'create' then 'starting'
-    when 'start'  then 'running'
-    when 'kill'   then 'stopping'
-    when 'die'    then 'stopping'
-    when 'stop'   then 'stopped'
-    when 'dead'   then 'stopped'
-    when 'destroy' then 'removed'
-    when 'top'    then ignore
+  updateFunction = switch msg.status
+    when 'create'       then updateServiceState 'starting'
+    when 'start'        then updateServiceState 'running'
+    when 'kill'         then updateServiceState 'stopping'
+    when 'die'          then updateServiceState 'stopping'
+    when 'stop'         then updateServiceState 'stopped'
+    when 'dead'         then updateServiceState 'stopped'
+    when 'destroy'      then updateServiceState 'removed'
+    when 'health_status: healthy'   then updateHealthStatus 'healthy'
+    when 'health_status: unhealthy' then updateHealthStatus 'unhealthy'
+    when 'top'          then ignore
     else console.log 'events:unknown container status', msg.status
 
-  if mappedState and (labels = msg.Actor?.Attributes)
-    console.log 'eventmsg', msg
-    reconciler.updateServiceState mappedState, labels
+  if updateFunction and (labels = msg.Actor?.Attributes)
+    updateFunction labels
 
     if id = msg.id
       reconciler.updateContainerId id, labels
