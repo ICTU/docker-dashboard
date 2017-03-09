@@ -83,14 +83,14 @@ module.exports =
 
   updateCreated: (created, labels) -> setServiceField 'container.created', created, labels
 
+  updateHealthStatus: (healthStatus, labels) -> setServiceField 'health.status', healthStatus, labels
+
   updateStartupLogs: (instanceName, logData) ->
-    console.log 'updateStartupLogs', instanceName, logData
     Instances.update {name: instanceName},
       $push: 'logs.startup': logData
       $set: status: logData
 
   updateTeardownLogs: (instanceName, logData) ->
-    console.log 'updateTeardownLogs', instanceName, logData
     Instances.update {name: instanceName},
       $push: 'logs.teardown': logData
       $set: status: logData
