@@ -111,6 +111,12 @@ a.navbar-brand > img {
 .glyphicon-exclamation-sign {
   color: #FF4136 !important;
 }
+.glyphicon-exclamation-sign.warning {
+  color: #F0AD4E !important;
+}
+.glyphicon-question-sign {
+  color: #F0AD4E !important;
+}
 
 #velocity-status-widget {
   left: 10px !important;

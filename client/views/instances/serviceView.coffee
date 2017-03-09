@@ -7,7 +7,11 @@ Template.serviceView.helpers
   hasSshSettings: -> @data.aux.ssh
   stateIcon: ->
     if @data.state is 'running'
-      'ok-sign'
+      if @data.health?.status is 'unhealthy'
+        'exclamation-sign warning'
+      else if @data.health?.status is 'unknown'
+        'question-sign'
+      else 'ok-sign'
     else if @data.state is 'starting'
       'play-circle'
     else if @data.state is 'stopping'

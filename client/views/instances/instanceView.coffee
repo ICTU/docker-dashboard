@@ -24,7 +24,12 @@ Template.instanceView.helpers
   ansiToHtml: -> if @.split then ansi_up.ansi_to_html @ else ''
   activityIcon: ->
     if @state is 'running'
-      'ok-sign'
+      healthList = _.map _.pairs(@services), ([k, s]) -> s.health?.status
+      if 'unhealthy' in healthList
+        'exclamation-sign warning'
+      else if 'unknown' in healthList
+        'question-sign'
+      else 'ok-sign'
     else if @state in ['starting', 'created']
       'play-circle'
     else if @state is 'stopping'
