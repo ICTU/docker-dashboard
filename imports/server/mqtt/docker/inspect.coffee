@@ -20,8 +20,6 @@ module.exports = (msg) ->
       when 'restarting' then 'restarting'
       else console.log 'inspect:unknown container status', msg.State?.Status
 
-    # console.log 'INSPECT_STATE', msg.State
-
     if mappedState
       reconciler.updateServiceState mappedState, labels
 
