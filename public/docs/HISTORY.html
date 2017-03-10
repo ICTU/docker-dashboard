@@ -248,7 +248,36 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h3 id="514">5.1.4</h3>
+                                <h3 id="560">5.6.0</h3>
+<ul>
+<li>Instance overall state reflects healthcheck status of individual services.</li>
+<li><a href="GLOSSARY.html#docker" class="glossary-term" title="Docker provides a way to run applications securely isolated in a container, packaged with all its dependencies and libraries. See https://docs.docker.com/.">Docker</a> healthcheck state of user defined services is reflected in the UI.</li>
+<li>Show healthcheck status for network containers.</li>
+<li>Show IP for network containers.</li>
+</ul>
+<h3 id="550">5.5.0</h3>
+<ul>
+<li>Added MQTT authentication. Set it in the Meteor settings file:<pre><code>...
+&quot;mqtt&quot;: {
+  &quot;url&quot;: &quot;mqtt://localhost&quot;,
+  &quot;username&quot;: &quot;user&quot;,
+  &quot;password&quot;: &quot;pass&quot;
+}
+...
+</code></pre></li>
+</ul>
+<h3 id="543">5.4.3</h3>
+<ul>
+<li>Fixes invalid instance name. Underscore is no longer allowed in instance name.</li>
+</ul>
+<h3 id="542">5.4.2</h3>
+<ul>
+<li>Introduced &apos;ssh&apos; property to BigBoat Compose. It allows to fine tune the configuration of the ssh service.</li>
+<li>Introduced &apos;type&apos; property to BigBoat Compose.</li>
+<li>The &apos;remove instance meta data&apos; button is only shown to administrators.</li>
+<li>Bugfix: Display app tags on instances page.</li>
+</ul>
+<h3 id="514">5.1.4</h3>
 <ul>
 <li>Removed obsolete &apos;Show instance startup logs&apos; button.</li>
 <li>Prevent page reload when restarting apps by tag.</li>
@@ -531,7 +560,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"History","level":"1.2.1","depth":2,"next":{"title":"Version 5","level":"1.2.2","depth":2,"path":"docs/changes/v5.md","ref":"docs/changes/v5.md","articles":[]},"previous":{"title":"Changes","level":"1.2","depth":1,"ref":"","articles":[{"title":"History","level":"1.2.1","depth":2,"path":"HISTORY.md","ref":"HISTORY.md","articles":[]},{"title":"Version 5","level":"1.2.2","depth":2,"path":"docs/changes/v5.md","ref":"docs/changes/v5.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"ICTU IQ-Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"INTRO.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"BigBoat Documentation","gitbook":"*","description":"Some notes on BigBoat"},"file":{"path":"HISTORY.md","mtime":"2017-02-23T13:07:31.391Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-02-27T15:35:58.020Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"History","level":"1.2.1","depth":2,"next":{"title":"Version 5","level":"1.2.2","depth":2,"path":"docs/changes/v5.md","ref":"docs/changes/v5.md","articles":[]},"previous":{"title":"Changes","level":"1.2","depth":1,"ref":"","articles":[{"title":"History","level":"1.2.1","depth":2,"path":"HISTORY.md","ref":"HISTORY.md","articles":[]},{"title":"Version 5","level":"1.2.2","depth":2,"path":"docs/changes/v5.md","ref":"docs/changes/v5.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"ICTU IQ-Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"INTRO.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"BigBoat Documentation","gitbook":"*","description":"Some notes on BigBoat"},"file":{"path":"HISTORY.md","mtime":"2017-03-10T09:12:02.739Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-03-10T09:18:51.156Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

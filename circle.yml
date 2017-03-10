@@ -4,7 +4,8 @@ machine:
 
 dependencies:
   override:
-    - echo "no install"
+    - npm install gitbook-cli -g
+    - gitbook build . public/docs/
 
 test:
   override:
