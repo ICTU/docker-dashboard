@@ -64,7 +64,8 @@ f = true
 setServiceField = (fieldName, fieldValue, labels) ->
   if (name = labels['bigboat.instance.name']) and (service = labels['bigboat.service.name']) and labels['bigboat.service.type'] in ['service', 'oneoff']
     Instances.upsert {name: name}, $set: {"services.#{service}.#{fieldName}": fieldValue}
-
+  if (name = labels['bigboat.instance.name']) and (service = labels['bigboat.service.name']) and (type = labels['bigboat.service.type']) in ['net', 'ssh']
+    Instances.upsert {name: name}, $set: {"services.#{service}.aux.#{type}.#{fieldName}": fieldValue}
 labelsToObject = (labels) ->
   obj = {}
   for label, val of labels
