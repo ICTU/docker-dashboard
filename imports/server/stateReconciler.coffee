@@ -33,10 +33,6 @@ determineState = (doc, stateF) ->
   overallState = 'failing' unless overallState
   Instances.update doc._id, $set: state: overallState
 
-  for serviceName, service of doc.services
-    if service.state is 'running'
-      Instances.update {_id: doc._id, 'steps.name': serviceName}, {$set: {'steps.$.completed': true}}
-
 f = false
 
 Instances.find({}, fields: {_id: 1}).observe
