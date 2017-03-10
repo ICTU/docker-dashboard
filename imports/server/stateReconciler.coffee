@@ -86,6 +86,8 @@ module.exports =
 
   updateHealthStatus: (healthStatus, labels) -> setServiceField 'health.status', healthStatus, labels
 
+  updateIp: (ip, labels) -> setServiceField 'ip', ip, labels
+
   updateStartupLogs: (instanceName, logData) ->
     Instances.update {name: instanceName},
       $push: 'logs.startup': logData
