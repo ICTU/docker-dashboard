@@ -20,7 +20,7 @@
       <tr><th scope="row">Container Name</th><td>{{data.container.name}}</td></tr>
       <!-- <tr><th scope="row">Container IP</th><td>{{data.ip}}</td></tr> -->
       <tr><th scope="row">Ports</th><td>{{data.ports}}</td></tr>
-      <tr><th scope="row">Network</th><td>{{data.aux.net.state}}</td></tr>
+      <tr><th scope="row">Network</th><td>{{data.aux.net.state}} {{#with data.aux.net.health.status}}({{this}}){{/with}}</td></tr>
 
 
       {{#if hasSshSettings}}
@@ -38,6 +38,9 @@ ssh {{hostname}}
         <a href="http://{{../data.hostname}}:{{this}}" class="btn btn-default"  target="_blank"><i class="glyphicon glyphicon-link pull-left"></i> http://{{../data.hostname}}:{{this}}</a>
       </div>
       {{/with}}
+      {{#if sshIsUnhealthy}}
+        <i>The SSH service is unhealthy</i>
+      {{/if}}
       </td></tr>
       {{/if}}
 
