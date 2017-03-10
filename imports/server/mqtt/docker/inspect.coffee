@@ -37,6 +37,10 @@ module.exports = (msg) ->
       reconciler.updateCreated created, labels
     if Health = msg.State?.Health
       reconciler.updateHealthStatus (mapHealthStatus Health.Status), labels
+      if labels['bigboat.service.type'] is 'net' and (log = Health.Log)?.length > 0
+        output = log[log.length - 1].Output
+        if match = /inet addr:([0-9\.]+)/.exec output
+          reconciler.updateIp match[1], labels
 
 ###
 [
