@@ -1,3 +1,9 @@
+### 5.6.0
+- Instance overall state reflects healthcheck status of individual services.
+- Docker healthcheck state of user defined services is reflected in the UI.
+- Show healthcheck status for network containers.
+- Show IP for network containers.
+
 ### 5.5.0
 - Added MQTT authentication. Set it in the Meteor settings file:
 ```
