@@ -1,19 +1,21 @@
 mqtt    = require 'mqtt'
 dot     = require 'mongo-dot-notation'
 
-storage = require './agent/storage.coffee'
-logs    = require './agent/logs.coffee'
+storage  = require './agent/storage.coffee'
+logs     = require './agent/logs.coffee'
+snapshot = require './docker/snapshot.coffee'
 
 mbe = Meteor.bindEnvironment
 
 mqttTopicHandlerMap =
-  '/docker/events':             mbe require './docker/events.coffee'
-  '/docker/container/inspect':  mbe require './docker/inspect.coffee'
-  '/agent/docker/pulling':      mbe require './agent/pulling.coffee'
-  '/agent/docker/log/startup':  mbe logs.startup
-  '/agent/docker/log/teardown': mbe logs.teardown
-  '/agent/storage/buckets':     mbe storage.buckets
-  '/agent/storage/size':        mbe storage.size
+  '/docker/events':                 mbe require './docker/events.coffee'
+  '/docker/container/inspect':      mbe require './docker/inspect.coffee'
+  '/agent/docker/pulling':          mbe require './agent/pulling.coffee'
+  '/agent/docker/log/startup':      mbe logs.startup
+  '/agent/docker/log/teardown':     mbe logs.teardown
+  '/agent/storage/buckets':         mbe storage.buckets
+  '/agent/storage/size':            mbe storage.size
+  '/docker/snapshot/containerIds':  mbe snapshot.containerIds
 
 mqst = Meteor.settings.mqtt
 client = mqtt.connect mqst.url,
