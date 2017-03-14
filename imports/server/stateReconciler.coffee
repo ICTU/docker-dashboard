@@ -27,7 +27,6 @@ stoppedIsDesired = (doc, services) ->
 
 
 determineState = (doc, stateF) ->
-  console.log 'determineState', doc
   services = _.values doc.services
   overallState = stateF doc, services
   overallState = 'failing' unless overallState
@@ -137,3 +136,14 @@ module.exports =
 
   imagePulling: (image, instance) ->
     Instances.upsert {name: instance}, $set: status: "Pulling #{image}"
+
+  #
+  # Checks containers we know about against the snapshot list. If we know of
+  # a container that isn't in the list, the container is removed
+  #
+  reconcileContainerIdsSnapshot: (containerIds) ->
+    Instances.find().forEach (i) ->
+      for name, service of i.services
+        if service.container?.id not in containerIds
+          console.log "Found a container that is not in the snapshotted list: changed state to 'removed' for #{i.name}.#{name}"
+          Instances.update i._id, $set: "services.#{name}.state": 'removed'
