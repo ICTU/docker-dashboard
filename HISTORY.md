@@ -1,3 +1,8 @@
+### 5.7.0
+- A snapshot of all running containers is received periodically. Based on this
+  snapshot containers that don't exist any more are marked as 'removed'.
+  This leads to eventual consistency of the dashboard's view.
+
 ### 5.6.0
 - Instance overall state reflects healthcheck status of individual services.
 - Docker healthcheck state of user defined services is reflected in the UI.
