@@ -1,3 +1,16 @@
+
+### 5.7.2
+- Make the instance 'trash' button available to all logged in users again. Pressing
+  this button clears out all meta information the dashboard has about this instance.
+  It has become clear that this feature is still useful when an instance state in
+  the dashboard becomes disconnected from its actual state or when an instance
+  does not want to start in the first place. Users need a mechanism for removing
+  such instances.
+
+### 5.7.1
+- Enforce stricter constraints on instance and bucket names. Capital letters (A-Z)
+  are not allowed any longer. Instance names with capitals cannot be found in DNS.
+
 ### 5.7.0
 - A snapshot of all running containers is received periodically. Based on this
   snapshot containers that don't exist any more are marked as 'removed'.
