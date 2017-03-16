@@ -53,8 +53,8 @@ module.exports = React.createClass
             </a>
             <form onSubmit={@copy(bucket)} role="form" className="copy-bucket-form dropdown-menu dropdown-menu-right" style={padding:'1em'}>
                 <div className="form-group" style={width:'30em'}>
-                    <label>Bucket name (must match [a-zA-Z0-9_-]+)</label>
-                    <input ref='bucketName' required pattern="[a-zA-Z0-9_-]+" type="text"
+                    <label>Bucket name (must match [a-z0-9_-]+)</label>
+                    <input ref='bucketName' required pattern="[a-z0-9_-]+" type="text"
                       name='bucket-name'
                       className="form-control bucket-name"
                       placeholder="Alphanummeric, underscores and dashes; no spaces" />
