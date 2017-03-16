@@ -29,10 +29,9 @@
   </div>
   <div id="instancePanel-{{instanceHash}}" class="panel-collapse collapse">
       <div class="panel-body">
+        {{#if isAuthenticated}}
         <ul class="nav nav-justified pull-right" style="margin-bottom:5px">
-          {{#if isAuthenticated}}
           <li class="btn-group">
-            {{#if isUserAdmin}}
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="glyphicon glyphicon-lg glyphicon-trash"></i>
             </a>
@@ -46,10 +45,7 @@
                 </div>
                 <button type="button" class="clear-instance btn btn-mini btn-danger pull-right">Yes!</button>
             </form>
-            {{/if}}
-
           </li>
-          {{/if}}
           <li class="btn-group">
             <a title="Stop" href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="glyphicon glyphicon-lg glyphicon-stop"></i>
@@ -60,9 +56,9 @@
                 </div>
                 <button type="button" class="stop-instance btn btn-mini btn-danger pull-right">Yes!</button>
             </form>
-
           </li>
         </ul>
+        {{/if}}
 
         <table class="table table-condensed">
           <tbody>
