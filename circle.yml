@@ -13,10 +13,10 @@ test:
 
 deployment:
   hub:
-    timeout: 1200
     tag: /^[0-9]+\.[0-9]+\.[0-9]+$/
     commands:
-      - docker build -t ictu/docker-dashboard:${CIRCLE_TAG} .
+      - docker build -t ictu/docker-dashboard:${CIRCLE_TAG} .:
+          timeout: 1200
       - MAJOR_VERSION=${CIRCLE_TAG/.*}; docker tag ictu/docker-dashboard:${CIRCLE_TAG} ictu/docker-dashboard:${MAJOR_VERSION}
       - MINOR_VERSION=${CIRCLE_TAG%.*}; docker tag ictu/docker-dashboard:${CIRCLE_TAG} ictu/docker-dashboard:${MINOR_VERSION}
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
