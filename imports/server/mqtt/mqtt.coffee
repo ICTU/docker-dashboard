@@ -12,6 +12,7 @@ mqttTopicHandlerMap =
   '/docker/container/inspect':      mbe require './docker/inspect.coffee'
   '/agent/docker/pulling':          mbe require './agent/pulling.coffee'
   '/agent/docker/log/startup':      mbe logs.startup
+  '/agent/docker/log/startup/error':mbe logs.startupFailed
   '/agent/docker/log/teardown':     mbe logs.teardown
   '/agent/storage/buckets':         mbe storage.buckets
   '/agent/storage/size':            mbe storage.size

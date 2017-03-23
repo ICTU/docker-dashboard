@@ -83,10 +83,13 @@ module.exports =
 
   updateIp: (ip, labels) -> setServiceField 'ip', ip, labels
 
-  updateStartupLogs: (instanceName, logData) ->
+  updateStartupLogs: updateStartupLogs = (instanceName, logData) ->
     Instances.update {name: instanceName},
       $push: 'logs.startup': logData
       $set: status: logData
+
+  updateStartupFailedLogs: (instanceName, logData) ->
+    updateStartupLogs instanceName, logData
 
   updateTeardownLogs: (instanceName, logData) ->
     Instances.update {name: instanceName},
