@@ -6,6 +6,10 @@ Template.serviceView.helpers
   sshIsUnhealthy: -> @data.aux.ssh.health.status is 'unhealthy'
   createdSince: -> moment(@data.container?.created).fromNow() if @data.container?.created
   hasSshSettings: -> @data.aux.ssh
+  renderHealth: ->
+    if "#{@}" is 'unknown'
+      'waiting for container to become healthy'
+    else @
   stateIcon: ->
     if @data.state is 'running'
       if @data.health?.status is 'unhealthy'
