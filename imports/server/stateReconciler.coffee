@@ -7,12 +7,12 @@ atLeastOneWithState = (services, states...) ->
 allWithState =  (services, states...) ->
   _.reduce services, ((memo, service) -> memo and service.state in states), true
 allMeetDesiredState = (services) ->
-  _.reduce services, ((memo, service) -> memo and service.state in service.desiredState), true
+  _.reduce services, ((memo, service) -> memo and service.state in (service.desiredState or ['running'])), true
 
 runningIsDesired = (doc, services) ->
   if allMeetDesiredState services
     'running'
-  else if atLeastOneWithState services, 'starting'
+  else if atLeastOneWithState services, 'starting', 'running'
     'starting'
 
 stoppedIsDesired = (doc, services) ->
@@ -27,10 +27,14 @@ stoppedIsDesired = (doc, services) ->
 
 
 determineState = (doc, stateF) ->
+
   services = _.values doc.services
-  overallState = stateF doc, services
+  auxServices = services.map (s) -> _.values s.aux
+  allServices = _.union services, _.flatten auxServices
+  overallState = stateF doc, allServices
   overallState = 'failing' unless overallState
   Instances.update doc._id, $set: state: overallState
+  console.log 'determineState::update'
 
 f = false
 
@@ -42,7 +46,7 @@ Instances.find({}, fields: {_id: 1}).observe
       status: 'Created'
 
 Instances.find({state: 'removed', desiredState: 'stopped'}, fields: {_id: 1}).observe
-  added: (doc, olddoc) -> Instances.remove doc._id
+  added: (doc, olddoc) -> console.log 'Instance.remove'; Instances.remove doc._id
 
 Instances.find({desiredState: 'running'}, fields: {services: 1}).observe
   changed: (doc, oldDoc) -> determineState doc, runningIsDesired
@@ -50,9 +54,6 @@ Instances.find({desiredState: 'running'}, fields: {services: 1}).observe
 Instances.find({desiredState: 'stopped'}, fields: {services: 1}).observe
   changed: (doc, oldDoc) -> determineState doc, stoppedIsDesired
 
-setStateDescription = (instanceName, stateDescription) ->
-  Instances.upsert {name: instanceName}, $set:
-    'state.description': stateDescription
 
 f = true
 
@@ -124,7 +125,7 @@ module.exports =
         updateDoc["services.#{service}.properties"] = properties
         updateDoc.status = "Starting #{service}" if mappedState is 'starting'
         updateDoc.status = "Stopping #{service}" if mappedState is 'stopping'
-
+        console.log 'updateServiceState::upsert'
         Instances.upsert {name: name}, $set: updateDoc
       else
         updateDoc = name: name
@@ -134,6 +135,7 @@ module.exports =
         service = labels['bigboat.service.name']
         updateDoc["services.#{service}.aux.#{type}"] = auxUpdateDoc
         Instances.update {name: name}, $set: updateDoc
+        console.log 'updateServiceState::update'
 
   #
   # Updates the internal state based on image pulls
