@@ -90,6 +90,10 @@ module.exports =
 
   updateStartupFailedLogs: (instanceName, logData) ->
     updateStartupLogs instanceName, logData
+    Instances.update {name: instanceName},
+      $set:
+        state: 'failed'
+        status: 'This instance could not be started because of errors.'
 
   updateTeardownLogs: (instanceName, logData) ->
     Instances.update {name: instanceName},
