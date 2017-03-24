@@ -75,6 +75,7 @@ substituteParameters = (def, parameters) ->
     Instances.upsert {name: instance}, $set:
       startedBy: user._id
       images: (service.image for serviceName, service of dockerCompose)
+      agent: url: agentUrl
       app:
         name: app
         version: version
