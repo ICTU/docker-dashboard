@@ -51,7 +51,7 @@ Instances.find({state: 'removed', desiredState: 'stopped'}, fields: {_id: 1}).ob
 Instances.find({desiredState: 'running'}, fields: {services: 1}).observe
   changed: (doc, oldDoc) -> determineState doc, runningIsDesired
 
-Instances.find({desiredState: 'stopped'}, fields: {services: 1}).observe
+Instances.find({desiredState: 'stopped', state: $ne: 'removed'}, fields: {services: 1}).observe
   changed: (doc, oldDoc) -> determineState doc, stoppedIsDesired
 
 
