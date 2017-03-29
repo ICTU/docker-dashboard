@@ -1,0 +1,15 @@
+- set:
+    storageBucket.copy('{{bucketName}}'): ''
+    storageBucket.copy.name('{{bucketName}}'): '{{copyToName}}'
+    storageBucket.copy.submit('{{bucketName}}'): ''
+- wait to appear:
+    expected: storageBucket.name('{{copyToName}}')
+    timeout: 5000
+
+# cleanup
+- set:
+    storageBucket.delete('{{copyToName}}'): ''
+    storageBucket.delete.confirm('{{copyToName}}'): ''
+- wait to disappear:
+    expected: storageBucket.name('{{copyToName}}')
+    timeout: 5000

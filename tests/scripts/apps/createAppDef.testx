@@ -1,0 +1,37 @@
+# Check that it is possible to create a new application definition
+- go to:
+    url: /
+- set:
+    menu.Apps: ''
+    toolbox.NewApp: ''
+- check equals:
+    editAppDefForm.DockerComposeEditor: |-
+      service1:
+        image: myImage
+        environment:
+          - ENV1=val1
+          - ENV2=val2
+        volumes:
+          - /my/mapping:/path/in/container:ro
+    editAppDefForm.BigboatComposeEditor: |-
+      name: myNewApp
+      version: 1.0
+
+      service1:
+        enable_ssh: true
+        endpoint: ':80/application/path'
+        protocol: https
+- set:
+    editAppDefForm.DockerComposeEditor: |-
+      www:
+        image: nginx
+
+      db:
+        image: mongo
+    editAppDefForm.BigboatComposeEditor: |-
+      name: '{{testApp}}'
+      version: '{{testVer}}'
+    editAppDefForm.Save:
+- wait to appear:
+    expected: apps.AppPanel('{{testApp}}')
+    timeout: 2000

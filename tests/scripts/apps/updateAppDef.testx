@@ -1,0 +1,21 @@
+# Check that it is possible to update an existing application definition
+- go to:
+    url: /
+- set:
+    menu.Apps:
+    apps.AppPanel('{{testApp}}'):
+    apps.Edit('{{testApp}}','{{testVer}}'):
+- set:
+    editAppDefForm.DockerComposeEditor: |-
+      www:
+        image: nginx
+- set:
+    editAppDefForm.Save:
+    menu.Instances:
+    menu.Apps:
+    apps.AppPanel('{{testApp}}'):
+    apps.Edit('{{testApp}}','{{testVer}}'):
+- check equals:
+    editAppDefForm.DockerComposeEditor: |-
+      www:
+        image: nginx

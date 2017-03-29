@@ -1,0 +1,13 @@
+- go to:
+    url: /
+- set:
+    menu.Storage: ''
+- wait to appear:
+    expected: newStorageBucket.name
+    timeout: 2000
+- set:
+    newStorageBucket.name: '{{bucketName}}'
+    newStorageBucket.add: ''
+- wait to appear:
+    expected: storageBucket.name('{{bucketName}}')
+    timeout: 5000

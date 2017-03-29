@@ -7,7 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "meteor test --driver-package practicalmeteor:mocha --port 3100"
+    "test": "meteor test --driver-package practicalmeteor:mocha --port 3100",
+    "art": "webdriver-manager update && protractor tests/conf.coffee"
   },
   "repository": {
     "type": "git",
@@ -50,5 +51,15 @@
     "react-addons-update": "^15.0.2",
     "react-dom": "^15.0.2",
     "utf-8-validate": "^1.2.1"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.12.4",
+    "protractor": "^5.1.1",
+    "testx": "^2.6.3",
+    "testx-jasmine-reporters": "^1.1.1"
+  },
+  "testx": {
+    "logScript": false,
+    "actionTimeout": 5000
   }
 }
