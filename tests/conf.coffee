@@ -1,7 +1,7 @@
 reporters = require 'testx-jasmine-reporters'
 
 exports.config =
-  directConnect: true
+  # directConnect: true
   specs: [
     'spec/login*'
     'spec/navigation*'
@@ -26,7 +26,7 @@ exports.config =
 
   onPrepare: ->
     require 'testx'
-    browser.driver.manage().window().maximize()
+    browser.driver.manage().window().setSize 1920, 1080
     testx.objects.add require './objects'
     reporters
       html:
