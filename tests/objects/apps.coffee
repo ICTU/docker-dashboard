@@ -20,10 +20,6 @@ aceBehaviour = (selector) ->
     @$('textarea').clear().sendKeys val
 
 module.exports =
-  "wholePageApps":
-    locator: "xpath"
-    value: "//div[@class='apps container']"
-
   # Edit empty (new) Application Definition form
   "editAppDefForm.Close":
     locator: "xpath"
@@ -78,32 +74,3 @@ module.exports =
   "apps.Edit": (appName, appVersion) ->
     locator: "css"
     value: "tr#controlPanel-#{appName}-#{appVersion}"
-
-
-# ======================================
-
-    "newAppButton":
-      locator: "linkText"
-      value: "New App"
-
-    "newAppName":
-      locator: "css"
-      value: "#name"
-    "newAppVersion":
-      locator: "css"
-      value: "#version"
-
-    # Ace editor contents should be injected via behaviour-overriding function
-    "newAppCompose":
-      locator: "css"
-      value: "#composeEditor"
-      behaviour:
-        set: (val) ->
-          browser.executeScript("ace.edit('composeEditor').getSession().setNewLineMode('unix')")
-          browser.executeScript("ace.edit('composeEditor').getSession().getDocument().setValue('#{val.replace(/&#10;/g, '\\n')}')")
-    # Ace editor contents should be injected via behaviour-overriding function
-    "newAppInfra":
-      locator: "css"
-      value: "#infraEditor"
-      behaviour:
-        set: (val) -> browser.executeScript("ace.edit('infraEditor').getSession().getDocument().setValue('#{val.replace(/&#10;/g, '\\n')}')")
