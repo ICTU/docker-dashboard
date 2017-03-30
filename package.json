@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "coffee-script": "^1.12.4",
+    "lodash": "^4.17.4",
     "npm-run-all": "^4.0.2",
     "protractor": "^5.1.1",
     "testx": "^2.6.3",
