@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Run ART') {
             steps {
-                sh "docker run --rm -v \$(pwd):/work -w /work --net=host -v /var/run/docker.sock:/var/run/docker.sock greyarch/nocker npm run art -- --baseUrl=${TARGET_URL}"
+                sh "docker run --rm -t -v \$(pwd):/work -w /work --net=host -v /var/run/docker.sock:/var/run/docker.sock greyarch/nocker npm run art -- --baseUrl=${TARGET_URL}"
             }
         }
     }
