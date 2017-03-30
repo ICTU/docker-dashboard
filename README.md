@@ -185,3 +185,11 @@ Add the following object to your Meteor settings file:
 ```
 
 After starting the dashboard you will be able to authenticate against the specified ldap server. You specify your username (uid) and password as listed in the LDAP directory. The superDn and superPass are used to perform an ldap search to determine the usersDn based on the passed uid. After a userDn has been found the dashboard will bind to ldap with the user credentials. On a succesful bind the account will be created and added to the user collection.
+
+## How to run the regression tests
+
+Start BigBoat and:
+
+```bash
+npm run art -- --baseUrl=http://url.of.the.running.bigboat
+```
