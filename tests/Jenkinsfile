@@ -1,6 +1,6 @@
 pipeline {
     agent {
-      label 'docker'
+      label 'build-slave-1'
     }
     parameters {
       string(name: 'TARGET_URL', defaultValue: 'http://www.dashboard.acc.ictu', description: 'The base URL of the BigBoat instance under test')
@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('NPM install') {
             steps {
-                sh 'docker run --rm -v \$(pwd):/work -w /work -u $(id -u):$(id -g) greyarch/nocker npm i --only=dev'
+                sh 'docker run --rm -v \$(pwd):/work -w /work -u \$(id -u):\$(id -g) greyarch/nocker npm i --only=dev'
             }
         }
         stage('Run ART') {
