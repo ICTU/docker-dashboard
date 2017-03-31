@@ -8,12 +8,16 @@ pipeline {
     stages {
         stage('NPM install') {
             steps {
-                sh 'docker run --rm -v \$(pwd):/work -w /work -u \$(id -u):\$(id -g) greyarch/nocker npm i --only=dev'
+                ansiColor('xterm') {
+                    sh 'docker run --rm -v \$(pwd):/work -w /work -u \$(id -u):\$(id -g) greyarch/nocker npm i --only=dev'
+                }
             }
         }
         stage('Run ART') {
             steps {
-                sh "docker run --rm -t -v \$(pwd):/work -w /work --net=host -v /var/run/docker.sock:/var/run/docker.sock greyarch/nocker npm run art -- --baseUrl=${TARGET_URL}"
+                ansiColor('xterm') {
+                    sh "docker run --rm -t -v \$(pwd):/work -w /work --net=host -v /var/run/docker.sock:/var/run/docker.sock greyarch/nocker npm run art -- --baseUrl=${TARGET_URL}"
+                }
             }
         }
     }
