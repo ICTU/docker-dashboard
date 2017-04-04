@@ -7,6 +7,7 @@ exports.config =
     'spec/navigation*'
     'spec/apps*'
     'spec/storage*'
+    'spec/api*'
   ]
 
   capabilities:
@@ -27,6 +28,7 @@ exports.config =
   onPrepare: ->
     require 'testx'
     browser.driver.manage().window().setSize 1920, 1080
+    testx.keywords.add require 'testx-http-keywords'
     testx.objects.add require './objects'
     reporters
       html:

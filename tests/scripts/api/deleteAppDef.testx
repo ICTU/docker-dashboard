@@ -1,0 +1,8 @@
+# Check that it is possible to create a new application definition
+- send http delete request:
+    url: "/api/v2/apps/{{testApp}}/{{testVer}}"
+    headers: api-key={{apiKey}}
+- send http get request:
+    url: "/api/v2/apps/{{testApp}}/{{testVer}}"
+    headers: api-key={{apiKey}}
+    expected status code: 404
