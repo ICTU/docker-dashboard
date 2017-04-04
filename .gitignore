@@ -3,6 +3,8 @@
 node_modules
 settings.local.json
 settings.test.json
+settings.acc.json
 settings.local.2x.json
 docker-compose-prd.yml
 /settings.json
+.coverage
