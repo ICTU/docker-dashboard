@@ -1,0 +1,15 @@
+- send http get request:
+    url: "/api/v2/instances/{{testName}}"
+    headers: api-key={{apiKey}}
+    expected status code: 200
+    $.state.current: running
+- send http delete request:
+    url: "/api/v2/instances/{{testName}}"
+    headers: api-key={{apiKey}}
+    expected status code: 200
+- sleep:
+    seconds: 5
+- send http get request:
+    url: "/api/v2/instances/{{testName}}"
+    headers: api-key={{apiKey}}
+    expected status code: 404

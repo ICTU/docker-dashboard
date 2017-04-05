@@ -1,0 +1,23 @@
+- send http get request:
+    url: "/api/v2/instances/{{testName}}"
+    headers: api-key={{apiKey}}
+    expected status code: 404
+- send http put request:
+    url: "/api/v2/instances/{{testName}}"
+    headers: api-key={{apiKey}}
+    json: |+
+      {
+        "app": "{{testApp}}",
+        "version": "{{testVer}}",
+        "parameters": {},
+      	"options": {}
+      }
+    expected status code: 201
+    $.state.current: created
+- sleep:
+    seconds: 30
+- send http get request:
+    url: "/api/v2/instances/{{testName}}"
+    headers: api-key={{apiKey}}
+    expected status code: 200
+    $.state.current: running
