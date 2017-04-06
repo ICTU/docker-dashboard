@@ -38,9 +38,9 @@ exports.config =
         showSkipped: true
       junit: false
     beforeEach -> browser.ignoreSynchronization = true
-  onComplete: ->
-    # save coverage info
-    browser.executeScript '''
-      Meteor.sendCoverage(function(stats,err) {console.log(stats,err);});
-      Meteor.exportCoverage("html", function(err) {console.log(err)})
-    '''
+  # onComplete: ->
+  #   # save coverage info
+  #   browser.executeScript '''
+  #     Meteor.sendCoverage(function(stats,err) {console.log(stats,err);});
+  #     Meteor.exportCoverage("html", function(err) {console.log(err)})
+  #   '''

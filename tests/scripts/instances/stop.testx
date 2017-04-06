@@ -2,12 +2,12 @@
 - go to:
     url: /
 - set:
-    menu.Instances: ''
+    menu.Instances:
 - wait to appear:
     expected: instances.Running('{{testName}}')
     timeout: 120000
 - set:
-    menu.Instances: ''
+    menu.Instances:
     runningInstance('{{testName}}'): ''
     instances.Stop('{{testName}}'): ''
     instances.Stop.Yes('{{testName}}'): ''

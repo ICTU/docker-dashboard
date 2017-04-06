@@ -13,9 +13,11 @@
       	"options": {}
       }
     expected status code: 201
-    $.state.current: created
-- sleep:
-    seconds: 30
+- set:
+    menu.Instances: ''
+- wait to appear:
+    expected: instances.Running('{{testName}}')
+    timeout: 120000
 - send http get request:
     url: "/api/v2/instances/{{testName}}"
     headers: api-key={{apiKey}}

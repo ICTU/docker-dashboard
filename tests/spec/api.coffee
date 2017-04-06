@@ -1,12 +1,22 @@
 randId = Math.floor(Math.random() * 100) + 1
 
 testAppDef =
-  apiKey: "27c6ee43cc29095b5c80e91d9e7fa735"
   testApp: "test-app-api-#{randId}"
   testVer: "test-ver-api-#{randId}"
   testName: "test-inst-api-#{randId}"
 
 describe 'API v2', ->
+  beforeAll -> # get the API key
+    browser.get '/config'
+    browser.sleep 1000
+    element(protractor.By.id 'inputApi').getAttribute('value').then (val) ->
+      if val
+        testAppDef.apiKey = val
+      else
+        testx.run 'tests/scripts/api/generateApiKey.testx'
+        browser.sleep 1000
+        element(protractor.By.id 'inputApi').getAttribute('value').then (val) ->
+          testAppDef.apiKey = val
   it 'should be able to create a new application definition', ->
     testx.run 'tests/scripts/api/createAppDef.testx', testAppDef
   it 'should be able to update an application definition', ->

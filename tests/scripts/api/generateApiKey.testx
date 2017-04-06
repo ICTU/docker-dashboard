@@ -1,0 +1,7 @@
+- set:
+    menu.Configuration:
+- check matches:
+    page.title: Configuration
+- set:
+    btnRegenerateApi:
+    btnConfirm:

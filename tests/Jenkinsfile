@@ -22,6 +22,9 @@ pipeline {
         }
     }
     post {
+      always {
+        archiveArtifacts artifacts: 'tests/results/'
+      }
       failure {
         sh 'docker kill bigboat-art-selenium-server'
       }

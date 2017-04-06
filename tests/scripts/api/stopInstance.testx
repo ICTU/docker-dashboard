@@ -7,8 +7,11 @@
     url: "/api/v2/instances/{{testName}}"
     headers: api-key={{apiKey}}
     expected status code: 200
-- sleep:
-    seconds: 5
+- set:
+    menu.Instances:
+- wait to disappear:
+    expected: runningInstance('{{testName}}')
+    timeout: 120000
 - send http get request:
     url: "/api/v2/instances/{{testName}}"
     headers: api-key={{apiKey}}

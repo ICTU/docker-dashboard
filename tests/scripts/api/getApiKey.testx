@@ -1,0 +1,8 @@
+- sleep:
+    seconds: 1
+- set:
+    menu.Configuration:
+- check matches:
+    page.title: Configuration
+- save:
+    inputApi: apiKey

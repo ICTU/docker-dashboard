@@ -2,8 +2,8 @@
 - go to:
     url: /
 - set:
-    menu.Apps: ''
-    toolbox.NewApp: ''
+    menu.Apps:
+    toolbox.NewApp:
 - check equals:
     editAppDefForm.DockerComposeEditor: |-
       service1:
