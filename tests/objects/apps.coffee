@@ -15,9 +15,11 @@ divAppDef = (appName, appVersion) ->
 
 aceBehaviour = (selector) ->
   get: (val) ->
-    browser.executeScript "return ace.edit($('#{selector}').get(0)).getValue();"
+    browser.executeScript "return ace.edit($('#{selector}')[0]).getValue();"
   set: (val) ->
-    @$('textarea').clear().sendKeys val
+    v = val.replace /\n/g, '\\n'
+    script = "return ace.edit(jQuery('#{selector}')[0]).setValue('#{v}');"
+    browser.executeScript script
 
 module.exports =
   # Edit empty (new) Application Definition form

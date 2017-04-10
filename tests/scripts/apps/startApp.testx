@@ -11,3 +11,25 @@
 - wait to appear:
     expected: instances.Running('{{testName}}')
     timeout: 120000
+- sleep:
+    seconds: 60
+- send http get request:
+    url: http://www.{{testName}}.acc.ictu
+- send http get request:
+    url: http://www2.{{testName}}.acc.ictu
+- send http get request:
+    url: http://www3.{{testName}}.acc.ictu
+- send http get request:
+    url: http://www4.{{testName}}.acc.ictu
+- send http get request:
+    url: http://www5.{{testName}}.acc.ictu
+- send http get request:
+    url: http://www6.{{testName}}.acc.ictu
+- send http get request:
+    url: http://www7.{{testName}}.acc.ictu
+- send http get request:
+    url: http://www8.{{testName}}.acc.ictu
+- send http get request:
+    url: http://www9.{{testName}}.acc.ictu
+- send http get request:
+    url: http://www10.{{testName}}.acc.ictu

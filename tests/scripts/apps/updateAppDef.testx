@@ -9,7 +9,24 @@
     editAppDefForm.DockerComposeEditor: |-
       www:
         image: nginx
-- set:
+      www2:
+        image: nginx
+      www3:
+        image: nginx
+      www4:
+        image: nginx
+      www5:
+        image: nginx
+      www6:
+        image: nginx
+      www7:
+        image: nginx
+      www8:
+        image: nginx
+      www9:
+        image: nginx
+      www10:
+        image: nginx
     editAppDefForm.Save:
     menu.Instances:
     menu.Apps:
@@ -18,4 +35,22 @@
 - check equals:
     editAppDefForm.DockerComposeEditor: |-
       www:
+        image: nginx
+      www2:
+        image: nginx
+      www3:
+        image: nginx
+      www4:
+        image: nginx
+      www5:
+        image: nginx
+      www6:
+        image: nginx
+      www7:
+        image: nginx
+      www8:
+        image: nginx
+      www9:
+        image: nginx
+      www10:
         image: nginx

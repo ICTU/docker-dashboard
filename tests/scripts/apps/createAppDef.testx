@@ -29,8 +29,8 @@
       db:
         image: mongo
     editAppDefForm.BigboatComposeEditor: |-
-      name: '{{testApp}}'
-      version: '{{testVer}}'
+      name: {{testApp}}
+      version: {{testVer}}
     editAppDefForm.Save:
 - wait to appear:
     expected: apps.AppPanel('{{testApp}}')
