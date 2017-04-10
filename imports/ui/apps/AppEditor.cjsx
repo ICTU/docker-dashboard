@@ -44,7 +44,7 @@ module.exports = React.createClass
     if not @props.isLoading
       <span>
         <div style={height:50}>
-          <h3 className="pull-left">{@state.bigboatCompose?.parsed.name}:{@state.bigboatCompose?.parsed.version}</h3>
+          <h3 className="pull-left">{@state.bigboatCompose?.parsed?.name}:{@state.bigboatCompose?.parsed?.version}</h3>
           {if @props.canEdit
             <button onClick={@save} id="submitButton" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
           else
