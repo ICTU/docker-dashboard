@@ -7,12 +7,12 @@ testAppDef =
 
 describe 'Applications', ->
   it 'should be able to create a new application definition', ->
-    testx.run 'tests/scripts/apps/createAppDef.testx', testAppDef
+    testx.run 'tests/testx/scripts/apps/createAppDef.testx', testAppDef
   it 'should be able to update an application definition', ->
-    testx.run 'tests/scripts/apps/updateAppDef.testx', testAppDef
+    testx.run 'tests/testx/scripts/apps/updateAppDef.testx', testAppDef
   it 'should be able to start a newly defined application', ->
-    testx.run 'tests/scripts/apps/startApp.testx', testAppDef
+    testx.run 'tests/testx/scripts/apps/startApp.testx', testAppDef
   it 'should be able to stop an application', ->
-    testx.run 'tests/scripts/instances/stop.testx', testAppDef
+    testx.run 'tests/testx/scripts/instances/stop.testx', testAppDef
   it 'should be able to delete an application definition', ->
-    testx.run 'tests/scripts/apps/deleteAppDef.testx', testAppDef
+    testx.run 'tests/testx/scripts/apps/deleteAppDef.testx', testAppDef
