@@ -9,7 +9,7 @@
   "scripts": {
     "test": "meteor test --driver-package practicalmeteor:mocha --port 3100",
     "art:pre": "(docker kill bigboat-art-selenium-server; sleep 1; docker run --rm -d --net=host --name=bigboat-art-selenium-server -e SCREEN_WIDTH=1920 -e SCREEN_HEIGHT=1080 selenium/standalone-chrome)",
-    "art:exec": "protractor tests/conf.coffee --seleniumAddress=http://localhost:4444/wd/hub",
+    "art:exec": "protractor tests/testx/conf.coffee --seleniumAddress=http://localhost:4444/wd/hub",
     "art:post": "docker kill bigboat-art-selenium-server",
     "art": "run-s art:pre \"art:exec -- {@}\" art:post --"
   },
