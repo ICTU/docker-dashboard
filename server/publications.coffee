@@ -8,6 +8,14 @@ Meteor.publish 'events', -> Events.find {}, limit: 20, sort: timestamp: -1
 Meteor.publish 'storage', -> StorageBuckets.find {}, sort: name: 1
 Meteor.publish 'datastores', -> Datastores.find {}, sort: name: 1
 
+Meteor.publish 'allUserInfo', ->
+  if loggedInUser
+    Meteor.users.find {}, fields:
+      profile:
+        firstname: 1
+        lastname: 1
+        email: 1
+
 Meteor.publish 'allUsers', ->
   loggedInUser = @userId
   if loggedInUser and Roles.userIsInRole(loggedInUser, ["admin"], Roles.GLOBAL_GROUP)
