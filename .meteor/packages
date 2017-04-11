@@ -58,7 +58,5 @@ kadira:dochead
 typ:accounts-ldap
 theduke:bootstrap-modal-prompt
 shell-server@0.2.2
-meteortypescript:compiler
-practicalmeteor:mocha
 perak:markdown
 lmieulet:meteor-coverage
