@@ -1,13 +1,13 @@
 url = require 'url'
 randId = Math.floor(Math.random() * 100) + 1
 
-dashboardUrl = url.parse browser.baseUrl
+[..., domain, tld] = (url.parse browser.baseUrl).hostname.split('.')
 
 testAppDef =
   testApp: "test-app-#{randId}"
   testVer: "test-ver-#{randId}"
   testName: "test-inst-#{randId}"
-  domain: dashboardUrl.host.split('.').reverse()[1]
+  domain: domain
   dockerImage: "ictu/parrot"
 
 describe 'Applications', ->
