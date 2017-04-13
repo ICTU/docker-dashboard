@@ -14,22 +14,22 @@
 - sleep:
     seconds: 60
 - send http get request:
-    url: http://www.{{testName}}.acc.ictu
+    url: http://www1.{{testName}}.{{domain}}.ictu
 - send http get request:
-    url: http://www2.{{testName}}.acc.ictu
+    url: http://www2.{{testName}}.{{domain}}.ictu
 - send http get request:
-    url: http://www3.{{testName}}.acc.ictu
+    url: http://www3.{{testName}}.{{domain}}.ictu
 - send http get request:
-    url: http://www4.{{testName}}.acc.ictu
+    url: http://www4.{{testName}}.{{domain}}.ictu
 - send http get request:
-    url: http://www5.{{testName}}.acc.ictu
+    url: http://www5.{{testName}}.{{domain}}.ictu
 - send http get request:
-    url: http://www6.{{testName}}.acc.ictu
+    url: http://www6.{{testName}}.{{domain}}.ictu
 - send http get request:
-    url: http://www7.{{testName}}.acc.ictu
+    url: http://www7.{{testName}}.{{domain}}.ictu
 - send http get request:
-    url: http://www8.{{testName}}.acc.ictu
+    url: http://www8.{{testName}}.{{domain}}.ictu
 - send http get request:
-    url: http://www9.{{testName}}.acc.ictu
+    url: http://www9.{{testName}}.{{domain}}.ictu
 - send http get request:
-    url: http://www10.{{testName}}.acc.ictu
+    url: http://www10.{{testName}}.{{domain}}.ictu

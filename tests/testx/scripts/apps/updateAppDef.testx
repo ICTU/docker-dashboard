@@ -7,26 +7,26 @@
     apps.Edit('{{testApp}}','{{testVer}}'):
 - set:
     editAppDefForm.DockerComposeEditor: |-
-      www:
-        image: nginx
+      www1:
+        image: {{dockerImage}}
       www2:
-        image: nginx
+        image: {{dockerImage}}
       www3:
-        image: nginx
+        image: {{dockerImage}}
       www4:
-        image: nginx
+        image: {{dockerImage}}
       www5:
-        image: nginx
+        image: {{dockerImage}}
       www6:
-        image: nginx
+        image: {{dockerImage}}
       www7:
-        image: nginx
+        image: {{dockerImage}}
       www8:
-        image: nginx
+        image: {{dockerImage}}
       www9:
-        image: nginx
+        image: {{dockerImage}}
       www10:
-        image: nginx
+        image: {{dockerImage}}
     editAppDefForm.Save:
     menu.Instances:
     menu.Apps:
@@ -34,23 +34,23 @@
     apps.Edit('{{testApp}}','{{testVer}}'):
 - check equals:
     editAppDefForm.DockerComposeEditor: |-
-      www:
-        image: nginx
+      www1:
+        image: {{dockerImage}}
       www2:
-        image: nginx
+        image: {{dockerImage}}
       www3:
-        image: nginx
+        image: {{dockerImage}}
       www4:
-        image: nginx
+        image: {{dockerImage}}
       www5:
-        image: nginx
+        image: {{dockerImage}}
       www6:
-        image: nginx
+        image: {{dockerImage}}
       www7:
-        image: nginx
+        image: {{dockerImage}}
       www8:
-        image: nginx
+        image: {{dockerImage}}
       www9:
-        image: nginx
+        image: {{dockerImage}}
       www10:
-        image: nginx
+        image: {{dockerImage}}

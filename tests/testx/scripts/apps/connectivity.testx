@@ -1,0 +1,51 @@
+# Check instances can talk to each other
+- send http post request:
+    url: http://{{instance}}.{{testName}}.{{domain}}.ictu
+    body: http://www1/bang
+    'expected status code': 200
+    'expected response': bang
+- send http post request:
+    url: http://{{instance}}.{{testName}}.{{domain}}.ictu
+    body: http://www2/bang
+    'expected status code': 200
+    'expected response': bang
+- send http post request:
+    url: http://{{instance}}.{{testName}}.{{domain}}.ictu
+    body: http://www3/bang
+    'expected status code': 200
+    'expected response': bang
+- send http post request:
+    url: http://{{instance}}.{{testName}}.{{domain}}.ictu
+    body: http://www4/bang
+    'expected status code': 200
+    'expected response': bang
+- send http post request:
+    url: http://{{instance}}.{{testName}}.{{domain}}.ictu
+    body: http://www5/bang
+    'expected status code': 200
+    'expected response': bang
+- send http post request:
+    url: http://{{instance}}.{{testName}}.{{domain}}.ictu
+    body: http://www6/bang
+    'expected status code': 200
+    'expected response': bang
+- send http post request:
+    url: http://{{instance}}.{{testName}}.{{domain}}.ictu
+    body: http://www7/bang
+    'expected status code': 200
+    'expected response': bang
+- send http post request:
+    url: http://{{instance}}.{{testName}}.{{domain}}.ictu
+    body: http://www8/bang
+    'expected status code': 200
+    'expected response': bang
+- send http post request:
+    url: http://{{instance}}.{{testName}}.{{domain}}.ictu
+    body: http://www9/bang
+    'expected status code': 200
+    'expected response': bang
+- send http post request:
+    url: http://{{instance}}.{{testName}}.{{domain}}.ictu
+    body: http://www10/bang
+    'expected status code': 200
+    'expected response': bang

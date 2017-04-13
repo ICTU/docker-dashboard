@@ -1,0 +1,30 @@
+- run:
+    file: tests/testx/scripts/apps/connectivity.testx
+    instance: www1
+- run:
+    file: tests/testx/scripts/apps/connectivity.testx
+    instance: www2
+- run:
+    file: tests/testx/scripts/apps/connectivity.testx
+    instance: www3
+- run:
+    file: tests/testx/scripts/apps/connectivity.testx
+    instance: www4
+- run:
+    file: tests/testx/scripts/apps/connectivity.testx
+    instance: www5
+- run:
+    file: tests/testx/scripts/apps/connectivity.testx
+    instance: www6
+- run:
+    file: tests/testx/scripts/apps/connectivity.testx
+    instance: www7
+- run:
+    file: tests/testx/scripts/apps/connectivity.testx
+    instance: www8
+- run:
+    file: tests/testx/scripts/apps/connectivity.testx
+    instance: www9
+- run:
+    file: tests/testx/scripts/apps/connectivity.testx
+    instance: www10
