@@ -6,7 +6,6 @@ HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
 
 findWebPort = (service) ->
   p = 80
-  console.log service?.ports
   service?.ports?.forEach (port) ->
     port = port.split('/')[0]
     if port in HTTPS_PORTS.concat(HTTP_PORTS) then p = port
@@ -73,6 +72,5 @@ Template.instanceView.events
   'click .showLogs': ->
     activeLogs.set @logs
   'click .showContainerLogs': ->
-    console.log 'clicked showContainerLogs', @data.dockerContainerId
     Meteor.call 'getLog', @data.dockerContainerId, (err, data) ->
-      console.log 'log -> ', err, data
+      console.error 'log -> ', err, data

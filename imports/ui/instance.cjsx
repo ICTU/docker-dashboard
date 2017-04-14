@@ -5,7 +5,6 @@ React               = require 'react'
 Instance = React.createClass
   displayName: 'Instance'
   render: ->
-    console.log 'render Instance', @
     instance = @props.instance
     unless instance
       <span></span>
