@@ -71,7 +71,7 @@ Meteor.startup ->
     @route 'status',
       path: '/status'
       data: ->
-        services: Services.find()
+        services: Services.find({}, sort: name: 1)
 
     @route 'logs',
       layoutTemplate: null
