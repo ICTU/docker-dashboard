@@ -167,6 +167,7 @@ substituteParameters = (def, parameters) ->
 
     Instances.upsert {name: instanceName}, $set:
       desiredState: 'stopped'
+      status: 'Instance stop is requested'
       stoppedBy: user._id
 
     console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
