@@ -13,6 +13,9 @@
         <div class="col-sm-1"><div class="led {{statusColor}} bigger"></div></div>
         <div class="col-sm-11">
           <div class="status">{{name}}</div>
+          {{#with description}}
+          <div class="text">{{{this}}}</div>
+          {{/with}}
           <div class="lastCheck">last checked: {{lastCheckHuman}}</div>
         </div>
         <hr>

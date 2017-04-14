@@ -37,3 +37,19 @@ Meteor.startup ->
         when 'appdef'   then renderAppDefNotification e
         when 'storage'   then renderStorageNotification e
     starting = false
+
+  Meteor.subscribe 'services', ->
+    errorAlertHandle = null
+    x = ->
+      if Services.find(isUp:false).count()
+        errorAlertHandle = sAlert.error "<strong>Ouch!</strong> Something is not going well. Be sure to checkout the <i>status</i> page.",
+          timeout: 999999999
+      else if errorAlertHandle
+        sAlert.close errorAlertHandle
+        errorAlertHandle = null
+        sAlert.success "<strong>Ooh yeah!</strong> We have encountered some issues, but it seems that they are all resolved now. We'll inform you as soon as we hit an iceberg again. Fingers crossed!",
+          timeout: 1000 * 60
+
+    Services.find(isUp:false).observe
+      added: x
+      removed: x

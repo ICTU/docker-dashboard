@@ -4,6 +4,7 @@ dot     = require 'mongo-dot-notation'
 storage  = require './agent/storage.coffee'
 logs     = require './agent/logs.coffee'
 snapshot = require './docker/snapshot.coffee'
+network  = require './docker/network.coffee'
 
 mbe = Meteor.bindEnvironment
 
@@ -16,6 +17,7 @@ mqttTopicHandlerMap =
   '/agent/docker/log/teardown':     mbe logs.teardown
   '/agent/storage/buckets':         mbe storage.buckets
   '/agent/storage/size':            mbe storage.size
+  '/network/info':                  mbe network.info
   '/docker/snapshot/containerIds':  mbe snapshot.containerIds
 
 mqst = Meteor.settings.mqtt
