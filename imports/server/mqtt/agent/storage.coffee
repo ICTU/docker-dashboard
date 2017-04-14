@@ -18,3 +18,15 @@ module.exports =
       isUp: prct < 90,
       description: "Total size: #{prettysize(total)}. <strong>Available: #{prettysize(total-used)}</strong>"
     }
+
+  dockergraph: (graph) ->
+    dsName = "Docker graph: #{graph.name}"
+    total = parseInt(graph.total)
+    used = parseInt(graph.used)
+    prct = (used / total) * 100
+    Services.upsert {name: dsName}, {
+      name: dsName,
+      lastCheck: new Date(),
+      isUp: prct < 90,
+      description: "Total size: #{prettysize(total)}. <strong>Available: #{prettysize(total-used)}</strong>"
+    }
