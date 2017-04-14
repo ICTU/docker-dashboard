@@ -13,9 +13,9 @@ Meteor.startup ->
     job = new Job Jobs, 'serviceCheck', j
     job.repeat
       repeats: Jobs.forever
-      wait: 1000 * 60
+      wait: 1000 * 20
     job.retry
-      wait: 1000 * 60
+      wait: 1000 * 10
     job.save()
 
   Jobs.processJobs 'serviceCheck', (job, callback) ->
@@ -24,6 +24,7 @@ Meteor.startup ->
         Services.upsert {name: job.data.name},
           name: job.data.name
           lastCheck: new Date()
+          description: '<strong>The agent is offline.</strong>'
           isUp: false
 
         job.fail err.content
@@ -31,6 +32,7 @@ Meteor.startup ->
         Services.upsert {name: job.data.name},
           name: job.data.name
           lastCheck: new Date()
+          description: 'The agent is online.'
           isUp: true
         job.done()
     callback()
