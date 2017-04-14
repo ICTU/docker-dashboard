@@ -3,7 +3,7 @@ Template.serviceView.onCreated ->
     target: (trigger) -> trigger.parentNode.nextElementSibling
 
 Template.serviceView.helpers
-  sshIsUnhealthy: -> @data.aux.ssh.health.status is 'unhealthy'
+  sshIsUnhealthy: -> @data.aux?.ssh?.health?.status is 'unhealthy'
   createdSince: -> moment(@data.container?.created).fromNow() if @data.container?.created
   hasSshSettings: -> @data.aux.ssh
   renderHealth: ->
