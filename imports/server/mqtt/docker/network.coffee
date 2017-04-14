@@ -9,4 +9,3 @@ module.exports =
       isUp: availableIps > 20,
       description: "Total number of IPs: #{info.totalIps}. IPs in use: #{info.usedIps}. <strong>Available IPs: #{availableIps}</strong>"
     }
-    console.log 'network info', info
