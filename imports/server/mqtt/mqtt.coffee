@@ -5,6 +5,7 @@ storage  = require './agent/storage.coffee'
 logs     = require './agent/logs.coffee'
 snapshot = require './docker/snapshot.coffee'
 network  = require './docker/network.coffee'
+system   = require './agent/system.coffee'
 
 mbe = Meteor.bindEnvironment
 
@@ -20,6 +21,9 @@ mqttTopicHandlerMap =
   '/agent/docker/graph':            mbe storage.dockergraph
   '/network/info':                  mbe network.info
   '/docker/snapshot/containerIds':  mbe snapshot.containerIds
+  '/system/memory':                 mbe system.memory
+  '/system/cpu':                    mbe system.cpu
+  '/system/uptime':                 mbe system.uptime
 
 mqst = Meteor.settings.mqtt
 client = mqtt.connect mqst.url,
