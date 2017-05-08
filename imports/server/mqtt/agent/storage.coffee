@@ -17,6 +17,10 @@ module.exports =
       lastCheck: new Date(),
       isUp: prct < 90,
       description: "Total size: #{prettysize(total)}. <strong>Available: #{prettysize(total-used)}</strong>"
+      details:
+        total: total
+        used: used
+        free: total - used
     }
 
   dockergraph: (graph) ->
@@ -29,4 +33,8 @@ module.exports =
       lastCheck: new Date(),
       isUp: prct < 90,
       description: "Total size: #{prettysize(total)}. <strong>Available: #{prettysize(total-used)}</strong>"
+      details:
+        total: total
+        used: used
+        free: total - used
     }

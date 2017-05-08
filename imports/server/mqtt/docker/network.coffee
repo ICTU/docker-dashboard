@@ -8,4 +8,5 @@ module.exports =
       lastCheck: new Date(),
       isUp: availableIps > 20,
       description: "Total number of IPs: #{info.totalIps}. IPs in use: #{info.usedIps}. <strong>Available IPs: #{availableIps}</strong>"
+      details: info
     }
