@@ -21,4 +21,5 @@ Meteor.startup ->
         'api/v2/apps'
         'api/v2/instances'
         'api/v2/instances/single'
+        'api/v2/status'
       ]

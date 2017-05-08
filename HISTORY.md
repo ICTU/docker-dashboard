@@ -1,4 +1,11 @@
 
+### 5.8.9
+- Network containers are started before the service containers. Service containers
+  are only started when all network containers have acquired an IP address.
+- The status page contains a more detailed overview of the system components
+  and their state. The dashboard will trigger an alarm notification when one of the components
+  is failing.
+
 ### 5.7.2
 - Make the instance 'trash' button available to all logged in users again. Pressing
   this button clears out all meta information the dashboard has about this instance.
