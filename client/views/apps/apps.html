@@ -136,7 +136,12 @@
                 {{/each}}
               {{/if}}
           </div>
-          <button type="submit" class="start-app btn btn-mini pull-right">Go!</button>
+          {{#if systemNotHealthy}}
+            <div style='float:left; color:#D40000; width:280px; font-size:14px'>
+              <span class="glyphicon glyphicon-exclamation-sign"></span>
+              The system is not healthy, your instance may not start.</div>
+          {{/if}}
+          <button type="submit" class="start-app btn btn-mini pull-right" style='float:right'>Go!</button>
       </form>
 
     </li>

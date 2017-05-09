@@ -57,6 +57,7 @@ Template.appActions.helpers
       _.uniq(params.map (p) -> p.replace('{{', '').trim())
     else
       []
+  systemNotHealthy: -> Services.find(isUp:false).count() > 0
 
 Template.appActions.events
   'submit #start-app-form': (e, tpl) ->

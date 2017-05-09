@@ -294,3 +294,53 @@ Requests an instance to be stopped. Returns the instance when successful.
 + Response 200
   [Instance][]
 + Response 404
+
+
+# Group Status
+
+## Status [/status]
+
+The status endpoint lists all items that are monitored and reported to BigBoat.
+Most statuses have a `details` object containing more detailed information on its state.
+
++ Model (application/json)
+
+    ```js
+    [
+      {
+        "name": "Available IPs",
+        "lastCheck": {
+            "time": 1494245442228,
+            "ISO": "2017-05-08T12:10:42.228Z"
+        },
+        "description": "Total number of IPs: 190. IPs in use: 19. <strong>Available IPs: 171</strong>",
+        "details": {
+            "totalIps": 190,
+            "usedIps": 19
+        },
+        "isOk": true
+        },
+        {
+          "name": "Docker graph: /var/lib/docker",
+          "lastCheck": {
+              "time": 1494245487722,
+              "ISO": "2017-05-08T12:11:27.722Z"
+          },
+          "description": "Total size: 218.2 GB. <strong>Available: 96.3 GB</strong>",
+          "details": {
+              "total": 234322399232,
+              "used": 130956759040,
+              "free": 103365640192
+          },
+          "isOk": true
+        },
+        ...
+    ]
+    ```
+
+### Retrieve all Statuses [GET]
+Returns all statuses.
+
++ Response 200
+
+  [Status][]
