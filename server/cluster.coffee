@@ -113,13 +113,11 @@ substituteParameters = (def, parameters) ->
 
       if sc = bigboatCompose[serviceName]?.startcheck
         service.labels['bigboat.startcheck.condition'] = sc.condition
-        service.labels['bigboat.startcheck.delay'] = sc.delay or 1000
-        service.labels['bigboat.startcheck.interval'] = sc.interval or 1000
+        service.labels['bigboat.startcheck.delay'] = "#{sc.delay or 1000}"
+        service.labels['bigboat.startcheck.interval'] = "#{sc.interval or 1000}"
 
       sshCompose = SshContainer.buildComposeConfig project, instance, serviceName, bigboatCompose[serviceName]
       services["bb-ssh-#{serviceName}"] = sshCompose if sshCompose
-
-    console.dir services.www.labels
 
     callOpts =
       responseType: "buffer"
@@ -138,9 +136,9 @@ substituteParameters = (def, parameters) ->
 
     console.log "Sending a POST request to '#{agentUrl}' to start '#{instance}'."
 
-    # HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
-    #   throw new Meteor.Error err if err
-    #   console.log "Sent request to start instance. Response from the agent is", result.content.toString()
+    HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+      throw new Meteor.Error err if err
+      console.log "Sent request to start instance. Response from the agent is", result.content.toString()
 
     Instances.findOne {name: instance}
 
