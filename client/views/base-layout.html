@@ -23,6 +23,7 @@
             <ul class="dropdown-menu">
               <li><a target="_blank" href="/docs">General documentation</a></li>
               <li><a target="_blank" href="/docs/api/v2">API v2 documentation</a></li>
+              <li><a href="/terms">Terms &amp; conditions</a></li>
             </ul>
           </li>
         </ul>
@@ -46,7 +47,7 @@
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
               <i class="glyphicon glyphicon-user"></i> Log In <span class="caret"></span>
             </a>
-            <div id="g-account-menu" class="dropdown-menu" style="padding-right:30px;padding-left:30px">
+            <div id="g-account-menu" class="dropdown-menu" style="width:270px;padding-right:30px;padding-left:30px">
               <form class="form" id="formLogin">
                 <div class="form-group row">
                   <div class="col-sm-15" style="margin:5px">
@@ -54,9 +55,13 @@
                   </div>
                   <div class="col-sm-15" style="margin:5px">
                     <input name="password" id="password" class="form-control" placeholder="Password" type="password"><br>
+                  </div><div class="col-sm-15" style="margin:5px">
+                     <label style="font-size:13px"><input id='accept_terms' type="checkbox" value="" style="margin-right:5px">
+                       I accept the <a href='/terms'>terms &amp; conditions</a>
+                     </label>
                   </div>
-                  <div class="col-sm-offset-2 col-sm-15">
-                    <button type="submit" id="btnLogin" class="btn btn-info">Log In</button>
+                  <div class="col-sm-15">
+                    <button style='float:right' type="submit" id="btnLogin" class="btn btn-info">Log In</button>
                   </div>
                 </div>
               </form>

@@ -32,11 +32,13 @@ Template['base-layout'].events
     e.preventDefault()
     username = e.target.username.value
     password = e.target.password.value
-    Meteor.loginWithLDAP username, password, { searchBeforeBind: {'uid': username} }, (err, res) ->
-      if err
-        sAlert.error "Login failed!"
-      else
-        sAlert.info "#{Meteor.user().username} logged in."
+    if e.target.accept_terms.checked
+      Meteor.loginWithLDAP username, password, { searchBeforeBind: {'uid': username} }, (err, res) ->
+        if err
+          sAlert.error "Login failed!"
+        else
+          sAlert.info "#{Meteor.user().username} logged in."
+    else sAlert.error 'Please accept the terms and conditions.'
   'click #logOut': ->
     Meteor.logout()
     sAlert.info "#{Meteor.user().username} logged out."
