@@ -113,8 +113,9 @@ substituteParameters = (def, parameters) ->
 
       if sc = bigboatCompose[serviceName]?.startcheck
         service.labels['bigboat.startcheck.condition'] = sc.condition
-        service.labels['bigboat.startcheck.delay'] = "#{sc.delay or 1000}"
+        service.labels['bigboat.startcheck.timeout'] = "#{sc.timeout or 5000}"
         service.labels['bigboat.startcheck.interval'] = "#{sc.interval or 1000}"
+        service.labels['bigboat.startcheck.retries'] = "#{sc.retries or 10}"
 
       sshCompose = SshContainer.buildComposeConfig project, instance, serviceName, bigboatCompose[serviceName]
       services["bb-ssh-#{serviceName}"] = sshCompose if sshCompose
