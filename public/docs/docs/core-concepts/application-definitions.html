@@ -288,18 +288,29 @@
 </li>
 <li><strong>endpoint</strong> - the service endpoint; has the format of <em>:port/path</em> and will be used by BigBoat to provide a more meaningful link to your service</li>
 <li><strong>protocol</strong> - the service protocol; example <em>http,https,tcp,udp</em>.</li>
-<li><p><strong>type</strong> - the type of the service; possible values are <em>service</em> and <em>oneoff</em>; defaults to <em>service</em>.
-When set to <em>oneoff</em> BigBoat will not try to restart the service if it exits. The instance will enter <em>failing</em> state if the service exits with code other than <em>0</em>. If the type of the service is <em>service</em> (the default value) BigBoat will keep trying to restart the service container, exponentially backing away. The <em>oneoff</em> services are meant as a way to initialize/bootstrap other services in the application.</p>
-<p>Example BigBoat Compose adding SSH connectivity to the www service:</p>
-<pre><code>name: jenkins
-version: 2.7.1
-www:
-  ssh: true
-  endpoint: :8080/startScreen
-  protocol: https
-</code></pre></li>
+<li><strong>type</strong> - the type of the service; possible values are <em>service</em> and <em>oneoff</em>; defaults to <em>service</em>.
+When set to <em>oneoff</em> BigBoat will not try to restart the service if it exits. The instance will enter <em>failing</em> state if the service exits with code other than <em>0</em>. If the type of the service is <em>service</em> (the default value) BigBoat will keep trying to restart the service container, exponentially backing away. The <em>oneoff</em> services are meant as a way to initialize/bootstrap other services in the application.</li>
+<li><strong>startcheck</strong> - A start check to be executed before any dependent services will be started. A <em>condition</em> will be run every <em>interval</em> with a <em>timeout</em> for a maximum <em>retries</em>. If the condition succeeds any dependent services will be started. After <em>retries</em> or a successful execution the startcheck will not be retried. The start check can be used to ensure that the service is in a certain state. The <em>condition</em> is mandatory, other properties have sensible defaults (timeout=5000, interval=1000, retries=10).</li>
 </ul>
+<h3 id="examples">Examples</h3>
+<p>  Example BigBoat Compose adding SSH connectivity to the www service:</p>
+<pre><code>  name: jenkins
+  version: 2.7.1
+  www:
+      ssh: true
+      endpoint: :8080/startScreen
+      protocol: https
+</code></pre><p>  Example BigBoat Compose with a startcheck</p>
+<pre><code>  name: nginx-with-startcheck
+  version: 1.0
 
+  www:
+    startcheck:
+      condition: wget http://localhost/
+      timeout: 5000
+      interval: 1000
+      retries: 10
+</code></pre>
                                 
                                 </section>
                             
@@ -338,7 +349,7 @@ www:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Apps","level":"1.3.1","depth":2,"next":{"title":"Instances","level":"1.3.2","depth":2,"path":"docs/core-concepts/instances.md","ref":"docs/core-concepts/instances.md","articles":[]},"previous":{"title":"Core concepts","level":"1.3","depth":1,"ref":"","articles":[{"title":"Apps","level":"1.3.1","depth":2,"path":"docs/core-concepts/application-definitions.md","ref":"docs/core-concepts/application-definitions.md","articles":[]},{"title":"Instances","level":"1.3.2","depth":2,"path":"docs/core-concepts/instances.md","ref":"docs/core-concepts/instances.md","articles":[]},{"title":"Storage","level":"1.3.3","depth":2,"path":"docs/core-concepts/storage-buckets.md","ref":"docs/core-concepts/storage-buckets.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"ICTU IQ-Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"INTRO.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"BigBoat Documentation","gitbook":"*","description":"Some notes on BigBoat"},"file":{"path":"docs/core-concepts/application-definitions.md","mtime":"2017-02-28T08:09:22.065Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-03-10T09:18:51.156Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Apps","level":"1.3.1","depth":2,"next":{"title":"Instances","level":"1.3.2","depth":2,"path":"docs/core-concepts/instances.md","ref":"docs/core-concepts/instances.md","articles":[]},"previous":{"title":"Core concepts","level":"1.3","depth":1,"ref":"","articles":[{"title":"Apps","level":"1.3.1","depth":2,"path":"docs/core-concepts/application-definitions.md","ref":"docs/core-concepts/application-definitions.md","articles":[]},{"title":"Instances","level":"1.3.2","depth":2,"path":"docs/core-concepts/instances.md","ref":"docs/core-concepts/instances.md","articles":[]},{"title":"Storage","level":"1.3.3","depth":2,"path":"docs/core-concepts/storage-buckets.md","ref":"docs/core-concepts/storage-buckets.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"ICTU IQ-Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"INTRO.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"BigBoat Documentation","gitbook":"*","description":"Some notes on BigBoat"},"file":{"path":"docs/core-concepts/application-definitions.md","mtime":"2017-06-09T11:41:25.457Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-09T11:42:14.266Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

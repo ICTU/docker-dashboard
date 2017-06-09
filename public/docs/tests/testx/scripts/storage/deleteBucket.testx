@@ -1,0 +1,13 @@
+- go to:
+    url: /
+- set:
+    menu.Storage: ''
+- wait to appear:
+    expected: storageBucket.name('{{bucketName}}')
+    timeout: 5000
+- set:
+    storageBucket.delete('{{bucketName}}'): ''
+    storageBucket.delete.confirm('{{bucketName}}'): ''
+- wait to disappear:
+    expected: storageBucket.name('{{bucketName}}')
+    timeout: 5000

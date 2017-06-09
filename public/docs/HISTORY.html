@@ -248,7 +248,35 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h3 id="560">5.6.0</h3>
+                                <h3 id="589">5.8.9</h3>
+<ul>
+<li>Network containers are started before the service containers. Service containers
+are only started when all network containers have acquired an IP address.</li>
+<li>The status page contains a more detailed overview of the system components
+and their state. The dashboard will trigger an alarm notification when one of the components
+is failing.</li>
+</ul>
+<h3 id="572">5.7.2</h3>
+<ul>
+<li>Make the instance &apos;trash&apos; button available to all logged in users again. Pressing
+this button clears out all meta information the dashboard has about this instance.
+It has become clear that this feature is still useful when an instance state in
+the dashboard becomes disconnected from its actual state or when an instance
+does not want to start in the first place. Users need a mechanism for removing
+such instances.</li>
+</ul>
+<h3 id="571">5.7.1</h3>
+<ul>
+<li>Enforce stricter constraints on instance and bucket names. Capital letters (A-Z)
+are not allowed any longer. Instance names with capitals cannot be found in DNS.</li>
+</ul>
+<h3 id="570">5.7.0</h3>
+<ul>
+<li>A snapshot of all running containers is received periodically. Based on this
+snapshot containers that don&apos;t exist any more are marked as &apos;removed&apos;.
+This leads to eventual consistency of the dashboard&apos;s view.</li>
+</ul>
+<h3 id="560">5.6.0</h3>
 <ul>
 <li>Instance overall state reflects healthcheck status of individual services.</li>
 <li><a href="GLOSSARY.html#docker" class="glossary-term" title="Docker provides a way to run applications securely isolated in a container, packaged with all its dependencies and libraries. See https://docs.docker.com/.">Docker</a> healthcheck state of user defined services is reflected in the UI.</li>
@@ -560,7 +588,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"History","level":"1.2.1","depth":2,"next":{"title":"Version 5","level":"1.2.2","depth":2,"path":"docs/changes/v5.md","ref":"docs/changes/v5.md","articles":[]},"previous":{"title":"Changes","level":"1.2","depth":1,"ref":"","articles":[{"title":"History","level":"1.2.1","depth":2,"path":"HISTORY.md","ref":"HISTORY.md","articles":[]},{"title":"Version 5","level":"1.2.2","depth":2,"path":"docs/changes/v5.md","ref":"docs/changes/v5.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"ICTU IQ-Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"INTRO.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"BigBoat Documentation","gitbook":"*","description":"Some notes on BigBoat"},"file":{"path":"HISTORY.md","mtime":"2017-03-10T09:12:02.739Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-03-10T09:18:51.156Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"History","level":"1.2.1","depth":2,"next":{"title":"Version 5","level":"1.2.2","depth":2,"path":"docs/changes/v5.md","ref":"docs/changes/v5.md","articles":[]},"previous":{"title":"Changes","level":"1.2","depth":1,"ref":"","articles":[{"title":"History","level":"1.2.1","depth":2,"path":"HISTORY.md","ref":"HISTORY.md","articles":[]},{"title":"Version 5","level":"1.2.2","depth":2,"path":"docs/changes/v5.md","ref":"docs/changes/v5.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"ICTU IQ-Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"INTRO.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"BigBoat Documentation","gitbook":"*","description":"Some notes on BigBoat"},"file":{"path":"HISTORY.md","mtime":"2017-05-09T09:22:27.669Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-06-09T11:42:14.266Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

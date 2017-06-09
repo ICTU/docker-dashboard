@@ -1,0 +1,35 @@
+# Check that it is possible to start an application
+- go to:
+    url: /
+- set:
+    menu.Apps:
+    apps.AppPanel('{{testApp}}'): ''
+    apps.Start('{{testApp}}','{{testVer}}'): ''
+    apps.Start.Name('{{testApp}}','{{testVer}}'): '{{testName}}'
+    apps.Start.Go('{{testApp}}','{{testVer}}'): ''
+    menu.Instances:
+- wait to appear:
+    expected: instances.Running('{{testName}}')
+    timeout: 120000
+- sleep:
+    seconds: 60
+- send http get request:
+    url: http://www1.{{testName}}.{{domain}}.ictu
+- send http get request:
+    url: http://www2.{{testName}}.{{domain}}.ictu
+- send http get request:
+    url: http://www3.{{testName}}.{{domain}}.ictu
+- send http get request:
+    url: http://www4.{{testName}}.{{domain}}.ictu
+- send http get request:
+    url: http://www5.{{testName}}.{{domain}}.ictu
+- send http get request:
+    url: http://www6.{{testName}}.{{domain}}.ictu
+- send http get request:
+    url: http://www7.{{testName}}.{{domain}}.ictu
+- send http get request:
+    url: http://www8.{{testName}}.{{domain}}.ictu
+- send http get request:
+    url: http://www9.{{testName}}.{{domain}}.ictu
+- send http get request:
+    url: http://www10.{{testName}}.{{domain}}.ictu

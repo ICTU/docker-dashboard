@@ -51,7 +51,9 @@ The service level properties can be specified for each service in the Docker Com
   - **protocol** - the service protocol; example *http,https,tcp,udp*.
   - **type** - the type of the service; possible values are *service* and *oneoff*; defaults to *service*.
   When set to *oneoff* BigBoat will not try to restart the service if it exits. The instance will enter *failing* state if the service exits with code other than *0*. If the type of the service is *service* (the default value) BigBoat will keep trying to restart the service container, exponentially backing away. The *oneoff* services are meant as a way to initialize/bootstrap other services in the application.
+  - **startcheck** - A start check to be executed before any dependent services will be started. A *condition* will be run every *interval* with a *timeout* for a maximum *retries*. If the condition succeeds any dependent services will be started. After *retries* or a successful execution the startcheck will not be retried. The start check can be used to ensure that the service is in a certain state. The *condition* is mandatory, other properties have sensible defaults (timeout=5000, interval=1000, retries=10).
 
+### Examples
   Example BigBoat Compose adding SSH connectivity to the www service:
   ```
   name: jenkins
@@ -61,3 +63,17 @@ The service level properties can be specified for each service in the Docker Com
       endpoint: :8080/startScreen
       protocol: https
   ```
+
+  Example BigBoat Compose with a startcheck
+
+  ```
+  name: nginx-with-startcheck
+  version: 1.0
+
+  www:
+    startcheck:
+      condition: wget http://localhost/
+      timeout: 5000
+      interval: 1000
+      retries: 10
+    ```

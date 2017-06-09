@@ -1,0 +1,16 @@
+# Check that it is possible to create a new application definition
+- send http put request:
+    url: "/api/v2/apps/{{testApp}}/{{testVer}}"
+    headers: api-key={{apiKey}}
+    expected status code: 201
+- send http get request:
+    url: "/api/v2/apps/{{testApp}}/{{testVer}}"
+    headers: api-key={{apiKey}}
+    $.name: "{{testApp}}"
+    $.version: "{{testVer}}"
+- send http get request:
+    url: "/api/v2/apps/{{testApp}}/{{testVer}}/files/bigboatCompose"
+    headers: api-key={{apiKey}}
+    expected response: |+
+      name: {{testApp}}
+      version: {{testVer}}

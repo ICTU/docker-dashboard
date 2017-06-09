@@ -1,0 +1,11 @@
+# Check that it is possible to delete an existing application definition
+- go to:
+    url: /
+- set:
+    menu.Apps:
+    apps.AppPanel('{{testApp}}'): ''
+    apps.Remove('{{testApp}}','{{testVer}}'): ''
+    apps.Remove.Yes('{{testApp}}','{{testVer}}'): ''
+- wait to disappear:
+    expected: apps.AppPanel('{{testApp}}')
+    timeout: 5000

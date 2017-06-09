@@ -1,0 +1,56 @@
+# Check that it is possible to update an existing application definition
+- go to:
+    url: /
+- set:
+    menu.Apps:
+    apps.AppPanel('{{testApp}}'):
+    apps.Edit('{{testApp}}','{{testVer}}'):
+- set:
+    editAppDefForm.DockerComposeEditor: |-
+      www1:
+        image: {{dockerImage}}
+      www2:
+        image: {{dockerImage}}
+      www3:
+        image: {{dockerImage}}
+      www4:
+        image: {{dockerImage}}
+      www5:
+        image: {{dockerImage}}
+      www6:
+        image: {{dockerImage}}
+      www7:
+        image: {{dockerImage}}
+      www8:
+        image: {{dockerImage}}
+      www9:
+        image: {{dockerImage}}
+      www10:
+        image: {{dockerImage}}
+    editAppDefForm.Save:
+    menu.Instances:
+    menu.Apps:
+    apps.AppPanel('{{testApp}}'):
+    apps.Edit('{{testApp}}','{{testVer}}'):
+- check equals:
+    editAppDefForm.DockerComposeEditor: |-
+      www1:
+        image: {{dockerImage}}
+      www2:
+        image: {{dockerImage}}
+      www3:
+        image: {{dockerImage}}
+      www4:
+        image: {{dockerImage}}
+      www5:
+        image: {{dockerImage}}
+      www6:
+        image: {{dockerImage}}
+      www7:
+        image: {{dockerImage}}
+      www8:
+        image: {{dockerImage}}
+      www9:
+        image: {{dockerImage}}
+      www10:
+        image: {{dockerImage}}
