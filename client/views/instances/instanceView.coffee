@@ -24,7 +24,8 @@ Template.instanceView.helpers
   activityIcon: ->
     if @state is 'running'
       healthList = _.map _.pairs(@services), ([k, s]) -> s.health?.status
-      if 'unhealthy' in healthList
+      startCheckList = _.map _.pairs(@services), ([k, s]) -> s.health?.startcheck?.succeeded
+      if 'unhealthy' in healthList or false in startCheckList
         'exclamation-sign warning'
       else if 'unknown' in healthList
         'question-sign'

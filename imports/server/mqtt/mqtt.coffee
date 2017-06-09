@@ -12,6 +12,7 @@ mbe = Meteor.bindEnvironment
 mqttTopicHandlerMap =
   '/docker/events':                 mbe require './docker/events.coffee'
   '/docker/container/inspect':      mbe require './docker/inspect.coffee'
+  '/agent/service/startcheck':      mbe require './agent/startcheck.coffee'
   '/agent/docker/pulling':          mbe require './agent/pulling.coffee'
   '/agent/docker/log/startup':      mbe logs.startup
   '/agent/docker/log/startup/error':mbe logs.startupFailed

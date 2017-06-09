@@ -82,6 +82,8 @@ module.exports =
 
   updateHealthStatus: (healthStatus, labels) -> setServiceField 'health.status', healthStatus, labels
 
+  updateStartCheckStatus: (startCheckStatus, labels) -> setServiceField 'health.startcheck', startCheckStatus, labels
+
   updateIp: (ip, labels) -> setServiceField 'ip', ip, labels
 
   updateStartupLogs: updateStartupLogs = (instanceName, logData) ->
