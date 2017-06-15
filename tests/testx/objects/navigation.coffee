@@ -30,6 +30,9 @@ module.exports =
     "login.Password":
       locator: "id"
       value: "password"
+    "login.acceptTerms":
+      locator: "id"
+      value: "accept_terms"
     "login.Submit":
       locator: "id"
       value: "btnLogin"
