@@ -11,16 +11,14 @@
     "art:pre": "(docker kill bigboat-art-selenium-server; sleep 1; docker run --rm -d --net=host --name=bigboat-art-selenium-server -e SCREEN_WIDTH=1920 -e SCREEN_HEIGHT=1080 selenium/standalone-chrome)",
     "art:exec": "protractor tests/testx/conf.coffee --seleniumAddress=http://localhost:4444/wd/hub",
     "art:post": "docker kill bigboat-art-selenium-server",
-    "art": "run-s art:pre \"art:exec -- {@}\" art:post --"
+    "art": "run-s art:pre \"art:exec -- {@}\" art:post --",
+    "release": "./release.sh"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ICTU/docker-dashboard.git"
   },
-  "keywords": [
-    "docker",
-    "dashboard"
-  ],
+  "keywords": ["docker", "dashboard"],
   "author": "ICTU",
   "license": "Apache-2.0",
   "bugs": {
