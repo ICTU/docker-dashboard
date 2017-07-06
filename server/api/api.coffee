@@ -1,11 +1,11 @@
 @API =
   authentication: (apiKey) ->
-    authenticateUser || authenticateDeployKey
+    authenticateUser(apiKey) || authenticateDeployKey(apiKey)
   authenticateUser: (apiKey) ->
     getUser = APIKeys.findOne({ 'key': apiKey }, fields: 'owner': 1)
     if getUser then getUser.owner else false
   authenticateDeployKey: (apiKey) ->
-    apiKey in Meteor.call "getDeployKeys"
+    apiKey in getDeployKeys()
   connection: (request) ->
     request.content = API.utility.getRequestContents(request)
     apiKey = request.content.api_key

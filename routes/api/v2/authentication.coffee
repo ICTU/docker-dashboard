@@ -9,7 +9,7 @@ Meteor.startup ->
           user = Meteor.users.findOne(apiKey.owner)
           # @authenticatedUSer = user
           @next()
-        else if(key in Meteor.call "getDeployKeys") 
+        else if(key in getDeployKeys()) 
           user = "deploy"
           @next()
         else 
