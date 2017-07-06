@@ -9,7 +9,11 @@ Meteor.startup ->
           user = Meteor.users.findOne(apiKey.owner)
           # @authenticatedUSer = user
           @next()
-        else lib.endWithError @response, 401, "Not authenticated"
+        else if(key in Meteor.call "getDeployKeys") 
+          user = "deploy"
+          @next()
+        else 
+          lib.endWithError @response, 401, "Not authenticated"
       else lib.endWithError @response, 401, "No API key provided"
 
     Router.onBeforeAction authenticationHandler, only:
@@ -23,3 +27,4 @@ Meteor.startup ->
         'api/v2/instances/single'
         'api/v2/status'
       ]
+

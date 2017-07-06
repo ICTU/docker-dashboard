@@ -89,6 +89,7 @@ Meteor.methods
     check userId, Match.OneOf( Meteor.userId(), String )
     newKey = Random.hexString 32
     APIKeys.insert owner: userId, key: newKey
+  getDeployKeys: -> if(process.env.DEPLOY_KEYS?) then process.env.DEPLOY_KEYS.split "," else []
 
 Meteor.users.after.insert (userId, doc) ->
   if doc.username in Meteor.settings?.ldap?.admins then Meteor.call "initApiKey", @_id
