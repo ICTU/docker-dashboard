@@ -2,6 +2,7 @@ Meteor.startup ->
   if Meteor.isServer
 
     lib = require './lib.coffee'
+    keys = require '/server/utils/deploykeys.coffee'
 
     authenticationHandler = ->
       if (key = @params.query?['api-key']) or (key = @request.headers?['api-key'])
@@ -9,7 +10,7 @@ Meteor.startup ->
           user = Meteor.users.findOne(apiKey.owner)
           # @authenticatedUSer = user
           @next()
-        else if(key in getDeployKeys()) 
+        else if(key in keys()) 
           user = "deploy"
           @next()
         else 
