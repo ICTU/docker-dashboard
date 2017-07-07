@@ -1,7 +1,13 @@
+keys = require '/server/utils/deploykeys.coffee'
+
 @API =
   authentication: (apiKey) ->
+    authenticateUser(apiKey) || authenticateDeployKey(apiKey)
+  authenticateUser: (apiKey) ->
     getUser = APIKeys.findOne({ 'key': apiKey }, fields: 'owner': 1)
-    if getUser then getUser.owner else false
+    getUser?owner? or false
+  authenticateDeployKey: (apiKey) ->
+    apiKey in keys()
   connection: (request) ->
     request.content = API.utility.getRequestContents(request)
     apiKey = request.content.api_key

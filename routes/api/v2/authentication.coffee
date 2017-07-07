@@ -2,6 +2,7 @@ Meteor.startup ->
   if Meteor.isServer
 
     lib = require './lib.coffee'
+    keys = require '/server/utils/deploykeys.coffee'
 
     authenticationHandler = ->
       if (key = @params.query?['api-key']) or (key = @request.headers?['api-key'])
@@ -9,7 +10,11 @@ Meteor.startup ->
           user = Meteor.users.findOne(apiKey.owner)
           # @authenticatedUSer = user
           @next()
-        else lib.endWithError @response, 401, "Not authenticated"
+        else if(key in keys()) 
+          user = "deploy"
+          @next()
+        else 
+          lib.endWithError @response, 401, "Not authenticated"
       else lib.endWithError @response, 401, "No API key provided"
 
     Router.onBeforeAction authenticationHandler, only:
@@ -23,3 +28,4 @@ Meteor.startup ->
         'api/v2/instances/single'
         'api/v2/status'
       ]
+

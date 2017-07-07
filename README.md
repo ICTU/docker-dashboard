@@ -28,6 +28,12 @@ Create a configuration file in the root of the project: `settings.json`. Populat
 ## Start dashboard
 `ROOT_URL=<root_url_of_app> meteor --settings settings.json`
 
+## Deployment keys
+It is possible to define deploy keys for automation. These keys will allow API access without the need for specific BigBoat users. To use these keys start the dashboard with the following environment variable:
+ -DEPLOY_KEYS
+This is a comma separated list of deploy keys, e.g: key1,key2
+
+
 ## Application Definition
 
 ### Environment variables (4.1.6)

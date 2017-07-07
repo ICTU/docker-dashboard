@@ -74,5 +74,4 @@ yaml = require 'js-yaml'
       ad.dockerCompose = migrateVolumes stripOldDirectives ad.def
       ad.bigboatCompose = createBigBoatCompose ad.def
       ad
-
 module.exports = Utils
