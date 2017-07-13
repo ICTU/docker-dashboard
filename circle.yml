@@ -4,7 +4,7 @@ machine:
 
 dependencies:
   pre:
-    - npm install gitbook-cli -g
+    - npm install gitbook-cli@2.3.0 -g
   override:
     - npm i --production
     - gitbook build . public/docs/
