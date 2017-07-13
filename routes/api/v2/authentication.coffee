@@ -8,8 +8,10 @@ Meteor.startup ->
       if (key = @params.query?['api-key']) or (key = @request.headers?['api-key'])
         if (apiKey = APIKeys.findOne key: key)
           user = Meteor.users.findOne(apiKey.owner)
-          # @authenticatedUSer = user
-          @next()
+          if user
+            @next()
+          else
+            lib.endWithError @response, 401, "Not authenticated" 
         else if(key in keys()) 
           user = "deploy"
           @next()
