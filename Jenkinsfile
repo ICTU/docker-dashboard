@@ -4,6 +4,7 @@ pipeline {
     }
     parameters {
       string(name: 'TARGET_URL', defaultValue: 'http://www.dashboard.acc.ictu', description: 'The base URL of the BigBoat instance under test')
+      string(name: 'TEST_USER_PASS', description: 'The password for the test user')
     }
     stages {
         stage('NPM install') {
@@ -16,7 +17,7 @@ pipeline {
         stage('Run ART') {
             steps {
                 ansiColor('xterm') {
-                    sh "docker run --rm -t -v \$(pwd):/work -w /work --net=host -v /var/run/docker.sock:/var/run/docker.sock greyarch/nocker npm run art -- --baseUrl=${TARGET_URL}"
+                    sh "docker run --rm -t -v \$(pwd):/work -w /work --net=host -v /var/run/docker.sock:/var/run/docker.sock -e TEST_USER_PASS=${TEST_USER_PASS} greyarch/nocker npm run art -- --baseUrl=${TARGET_URL}"
                 }
             }
         }
