@@ -1,6 +1,6 @@
 {
   "name": "dashboard",
-  "version": "5.9.0",
+  "version": "5.9.1",
   "description": "Docker dashboard",
   "main": "index.js",
   "directories": {
@@ -18,7 +18,10 @@
     "type": "git",
     "url": "git+https://github.com/ICTU/docker-dashboard.git"
   },
-  "keywords": ["docker", "dashboard"],
+  "keywords": [
+    "docker",
+    "dashboard"
+  ],
   "author": "ICTU",
   "license": "Apache-2.0",
   "bugs": {
