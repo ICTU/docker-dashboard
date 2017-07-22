@@ -156,3 +156,7 @@ module.exports =
         if service.container?.id not in containerIds
           console.log "Found a container that is not in the snapshotted list: changed state to 'removed' for #{i.name}.#{name}"
           Instances.update i._id, $set: "services.#{name}.state": 'removed'
+        for auxName, auxService of service.aux
+          if auxService.container?.id not in containerIds
+            console.log "Found an aux (#{auxName}) container that is not in the snapshotted list: changed state to 'removed' for #{i.name}.#{name}.#{auxName}"
+            Instances.update i._id, $set: "services.#{name}.aux.#{auxName}.state": 'removed'
