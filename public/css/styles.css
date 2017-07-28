@@ -124,3 +124,33 @@ a.navbar-brand > img {
   top: 12px !important;
   right: initial !important;
 }
+
+div.code {
+  height: 200px; 
+  overflow: hidden;
+}
+
+pre.code { 
+    font-size: 90%;
+    white-space: pre; 
+    white-space: pre-wrap; 
+    white-space: -moz-pre-wrap; 
+    white-space: -o-pre-wrap; 
+
+    height:1%;
+    width: auto;
+    clear: both;
+    margin: auto 40px auto 40px;
+    border: solid 1px #e1e1e1;
+
+    line-height: 1.2em;
+    font-family: Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
+
+    display: block; 
+    color: #999999;
+    padding: 1em 1em;
+    background: black;
+
+    height: 100%; 
+    overflow-y: scroll;
+}

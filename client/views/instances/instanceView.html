@@ -64,9 +64,9 @@
           <tbody>
             {{#if hasLogs}}
             <tr><td colspan="2">
-              {{#prism language="bash" class="code-toolbar logs-preview" logEntries=logs}}
-              {{#each logEntries}}{{ansiToHtml}}{{/each}}
-              {{/prism}}
+              <div class="code">
+                <pre class="code">{{#each logs}}{{{ansiToHtml}}}{{/each}}</pre>
+              </div>
             </td></tr>
             {{/if}}
             <tr><th scope="row" style="width:250px;">State</th><td>{{state}}</td></tr>
