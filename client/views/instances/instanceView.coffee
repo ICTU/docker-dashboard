@@ -19,7 +19,7 @@ determineProtocol = (port) ->
 
 Template.instanceView.helpers
   hasLogs: -> @logs?.startup? or @logs?.teardown?
-  logs: -> _.union @logs?.startup, @logs?.teardown
+  logs: -> (_.union @logs?.startup, @logs?.teardown).reverse()
   ansiToHtml: -> if @.split then ansi_up.ansi_to_html @ else ''
   activityIcon: ->
     if @state is 'running'
@@ -40,7 +40,7 @@ Template.instanceView.helpers
   showProgressbar: -> @desiredState is 'stopped' or !("#{@state}" in ['running', 'failing', 'removed'])
   totalSteps: -> @app.numberOfServices * 4
   progressPercentage: ->
-    progress = @logs.startup?.length or 0
+    progress = @logs?.startup?.length or 0
     totalSteps = @app.numberOfServices * 4
 
     if @state in ['stopping', 'stopped']

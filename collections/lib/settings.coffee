@@ -8,7 +8,7 @@ key = key: (Meteor.settings.public?.key or 'default')
     if field
       s = settings?[field]
       if s isnt undefined then s else
-        console.warn new Error("'#{field}' setting is not defined, is this a typo?").stack
+        console.warn "'#{field}' setting is not defined."
         ''
     else
       console.warn "Settings.get() is deprecated. Please use Settings.get('field') or Settings.all() instead."

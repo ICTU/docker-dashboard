@@ -65,7 +65,7 @@
             {{#if hasLogs}}
             <tr><td colspan="2">
               <div class="code">
-                <pre class="code">{{#each logs}}{{{ansiToHtml}}}{{/each}}</pre>
+                <pre id="compose-log-{{name}}" class="code">{{#each logs}}{{{ansiToHtml}}}{{/each}}</pre>
               </div>
             </td></tr>
             {{/if}}
