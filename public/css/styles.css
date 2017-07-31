@@ -138,9 +138,9 @@ pre.code {
     white-space: -o-pre-wrap; 
 
     height:1%;
-    width: auto;
+    width: 100%;
     clear: both;
-    margin: auto 40px auto 40px;
+    margin: auto 40px auto 0px;
     border: solid 1px #e1e1e1;
 
     line-height: 1.2em;
