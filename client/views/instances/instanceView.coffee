@@ -17,9 +17,19 @@ determineProtocol = (port) ->
   else
     "http"
 
+instanceHash = (inst) ->
+  CryptoJS.MD5 "#{inst}"
+
+scrollLog = (hash) ->
+  Tracker.afterFlush ->
+    logdiv = $("#compose-log-#{hash}")
+    logdiv.scrollTop(logdiv.prop('scrollHeight'))
+
 Template.instanceView.helpers
   hasLogs: -> @logs?.startup? or @logs?.teardown?
-  logs: -> (_.union @logs?.startup, @logs?.teardown).reverse()
+  logs: -> 
+    scrollLog(instanceHash("#{@name}"))
+    _.union @logs?.startup, @logs?.teardown
   ansiToHtml: -> if @.split then ansi_up.ansi_to_html @ else ''
   activityIcon: ->
     if @state is 'running'
@@ -60,7 +70,7 @@ Template.instanceView.helpers
   params: -> key: k, value: v for k, v of @parameters when k isnt 'tags' if @parameters
   services: -> {name: k, data: v} for k, v of @services
   pretify: (json) -> JSON.stringify json, undefined, 2
-  instanceHash: -> CryptoJS.MD5 "#{@name}"
+  instanceHash: -> instanceHash("#{@name}")
   startedByUser: -> Meteor.users.findOne(@startedBy)?.username
   stoppedByUser: -> @stoppedBy?.username
 
@@ -74,3 +84,6 @@ Template.instanceView.events
   'click .showContainerLogs': ->
     Meteor.call 'getLog', @data.dockerContainerId, (err, data) ->
       console.error 'log -> ', err, data
+  "click .toggle": ->
+    scrollLog(instanceHash(@name))
+  
