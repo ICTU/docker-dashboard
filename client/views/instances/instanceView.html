@@ -8,8 +8,8 @@
       {{else}}
         <span style="padding-left:5px;" title="This application does not have a web UI.">{{name}}</span>
       {{/if}}
-      <a data-toggle="collapse" data-target="#instancePanel-{{instanceHash}}"
-         href="#instancePanel-{{name}}" class="collapsed toggle titleToggle">
+      <a data-toggle="collapse" data-target="#instancePanel-{{instanceHash}}" 
+        href="#instancePanel-{{name}}" class="collapsed toggle titleToggle">
       </a>
       {{#if showProgressbar}}
       <div class="progress">
@@ -65,7 +65,7 @@
             {{#if hasLogs}}
             <tr><td colspan="2">
               <div class="code">
-                <pre id="compose-log-{{name}}" class="code">{{#each logs}}{{{ansiToHtml}}}{{/each}}</pre>
+                <pre id="compose-log-{{instanceHash}}" class="code">{{#each logs}}{{{ansiToHtml}}}{{/each}}</pre>
               </div>
             </td></tr>
             {{/if}}
