@@ -9,3 +9,4 @@ docker-compose-prd.yml
 /settings.json
 .coverage
 npm-debug.log
+package-lock.json
