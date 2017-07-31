@@ -165,10 +165,11 @@ substituteParameters = (def, parameters) ->
 
     user = getUser @userId
 
-    Instances.upsert {name: instanceName}, $set:
-      desiredState: 'stopped'
-      status: 'Instance stop is requested'
-      stoppedBy: user._id
+    Meteor.defer ->
+      Instances.upsert {name: instanceName}, $set:
+        desiredState: 'stopped'
+        status: 'Instance stop is requested'
+        stoppedBy: user._id
 
     console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
     HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
