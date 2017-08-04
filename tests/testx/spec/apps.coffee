@@ -23,3 +23,9 @@ describe 'Applications', ->
     testx.run 'tests/testx/scripts/instances/stop.testx', testAppDef
   it 'should be able to delete an application definition', ->
     testx.run 'tests/testx/scripts/apps/deleteAppDef.testx', testAppDef
+  it 'should not be able to start instance with missing image', ->
+    testx.run 'tests/testx/scripts/apps/startAppWithMissingImage.testx', testAppDef
+  it 'should be able to delete instance information', ->
+    testx.run 'tests/testx/scripts/instances/delete.testx', testAppDef
+  it 'should be able to delete an application definition', ->
+    testx.run 'tests/testx/scripts/apps/deleteAppDef.testx', testAppDef

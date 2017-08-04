@@ -4,13 +4,13 @@
 - set:
     menu.Instances:
 - wait to appear:
-    expected: instances.Running('{{testName}}')
+    expected: instances.ProgressBarPullingFailed('{{testName}}')
     timeout: 120000
 - set:
     menu.Instances:
     toggleInstance('{{testName}}'): ''
-    instances.Stop('{{testName}}'): ''
-    instances.Stop.Yes('{{testName}}'): ''
+    instances.Delete('{{testName}}'): ''
+    instances.Delete.Yes('{{testName}}'): ''
 - wait to disappear:
     expected: runningInstance('{{testName}}')
     timeout: 120000

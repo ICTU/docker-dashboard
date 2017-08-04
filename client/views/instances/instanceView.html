@@ -14,7 +14,7 @@
       {{#if showProgressbar}}
       <div class="progress">
         <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{progressPercentage}}%;">
-          <span>{{#with status}}{{{ansiToHtml}}}{{/with}}</span>
+          <span id="progress-bar-info-text-{{this.name}}">{{#with status}}{{{ansiToHtml}}}{{/with}}</span>
         </div>
       </div>
       {{/if}}
@@ -32,7 +32,7 @@
         {{#if isAuthenticated}}
         <ul class="nav nav-justified pull-right" style="margin-bottom:5px">
           <li class="btn-group">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <a title="Delete" href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="glyphicon glyphicon-lg glyphicon-trash"></i>
             </a>
             <form role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">

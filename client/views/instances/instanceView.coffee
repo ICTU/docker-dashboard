@@ -86,4 +86,3 @@ Template.instanceView.events
       console.error 'log -> ', err, data
   "click .toggle": ->
     scrollLog(instanceHash(@name))
-  

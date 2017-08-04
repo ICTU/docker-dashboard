@@ -1,0 +1,31 @@
+# Create a new application definition
+- go to:
+    url: /
+- set:
+    menu.Apps:
+    toolbox.NewApp:
+- set:
+    editAppDefForm.DockerComposeEditor: |-
+      www:
+        image: notExistingImageName
+    editAppDefForm.BigboatComposeEditor: |-
+      name: {{testApp}}
+      version: {{testVer}}
+    editAppDefForm.Save:
+- wait to appear:
+    expected: apps.AppPanel('{{testApp}}')
+    timeout: 2000
+
+# Start the application definition
+- set:
+    menu.Apps:
+    apps.AppPanel('{{testApp}}'): ''
+    apps.Start('{{testApp}}','{{testVer}}'): ''
+    apps.Start.Name('{{testApp}}','{{testVer}}'): '{{testName}}'
+    apps.Start.Go('{{testApp}}','{{testVer}}'): ''
+    menu.Instances:
+
+# Check for errornous state
+- wait to appear:
+    expected: instances.ProgressBarPullingFailed('{{testName}}')
+    timeout: 15000
