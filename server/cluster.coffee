@@ -5,14 +5,28 @@ loggingHandler = (cb) -> Meteor.bindEnvironment (error, stdout, stderr) ->
   console.log stdout, stderr
   cb && cb()
 
-pickAgent = ->
+httpErrorHandler = (cb) -> (err, res) ->
+  if err
+    new Meteor.Error err
+  else
+    cb?(res)
+
+callAgent = (method, url, data, cb) ->
+  fullUrl = "#{getAgent()}#{url}?access_token=#{Settings.get('agentAuthToken')}"
+  if method in ['get', 'del']
+    HTTP[method] fullUrl, httpErrorHandler(cb)
+  else
+    HTTP[method] fullUrl, data, httpErrorHandler(cb)
+
+getAgent = ->
+  Settings.all()?.agentUrl?[0]
   #round robin
-  settings = Settings.all()
-  agents = settings.agentUrl
-  agent = agents.shift()
-  agents.push agent
-  Settings.set 'agentUrl', agents
-  agent
+  # settings = Settings.all()
+  # agents = settings.agentUrl
+  # agent = agents.shift()
+  # agents.push agent
+  # Settings.set 'agentUrl', agents
+  # agent
 
 findAppDef = (name, version) ->
   ApplicationDefs.findOne
@@ -34,17 +48,16 @@ substituteParameters = (def, parameters) ->
 @Cluster = @Agent =
   getStorageBucketSize: (id) ->
     name = StorageBuckets.findOne(id)?.name
-    HTTP.get "#{pickAgent()}/storage/#{name}/size?access_token=#{Settings.get('agentAuthToken')}", (err, res) ->
-      new Meteor.Error err if err
+    callAgent 'get', "/storage/#{name}/size", {}, (res) ->
       StorageBuckets.upsert {name: name}, $set: JSON.parse res.content
   listStorageBuckets: ->
-    HTTP.get "#{pickAgent()}/storage/list?access_token=#{Settings.get('agentAuthToken')}"
+    callAgent 'get', '/storage/list'
   deleteStorageBucket: (name) ->
-    HTTP.del "#{pickAgent()}/storage/#{name}?access_token=#{Settings.get('agentAuthToken')}"
+    callAgent 'del', "/storage/#{name}"
   createStorageBucket: (name) ->
-    HTTP.put "#{pickAgent()}/storage?access_token=#{Settings.get('agentAuthToken')}", data: name: name
+    callAgent 'put', '/storage', data: name: name
   copyStorageBucket: (source, destination) ->
-    HTTP.put "#{pickAgent()}/storage?access_token=#{Settings.get('agentAuthToken')}", data: name: destination, source: source
+    callAgent 'put', '/storage', data: name: destination, source: source
 
   stopAll: ->
     Instances.find().forEach (inst) -> stopInstance inst.name
@@ -67,7 +80,7 @@ substituteParameters = (def, parameters) ->
     console.log "Cluster.startApp #{app}, #{version}, #{instance}, #{EJSON.stringify options}, #{EJSON.stringify parameters} in project #{Settings.get('project')}."
 
     user = getUser @userId
-    agentUrl = if options?.targetHost then "http://#{options.targetHost}" else pickAgent()
+    agentUrl = if options?.targetHost then "http://#{options.targetHost}" else getAgent()
     appDef = findAppDef app, version
     dockerCompose = YAML.load substituteParameters appDef.dockerCompose, parameters
     bigboatCompose = YAML.load appDef.bigboatCompose
