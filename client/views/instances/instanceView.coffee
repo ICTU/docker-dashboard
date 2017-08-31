@@ -27,7 +27,7 @@ scrollLog = (hash) ->
 
 Template.instanceView.helpers
   hasLogs: -> @logs?.startup? or @logs?.teardown?
-  logs: -> 
+  logs: ->
     scrollLog(instanceHash("#{@name}"))
     _.union @logs?.startup, @logs?.teardown
   ansiToHtml: -> if @.split then ansi_up.ansi_to_html @ else ''
