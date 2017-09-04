@@ -4,9 +4,9 @@ exports.config =
   # directConnect: true
   specs: [
     'spec/login*'
-    'spec/navigation*'
-    'spec/apps*'
-    'spec/storage*'
+    # 'spec/navigation*'
+    # 'spec/apps*'
+    # 'spec/storage*'
     'spec/api*'
   ]
 

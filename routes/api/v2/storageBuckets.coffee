@@ -5,10 +5,11 @@ Meteor.startup ->
     lib = require './lib.coffee'
 
     formatStorageBucket = (sb) ->
-      console.log(sb)
       id: sb._id
       name: sb.name
       create: sb.created
+      isLocked: sb.isLocked
+      size: sb.size
 
     Router.map ->
       @route 'api/v2/storageBuckets',
