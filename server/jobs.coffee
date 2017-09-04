@@ -7,7 +7,7 @@ Meteor.startup ->
   for agent in Settings.get('agentUrl')
     jobs.push
       name: "Agent #{agent}"
-      url: "#{agent}/ping"
+      url: "#{agent}/version"
 
   for j in jobs
     job = new Job Jobs, 'serviceCheck', j
@@ -29,11 +29,13 @@ Meteor.startup ->
 
         job.fail err.content
       else
+        resp = JSON.parse data.content
         Services.upsert {name: job.data.name},
           name: job.data.name
           lastCheck: new Date()
-          description: 'The agent is online.'
+          description: "API version: <strong>#{resp.api}</strong>. Agent version: <strong>#{resp.agent.version}</strong>"
           isUp: true
+          details: resp
         job.done()
     callback()
 
