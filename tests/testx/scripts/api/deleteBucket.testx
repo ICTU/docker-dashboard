@@ -1,0 +1,9 @@
+# Check that it is possible to delete a storage bucket
+- send http delete request:
+    url: "/api/v2/storageBuckets/{{testBucket}}"
+    headers: api-key={{apiKey}}
+    expected status code: 200
+- send http get request:
+    url: "/api/v2/storageBuckets/{{testBucket}}"
+    headers: api-key={{apiKey}}
+    expected status code: 400
