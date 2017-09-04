@@ -1,0 +1,9 @@
+# Check that it is possible to create a new storage bucket
+- send http put request:
+    url: "/api/v2/storageBuckets/{{testBucket}}"
+    headers: api-key={{apiKey}}
+    expected status code: 200
+- send http get request:
+    url: "/api/v2/storageBuckets/{{testBucket}}"
+    headers: api-key={{apiKey}}
+    $.name: "{{testBucket}}"
