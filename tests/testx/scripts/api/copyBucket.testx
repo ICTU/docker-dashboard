@@ -16,6 +16,6 @@
     expected status code: 400
 # Test non-existing source
 - send http put request:
-    url: "/api/v2/storageBuckets/{{testBucketCopy}}/{{testBucket}}-not-existing"
+    url: "/api/v2/storageBuckets/{{testBucketCopy}}-new/{{testBucket}}-not-existing"
     headers: api-key={{apiKey}}
     expected status code: 404
