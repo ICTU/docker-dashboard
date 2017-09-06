@@ -60,7 +60,7 @@ Meteor.startup ->
           check([source = @params.source], [String])
           if (StorageBuckets.findOne(name: name))
             lib.endWithError @response, 400, "Bucket exists"  
-          else if (!StorageBuckets.findOne(name: source))
+          else if (StorageBuckets.findOne(name: source) == undefined)
             lib.endWithError @response, 404, "Source bucket not found"  
           else
             Agent.copyStorageBucket source, name

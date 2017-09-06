@@ -28,6 +28,9 @@ Meteor.startup ->
         'api/v2/apps'
         'api/v2/instances'
         'api/v2/instances/single'
+        'api/v2/storageBuckets'
+        'api/v2/storageBuckets/single'
+        'api/v2/storageBuckets/create'
         'api/v2/status'
       ]
 
