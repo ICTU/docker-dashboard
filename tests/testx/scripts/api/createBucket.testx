@@ -4,7 +4,7 @@
     headers: api-key={{apiKey}}
     expected status code: 200
 - sleep:
-    seconds: 1
+    seconds: 5
 - send http get request:
     url: "/api/v2/storageBuckets/{{testBucket}}"
     headers: api-key={{apiKey}}
