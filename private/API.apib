@@ -296,6 +296,105 @@ Requests an instance to be stopped. Returns the instance when successful.
 + Response 404
 
 
+# Group Storage Buckets
+
+A storage bucket provides a data folder to an instance.
+
+## Storage Buckets [/storageBuckets]
+
++ Model (application/json)
+
+  ```js
+  [
+    {
+      id: "v6yNgH2MWyogJnSah",
+      name: "docker-registry",
+      create: "2017-06-15T15:29:21.000Z",
+      isLocked: false,
+      size: 8192
+    },
+    {
+      id: "5YysCZsuN9WrfCr6Y",
+      name: "jenkins",
+      create: "2017-06-16T07:45:41.000Z",
+      isLocked: false,
+      size: 276200826
+    }
+  ]
+  ```
+
+### Retrieve all Storage Buckets [GET]
+Returns all storage buckets.
+
++ Response 200
+  [Storage Buckets][]
+
+## Storage Bucket [/storageBuckets/{name}]
+
++ Parameters
+  + name: `nginx` (string) - The unique name of the storage bucket
+
++ Model (application/json)
+
+  ```js
+  {
+    id: "5YysCZsuN9WrfCr6Y",
+    name: "jenkins",
+    create: "2017-06-16T07:45:41.000Z",
+    isLocked: false,
+    size: 276200826
+  }
+  ```
+
+### Retrieve a single Storage Bucket [GET]
+Returns a single storage bucket
+
++ Response 200
+
+    [Storage Bucket][]
+
++ Response 404
+
+### Create a Storage Bucket [PUT]
+Requests a new empty storage bucket. Will return 400 if the bucket already exists.
+
++ Request
+
++ Response 201
+    ```js
+    {
+      name: name
+    }
+    ```
++ Response 400
+
+### Stop a storage bucket [DELETE]
+Requests a storage bucket to be deleted. WARNING: All data will be lost.
+
++ Response 200
+  [Storage Bucket][]
++ Response 404
+
+## Copy Bucket [/storageBucket/{name}/{source}]
+
++ Parameters
+  + name: `nginx-copy` (string) - The unique name of the new storage bucket
+  + source: `nginx` (string) - The unique name of the source (original) storage bucket
+
+### Copy a Storage Bucket [PUT]
+Requests a copy of an existing storage bucket. Will return 400 if the bucket already exists, 404 if the source is not found.
+
++ Request
+
++ Response 200
+    ```js
+    {
+      name: nginx-copy
+    }
+    ```
++ Response 400
++ Response 404
+
 # Group Status
 
 ## Status [/status]

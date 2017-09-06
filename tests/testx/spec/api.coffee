@@ -5,6 +5,7 @@ testAppDef =
   testVer: "test-ver-api-#{randId}"
   testName: "test-inst-api-#{randId}"
   testBucket: "test-bucket-#{randId}"
+  testBucketCopy: "test-bucket-copy-#{randId}"
 
 describe 'API v2', ->
   beforeAll -> # get the API key
@@ -30,9 +31,9 @@ describe 'API v2', ->
   #   testx.run 'tests/testx/scripts/api/deleteAppDef.testx', testAppDef
   it 'should be able to create a new bucket', ->
     testx.run 'tests/testx/scripts/api/createBucket.testx', testAppDef
-  # it 'should be able to copy a bucket', ->
-  #   testx.run 'tests/testx/scripts/api/copyBucket.testx'
-  # it 'should be able to get all bucket info', ->
-  #   testx.run 'tests/testx/scripts/api/getBuckets.testx'
+  it 'should be able to copy a bucket', ->
+    testx.run 'tests/testx/scripts/api/copyBucket.testx', testAppDef
+  it 'should be able to get list all buckets', ->
+    testx.run 'tests/testx/scripts/api/listBuckets.testx', testAppDef
   it 'should be able to delete a bucket', ->
     testx.run 'tests/testx/scripts/api/deleteBucket.testx', testAppDef

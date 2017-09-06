@@ -1,9 +1,37 @@
 # Check that it is possible to delete a storage bucket
+# Check if buckets exist
+- send http get request:
+    url: "/api/v2/storageBuckets/{{testBucket}}"
+    headers: api-key={{apiKey}}
+    $.name: "{{testBucket}}"
+- send http get request:
+    url: "/api/v2/storageBuckets/{{testBucketCopy}}"
+    headers: api-key={{apiKey}}
+    $.name: "{{testBucketCopy}}"
+# Delete buckets
 - send http delete request:
     url: "/api/v2/storageBuckets/{{testBucket}}"
     headers: api-key={{apiKey}}
     expected status code: 200
+- sleep:
+    seconds: 5
+- send http delete request:
+    url: "/api/v2/storageBuckets/{{testBucketCopy}}"
+    headers: api-key={{apiKey}}
+    expected status code: 200
+- sleep:
+    seconds: 5
+# Check if the buckets are deleted
 - send http get request:
     url: "/api/v2/storageBuckets/{{testBucket}}"
+    headers: api-key={{apiKey}}
+    expected status code: 404
+- send http get request:
+    url: "/api/v2/storageBuckets/{{testBucketCopy}}"
+    headers: api-key={{apiKey}}
+    expected status code: 404
+# Delete non-existing buckets
+- send http delete request:
+    url: "/api/v2/storageBuckets/{{testBucket}}-not-existing"
     headers: api-key={{apiKey}}
     expected status code: 400

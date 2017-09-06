@@ -60,6 +60,8 @@ Meteor.startup ->
           check([source = @params.source], [String])
           if (StorageBuckets.findOne(name: name))
             lib.endWithError @response, 400, "Bucket exists"  
+          else if (!StorageBuckets.findOne(name: source))
+            lib.endWithError @response, 404, "Source bucket not found"  
           else
             Agent.copyStorageBucket source, name
             lib.foundJson @response, 200, { name: name }

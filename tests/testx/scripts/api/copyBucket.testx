@@ -1,0 +1,21 @@
+# Check that it is possible to copy a storage bucket
+- send http put request:
+    url: "/api/v2/storageBuckets/{{testBucketCopy}}/{{testBucket}}"
+    headers: api-key={{apiKey}}
+    expected status code: 200
+- sleep:
+    seconds: 5
+- send http get request:
+    url: "/api/v2/storageBuckets/{{testBucketCopy}}"
+    headers: api-key={{apiKey}}
+    $.name: "{{testBucketCopy}}"
+# Test existing copy target
+- send http put request:
+    url: "/api/v2/storageBuckets/{{testBucket}}/{{testBucket}}"
+    headers: api-key={{apiKey}}
+    expected status code: 400
+# Test non-existing source
+- send http put request:
+    url: "/api/v2/storageBuckets/{{testBucketCopy}}/{{testBucket}}-not-existing"
+    headers: api-key={{apiKey}}
+    expected status code: 404
