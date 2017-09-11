@@ -29,8 +29,11 @@ Meteor.startup ->
       .delete ->
         try
           check([name = @params.name], [String])
-          Agent.deleteStorageBucket name
-          lib.foundJson @response, 200, { name: name }
+          if (StorageBuckets.findOne(name: name) == undefined)
+            lib.endWithError @response, 404, "Bucket not found"  
+          else
+            Agent.deleteStorageBucket name
+            lib.foundJson @response, 200, { name: name }
         catch e
           lib.endWithError @response, 400, (e.message or e.error)
       .put ->
