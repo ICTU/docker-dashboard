@@ -1,6 +1,10 @@
 prettysize = require('prettysize')
 
 module.exports =
+  bucketState: (bucket) ->
+    StorageBuckets.upsert {name: bucket.name}, $set: {'bucket.isLocked': bucket.isLocked}
+  bucketSize: (bucket) ->
+    StorageBuckets.upsert {name: bucket.name}, $set: {'bucket.size': bucket.size}
   buckets: (buckets) ->
     for bucket in buckets
       StorageBuckets.upsert {name: bucket.name}, $set: bucket
