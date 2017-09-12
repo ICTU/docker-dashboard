@@ -46,10 +46,6 @@ substituteParameters = (def, parameters) ->
   def
 
 @Cluster = @Agent =
-  getStorageBucketSize: (id) ->
-    name = StorageBuckets.findOne(id)?.name
-    callAgent 'get', "/storage/#{name}/size", {}, (res) ->
-      StorageBuckets.upsert {name: name}, $set: JSON.parse res.content
   deleteStorageBucket: (name) ->
     callAgent 'del', "/storage/#{name}"
   createStorageBucket: (name) ->
