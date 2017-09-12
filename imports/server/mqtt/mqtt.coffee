@@ -17,7 +17,9 @@ mqttTopicHandlerMap =
   '/agent/docker/log/startup/error':mbe logs.startupFailed
   '/agent/docker/log/teardown':     mbe logs.teardown
   '/agent/storage/buckets':         mbe storage.buckets
+  '/agent/storage/bucket/state':    mbe storage.bucketState
   '/agent/storage/size':            mbe storage.size
+  '/agent/storage/bucket/size':     mbe storage.bucketSize
   '/agent/docker/graph':            mbe storage.dockergraph
   '/network/info':                  mbe network.info
   '/docker/snapshot/containerIds':  mbe snapshot.containerIds
