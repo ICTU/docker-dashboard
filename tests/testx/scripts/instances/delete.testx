@@ -4,7 +4,7 @@
 - set:
     menu.Instances:
 - wait to appear:
-    expected: instances.ProgressBarPullingFailed('{{testName}}')
+    expected: instances.ProgressBarStartupFailed('{{testName}}')
     timeout: 120000
 - set:
     menu.Instances:

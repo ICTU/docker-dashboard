@@ -27,5 +27,5 @@
 
 # Check for errornous state
 - wait to appear:
-    expected: instances.ProgressBarPullingFailed('{{testName}}')
+    expected: instances.ProgressBarStartupFailed('{{testName}}')
     timeout: 15000

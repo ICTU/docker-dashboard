@@ -19,9 +19,9 @@ module.exports =
 
   "instances.Starting": instancesPanelLocator "h4 span.glyphicon-play-circle"
 
-  "instances.ProgressBarPullingFailed": (instanceName) ->
+  "instances.ProgressBarStartupFailed": (instanceName) ->
     locator: "xpath"
-    value: "//span[@id='progress-bar-info-text-#{instanceName}' and .='Something went wrong while pulling images.']"
+    value: "//span[@id='progress-bar-info-text-#{instanceName}' and .='Something went wrong while starting the instance.']"
 
   "instances.Stop": instancesPanelLocator "a[title=Stop]"
 
