@@ -89,9 +89,16 @@ substituteParameters = (def, parameters) ->
     dockerCompose = YAML.load substituteParameters appDef.dockerCompose, parameters
     bigboatCompose = YAML.load appDef.bigboatCompose
 
+    services = dockerCompose.services or dockerCompose
+    serviceNames = (serviceName for serviceName, srv of services)
+    allServices = _.reduce serviceNames, (srvcs, sn) ->
+      srvcs[sn] = {state: 'requested'}
+      srvcs
+    , {}
     Instances.upsert {name: instance}, $set:
+      services: allServices
       startedBy: user._id
-      images: (service.image for serviceName, service of dockerCompose)
+      images: (service.image for serviceName, service of services)
       agent: url: agentUrl
       app:
         name: app
