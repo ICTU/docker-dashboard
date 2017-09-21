@@ -1,7 +1,7 @@
 module.exports = (instances) ->
   names = for instName, inst of instances
     stored = Instances.findOne {name: instName}
-    services = (sName for sName of stored.services)
+    services = (sName for sName of stored?.services)
     newInst = lodash.merge {}, stored, inst
     for srv in services
       unless inst.services[srv]
