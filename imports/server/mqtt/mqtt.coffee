@@ -6,13 +6,16 @@ logs     = require './agent/logs.coffee'
 snapshot = require './docker/snapshot.coffee'
 network  = require './docker/network.coffee'
 system   = require './agent/system.coffee'
+swarm = require './docker/swarm.coffee'
 
 mbe = Meteor.bindEnvironment
 
 mqttTopicHandlerMap =
-  '/docker/events':                 mbe require './docker/events.coffee'
-  '/docker/container/inspect':      mbe require './docker/inspect.coffee'
-  '/agent/docker/pulling':          mbe require './agent/pulling.coffee'
+  # '/docker/events':                 mbe require './docker/events.coffee'
+  # '/docker/container/inspect':      mbe require './docker/inspect.coffee'
+  # '/agent/docker/pulling':          mbe require './agent/pulling.coffee'
+  '/bigboat/instances':             mbe swarm
+
   '/agent/docker/log/startup':      mbe logs.startup
   '/agent/docker/log/startup/error':mbe logs.startupFailed
   '/agent/docker/log/teardown':     mbe logs.teardown
