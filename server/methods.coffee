@@ -36,9 +36,13 @@ Meteor.methods logInvocation
   clearInstance: Cluster.clearInstance
   saveApp: Cluster.saveApp
   deleteApp: Cluster.deleteApp
-  'storage/buckets/delete': (id) -> Agent.deleteStorageBucket StorageBuckets.findOne(id)?.name
+  'storage/buckets/delete': (id) ->
+    StorageBuckets.update id, $set: isLocked: true
+    Agent.deleteStorageBucket StorageBuckets.findOne(id)?.name
   'storage/buckets/create': (name) -> Agent.createStorageBucket name
-  'storage/buckets/copy': (source, destination) -> Agent.copyStorageBucket source, destination
+  'storage/buckets/copy': (source, destination) ->
+    StorageBuckets.update {name: source}, $set: isLocked: true
+    Agent.copyStorageBucket source, destination
 
   restartTag: (tag) ->
     for instance in Instances.find('parameters.tags': tag).fetch()
