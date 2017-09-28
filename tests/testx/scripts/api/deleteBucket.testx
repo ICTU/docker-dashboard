@@ -34,4 +34,4 @@
 - send http delete request:
     url: "/api/v2/storageBuckets/{{testBucket}}-not-existing"
     headers: api-key={{apiKey}}
-    expected status code: 400
+    expected status code: 404
