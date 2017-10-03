@@ -27,6 +27,14 @@ mqttTopicHandlerMap =
   '/system/cpu':                    mbe system.cpu
   '/system/uptime':                 mbe system.uptime
 
+  '/errors/remotefs': mbe (msg) ->
+    Events.insert
+      type: 'error'
+      subject: 'Storage'
+      action: msg.action
+      info: msg.message
+      timestamp: new Date()
+
 mqst = Meteor.settings.mqtt
 client = mqtt.connect mqst.url,
   username: mqst.username
