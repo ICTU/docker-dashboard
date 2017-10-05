@@ -39,7 +39,9 @@ Meteor.methods logInvocation
   'storage/buckets/delete': (id) ->
     StorageBuckets.update id, $set: isLocked: true
     Agent.deleteStorageBucket StorageBuckets.findOne(id)?.name
-  'storage/buckets/create': (name) -> Agent.createStorageBucket name
+  'storage/buckets/create': (name) ->
+    StorageBuckets.insert name:name, isLocked: true
+    Agent.createStorageBucket name
   'storage/buckets/copy': (source, destination) ->
     StorageBuckets.update {name: source}, $set: isLocked: true
     Agent.copyStorageBucket source, destination
