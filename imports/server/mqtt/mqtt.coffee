@@ -39,11 +39,10 @@ mqst = Meteor.settings.mqtt
 client = mqtt.connect mqst.url,
   username: mqst.username
   password: mqst.password
-client.on 'connect', ->
-  for topicName, handler of mqttTopicHandlerMap
-    client.subscribe topicName
-  client.on 'message', (topic, data) ->
-    mqttTopicHandlerMap[topic] JSON.parse data.toString()
+for topicName, handler of mqttTopicHandlerMap
+  client.subscribe topicName
+client.on 'message', (topic, data) ->
+  mqttTopicHandlerMap[topic] JSON.parse data.toString()
 
 client.on 'error', (err) -> console.log 'MQTT::An error occured', err
 client.on 'close', -> console.log 'MQTT connection closed'
