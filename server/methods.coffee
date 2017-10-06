@@ -55,6 +55,9 @@ Meteor.methods logInvocation
   'storage/buckets/copy': (source, destination) ->
     ifBucketDoesNotExist destination, ->
       StorageBuckets.update {name: source}, $set: isLocked: true
+      StorageBuckets.insert
+        name: destination
+        isLocked: true
       Agent.copyStorageBucket source, destination
 
   restartTag: (tag) ->
