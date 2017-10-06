@@ -30,6 +30,15 @@ getLogs = (q) ->
   else
     result
 
+ifBucketDoesNotExist = (name, cb) ->
+  if StorageBuckets.findOne(name: name)
+    Events.insert
+      type: 'error'
+      subject: 'Storage'
+      action: 'create bucket'
+      info:"Bucket '#{name}' already exists"
+      timestamp: new Date()
+  else cb?(name)
 Meteor.methods logInvocation
   startApp: Cluster.startApp
   stopInstance: Cluster.stopInstance
@@ -40,11 +49,13 @@ Meteor.methods logInvocation
     StorageBuckets.update id, $set: isLocked: true
     Agent.deleteStorageBucket StorageBuckets.findOne(id)?.name
   'storage/buckets/create': (name) ->
-    StorageBuckets.insert name:name, isLocked: true
-    Agent.createStorageBucket name
+    ifBucketDoesNotExist name, ->
+      StorageBuckets.insert name:name, isLocked: true
+      Agent.createStorageBucket name
   'storage/buckets/copy': (source, destination) ->
-    StorageBuckets.update {name: source}, $set: isLocked: true
-    Agent.copyStorageBucket source, destination
+    ifBucketDoesNotExist destination, ->
+      StorageBuckets.update {name: source}, $set: isLocked: true
+      Agent.copyStorageBucket source, destination
 
   restartTag: (tag) ->
     for instance in Instances.find('parameters.tags': tag).fetch()
