@@ -14,7 +14,7 @@ divAppDef = (appName, appVersion) ->
   "//div[@class='modal-content #{appName}:#{appVersion}']"
 
 aceBehaviour = (selector) ->
-  get: (val) ->
+  get: ->
     browser.executeScript "return ace.edit($('#{selector}')[0]).getValue();"
   set: (val) ->
     v = val.replace /\n/g, '\\n'
