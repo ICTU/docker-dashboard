@@ -1,4 +1,3 @@
-mqtt    = require 'mqtt'
 dot     = require 'mongo-dot-notation'
 
 storage  = require './agent/storage.coffee'
@@ -8,6 +7,14 @@ network  = require './docker/network.coffee'
 system   = require './agent/system.coffee'
 
 mbe = Meteor.bindEnvironment
+
+insertEvent = (type, subject) -> (msg) ->
+  Events.insert
+    type: type
+    subject: subject
+    action: msg.action
+    info: msg.message
+    timestamp: new Date()
 
 mqttTopicHandlerMap =
   '/docker/events':                 mbe require './docker/events.coffee'
@@ -26,23 +33,7 @@ mqttTopicHandlerMap =
   '/system/memory':                 mbe system.memory
   '/system/cpu':                    mbe system.cpu
   '/system/uptime':                 mbe system.uptime
+  '/errors/storage':                mbe insertEvent('error', 'Storage')
 
-  '/errors/remotefs': mbe (msg) ->
-    Events.insert
-      type: 'error'
-      subject: 'Storage'
-      action: msg.action
-      info: msg.message
-      timestamp: new Date()
-
-mqst = Meteor.settings.mqtt
-client = mqtt.connect mqst.url,
-  username: mqst.username
-  password: mqst.password
-for topicName, handler of mqttTopicHandlerMap
-  client.subscribe topicName
-client.on 'message', (topic, data) ->
-  mqttTopicHandlerMap[topic] JSON.parse data.toString()
-
-client.on 'error', (err) -> console.log 'MQTT::An error occured', err
-client.on 'close', -> console.log 'MQTT connection closed'
+module.exports = (mqtt) ->
+  mqtt.subscribe mqttTopicHandlerMap

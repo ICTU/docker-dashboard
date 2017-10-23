@@ -47,18 +47,22 @@ Meteor.methods logInvocation
   deleteApp: Cluster.deleteApp
   'storage/buckets/delete': (id) ->
     StorageBuckets.update id, $set: isLocked: true
-    Agent.deleteStorageBucket StorageBuckets.findOne(id)?.name
+    Mqtt.publish '/commands/storage/bucket/delete',
+      name: StorageBuckets.findOne(id)?.name
   'storage/buckets/create': (name) ->
     ifBucketDoesNotExist name, ->
       StorageBuckets.insert name:name, isLocked: true
-      Agent.createStorageBucket name
+      Mqtt.publish '/commands/storage/bucket/create',
+        name: name
   'storage/buckets/copy': (source, destination) ->
     ifBucketDoesNotExist destination, ->
       StorageBuckets.update {name: source}, $set: isLocked: true
       StorageBuckets.insert
         name: destination
         isLocked: true
-      Agent.copyStorageBucket source, destination
+      Mqtt.publish '/commands/storage/bucket/copy',
+        source: source
+        destination: destination
 
   restartTag: (tag) ->
     for instance in Instances.find('parameters.tags': tag).fetch()
