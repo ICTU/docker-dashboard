@@ -16,7 +16,7 @@ module.exports = createContainer (props) ->
     _.extend bucket,
       size: pretty bucket.size
       usedBy: usage[bucket.name]
-  onDelete: -> Meteor.call 'storage/buckets/delete', @_id
+  onDelete: -> Meteor.call 'storage/buckets/delete', @name
   onCopy: (source, dest) ->  Meteor.call 'storage/buckets/copy', source, dest
   authenticated: Helpers.isAuthenticated()
 , StorageBucketList

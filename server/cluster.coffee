@@ -47,11 +47,21 @@ substituteParameters = (def, parameters) ->
 
 @Cluster = @Agent =
   deleteStorageBucket: (name) ->
-    callAgent 'del', "/storage/#{name}"
+    StorageBuckets.update {name: name}, $set: isLocked: true
+    Mqtt.publish '/commands/storage/bucket/delete',
+      name: name
   createStorageBucket: (name) ->
-    callAgent 'put', '/storage', data: name: name
+    StorageBuckets.insert name:name, isLocked: true
+    Mqtt.publish '/commands/storage/bucket/create',
+      name: name
   copyStorageBucket: (source, destination) ->
-    callAgent 'put', '/storage', data: name: destination, source: source
+    StorageBuckets.update {name: source}, $set: isLocked: true
+    StorageBuckets.insert
+      name: destination
+      isLocked: true
+    Mqtt.publish '/commands/storage/bucket/copy',
+      source: source
+      destination: destination
 
   stopAll: ->
     Instances.find().forEach (inst) -> stopInstance inst.name
