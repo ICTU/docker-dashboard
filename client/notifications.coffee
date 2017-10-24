@@ -18,6 +18,9 @@ renderStorageNotification = (e) ->
     when 'unlocked' then sAlert.info "Storage bucket #{e.info.name} has become available."
     when 'removed' then sAlert.warning "Storage bucket #{e.info.name} was removed."
 
+renderErrorNotification = (e) ->
+  sAlert.error "#{e.subject} - #{e.action}: #{e.info}"
+
 Meteor.startup ->
   # general sAlert configuration
   sAlert.config
@@ -32,10 +35,13 @@ Meteor.startup ->
   Meteor.subscribe 'events', ->
     starting = true
     Events.find().observe added: (e) ->
-      unless starting then switch e.subject
-        when 'instance' then renderInstanceNotification e
-        when 'appdef'   then renderAppDefNotification e
-        when 'storage'   then renderStorageNotification e
+      unless starting
+        if e.type is 'error'
+          renderErrorNotification e
+        else switch e.subject
+          when 'instance' then renderInstanceNotification e
+          when 'appdef'   then renderAppDefNotification e
+          when 'storage'   then renderStorageNotification e
     starting = false
 
   Meteor.subscribe 'services', ->

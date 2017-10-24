@@ -1,4 +1,3 @@
-mqtt    = require 'mqtt'
 dot     = require 'mongo-dot-notation'
 
 storage  = require './agent/storage.coffee'
@@ -9,6 +8,14 @@ system   = require './agent/system.coffee'
 
 mbe = Meteor.bindEnvironment
 
+insertEvent = (type, subject) -> (msg) ->
+  Events.insert
+    type: type
+    subject: subject
+    action: msg.action
+    info: msg.message
+    timestamp: new Date()
+
 mqttTopicHandlerMap =
   '/docker/events':                 mbe require './docker/events.coffee'
   '/docker/container/inspect':      mbe require './docker/inspect.coffee'
@@ -17,23 +24,16 @@ mqttTopicHandlerMap =
   '/agent/docker/log/startup/error':mbe logs.startupFailed
   '/agent/docker/log/teardown':     mbe logs.teardown
   '/agent/storage/buckets':         mbe storage.buckets
+  '/agent/storage/bucket/state':    mbe storage.bucketState
   '/agent/storage/size':            mbe storage.size
+  '/agent/storage/bucket/size':     mbe storage.bucketSize
   '/agent/docker/graph':            mbe storage.dockergraph
   '/network/info':                  mbe network.info
   '/docker/snapshot/containerIds':  mbe snapshot.containerIds
   '/system/memory':                 mbe system.memory
   '/system/cpu':                    mbe system.cpu
   '/system/uptime':                 mbe system.uptime
+  '/errors/storage':                mbe insertEvent('error', 'Storage')
 
-mqst = Meteor.settings.mqtt
-client = mqtt.connect mqst.url,
-  username: mqst.username
-  password: mqst.password
-client.on 'connect', ->
-  for topicName, handler of mqttTopicHandlerMap
-    client.subscribe topicName
-  client.on 'message', (topic, data) ->
-    mqttTopicHandlerMap[topic] JSON.parse data.toString()
-
-client.on 'error', (err) -> console.log 'MQTT::An error occured', err
-client.on 'close', -> console.log 'MQTT connection closed'
+module.exports = (mqtt) ->
+  mqtt.subscribe mqttTopicHandlerMap

@@ -1,1 +1,2 @@
-require './mqtt/mqtt.coffee'
+module.exports = (mqtt) ->
+  (require './mqtt/handlers.coffee') mqtt

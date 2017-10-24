@@ -68,17 +68,14 @@ module.exports = React.createClass
         </span>
       }
       <span className="pull-right" style={marginRight: 10, marginTop: 3, fontSize: 12, color: "grey"}>
-        Created {moment(bucket.created).fromNow()}
+        Last updated {moment(bucket.created).fromNow()}
         {if bucket.usedBy
            " | Used by #{bucket.usedBy?.join(', ')}"
         else
           " | Not in use"
         }
         {if bucket.size
-          if bucket.isSizeLocked
-            <strong> | Retrieving size ...</strong>
-          else
-            " | Size #{bucket.size}"
+           <span> | Size <strong> {bucket.size}</strong></span>
         }
       </span>
     </div>

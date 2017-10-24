@@ -18,7 +18,3 @@ Template.storage.events
     e.preventDefault()
     Meteor.call 'storage/buckets/create', tpl.$('#bucket-name').val(), ->
       tpl.$('#bucket-name').val ''
-  'click button.size-buckets': (e, tpl) ->
-    buckets = StorageBuckets?.find {}, sort: name: 1
-    buckets.forEach (bucket) ->
-      Meteor.call 'storage/buckets/size', bucket._id
