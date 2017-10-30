@@ -4,7 +4,7 @@ module.exports = (instances) ->
     services = (sName for sName of stored?.services)
     newInst = lodash.merge {}, stored, inst
     for srv in services
-      unless inst.services[srv]
+      if inst.services[srv].state is "unknown"
         newInst.services[srv].state = "missing"
         newInst.state = "failing"
     Instances.upsert {name: instName}, newInst
