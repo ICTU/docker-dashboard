@@ -12,11 +12,6 @@ Instance = React.createClass
       <div>
         <ul className="nav nav-justified pull-right" style={marginBottom:'5px'}>
           <li className="btn-group">
-            <a title="Logs" target="_blank" href="{{pathFor route='instanceLogs' instanceId=_id}}">
-              <i className="glyphicon glyphicon-lg glyphicon-list-alt"></i>
-            </a>
-          </li>
-          <li className="btn-group">
 
             <a title="Stop" href="#" className="dropdown-toggle" data-toggle="dropdown">
               <i className="glyphicon glyphicon-lg glyphicon-stop"></i>

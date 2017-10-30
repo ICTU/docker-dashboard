@@ -10,26 +10,6 @@ loggedMethod = (name, f) -> ->
 logInvocation = (methods) ->
   _.object ([name, loggedMethod(name, func)] for name, func of methods)
 
-getLogs = (q) ->
-  result = HTTP.post "#{Settings.get('elasticSearchUrl')}/_search",
-    data:
-      query:
-        filtered:
-          query:
-            bool: q
-      sort:['@timestamp': order: 'desc']
-      size: 500
-    auth: "#{Settings.get 'elasticSearchAuth'}"
-
-  result = JSON.parse result.content
-
-  if hits = result?.hits?.hits
-    hits.map (item) ->
-      date: item._source['@timestamp']
-      message: item._source.message
-  else
-    result
-
 ifBucketDoesNotExist = (name, cb) ->
   if StorageBuckets.findOne(name: name)
     Events.insert
@@ -64,16 +44,9 @@ Meteor.methods logInvocation
       catch err
         console.log err
 
-  getLog: (cid) ->
-    getLogs must: [term: 'docker.id': cid]
-
-  getInstanceLog: (id) ->
-    instance = Instances.findOne _id: id
-    if instance?.meta?.id
-      getLogs(must: [match_phrase: message: instance.meta.id])
-    else if instance?.logs?.bootstrapLog
-      [{date: new Date(), message: instance?.logs?.bootstrapLog}]
-    else []
+  getLog: (data) ->
+    logsUrl = Instances.findOne({name: data.instance})?.services[data.service]?.logsUrl
+    if logsUrl then HTTP.get(logsUrl).content else ""
 
 Meteor.methods
   getDocs: -> Assets?.getText 'docs.md'
