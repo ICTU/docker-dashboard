@@ -6,7 +6,10 @@
   <table class="table table-condensed">
     <tbody>
       <tr><th scope="row">Created</th><td>{{createdSince}}</td></tr>
-      <tr><th scope="row">State</th><td>{{data.state}} {{#with data.health.status}}({{renderHealth}}){{/with}}</td></tr>
+      <tr><th scope="row">State</th><td>{{data.state}}
+        <span> {{#with data.health.status}}({{renderHealth}}){{/with}}</span>
+        {{#if data.errors}}<span> ({{data.errors}})</span>{{/if}}
+      </td></tr>
       <tr>
         <th scope="row" style="width:250px;">FQDN</th>
         <td>

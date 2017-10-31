@@ -45,8 +45,17 @@ Meteor.methods logInvocation
         console.log err
 
   getLog: (data) ->
-    logsUrl = Instances.findOne({name: data.instance})?.services[data.service]?.logsUrl
-    if logsUrl then HTTP.get(logsUrl).content else ""
+    if Meteor.isServer
+      try
+        logsUrl = Instances.findOne({name: data.instance})?.services[data.service]?.logsUrl
+        if logsUrl
+          HTTP.get(logsUrl).content.split(/\0\0\0\0\0/g).map (l) -> l[2...-1]
+        else ""
+      catch ex
+        console.error ex
+        [ex.response.data.message]
+    else
+      "Loading logs for #{data.instance}/#{data.service}"
 
 Meteor.methods
   getDocs: -> Assets?.getText 'docs.md'

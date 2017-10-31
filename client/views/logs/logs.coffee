@@ -19,9 +19,9 @@ Template.logs.onRendered ->
     Meteor.call 'getLog', @data, (err, logs) =>
       if err
         console.err "Error while getting logs for #{@data.instance}/#{@data.service}", err
+        Session.set "logs/#{@data.instance}/#{@data.service}", [err]
       else
-        logLines = logs.split(/\0\0\0\0\0/g).map (l) => l[2...-1]
-        Session.set "logs/#{@data.instance}/#{@data.service}", logLines
+        Session.set "logs/#{@data.instance}/#{@data.service}", logs
   else
     Session.set "logs/#{@data.instance}/#{@data.service}", "Unknown service #{@data.instance}/#{@data.service}!"
 
