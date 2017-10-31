@@ -119,9 +119,6 @@ substituteParameters = (def, parameters) ->
       if bigboatCompose[serviceName]?.type is 'oneoff'
         service.restart = 'no' unless service.restart
         serviceType = 'oneoff'
-
-      # service.container_name = "#{project}-#{instance}-#{serviceName}"
-      # service.restart = 'unless-stopped' unless service.restart
       service.labels =
         'bigboat.instance.name': instance
         'bigboat.service.name': serviceName
