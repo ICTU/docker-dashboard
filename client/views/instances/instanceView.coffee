@@ -1,22 +1,5 @@
 ansi_up = require('ansi_up')
 
-
-HTTPS_PORTS = ['443', '8443']
-HTTP_PORTS = ['80', '4567', '8000', '8080', '8081', '8181', '8668', '9000']
-
-findWebPort = (service) ->
-  p = 80
-  service?.ports?.forEach (port) ->
-    port = port.split('/')[0]
-    if port in HTTPS_PORTS.concat(HTTP_PORTS) then p = port
-  p
-
-determineProtocol = (port) ->
-  if port in HTTPS_PORTS
-    "https"
-  else
-    "http"
-
 instanceHash = (inst) ->
   CryptoJS.MD5 "#{inst}"
 
@@ -63,8 +46,8 @@ Template.instanceView.helpers
   stopButtonText: -> if @meta.state isnt 'active' then 'Destroy' else 'Stop'
   instanceLink: ->
     port = findWebPort @services?.www
-    endpoint = @services?.www?.properties?.bigboat?.instance?.endpoint?.path or ":" + port
-    protocol = @services?.www?.properties?.bigboat?.instance?.endpoint?.protocol or determineProtocol port
+    endpoint = @services?.www?.endpoint?.path or ":" + port
+    protocol = @services?.www?.endpoint?.protocol or determineProtocol port
     if fqdn = @services?.www?.fqdn
       "#{protocol}://#{fqdn}#{endpoint}"
   params: -> key: k, value: v for k, v of @parameters when k isnt 'tags' if @parameters

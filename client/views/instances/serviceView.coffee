@@ -6,6 +6,11 @@ Template.serviceView.helpers
   sshIsUnhealthy: -> @data.aux?.ssh?.health?.status is 'unhealthy'
   createdSince: -> moment(@data.container?.created).fromNow() if @data.container?.created
   hasSshSettings: -> @data?.aux?.ssh
+  serviceLink: ->
+    port = findWebPort @data
+    endpoint = @data?.endpoint?.path or ":" + port
+    protocol = @data?.endpoint?.protocol or determineProtocol port
+    "#{protocol}://#{@data?.fqdn}#{endpoint}"
   renderHealth: ->
     if "#{@}" is 'unknown'
       'waiting for container to become healthy'
