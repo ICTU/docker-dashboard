@@ -1,7 +1,7 @@
 <template name="serviceView">
   <h5>
     <span class="glyphicon glyphicon-{{stateIcon}}"></span>
-    <a href="{{serviceLink}}">{{name}}</a>
+    <a href="{{serviceLink}}" target="_blank">{{name}}</a>
   </h5>
   <table class="table table-condensed">
     <tbody>
@@ -12,13 +12,7 @@
       </td></tr>
       <tr>
         <th scope="row" style="width:250px;">FQDN</th>
-        <td>
-          {{#if data.properties.bigboat.instance.endpoint}}
-          <a href="{{#if data.properties.bigboat.instance.endpoint.protocol}}{{data.properties.bigboat.instance.endpoint.protocol}}{{else}}http{{/if}}://{{data.fqdn}}{{data.properties.bigboat.instance.endpoint.path}}">{{data.fqdn}}</a>
-          {{else}}
-          {{data.fqdn}}
-          {{/if}}
-        </td>
+        <td>{{data.fqdn}}</td>
       </tr>
       <tr><th scope="row">Container Name</th><td>{{data.container.name}}</td></tr>
       <tr><th scope="row">IP</th><td>{{data.ip}}</td></tr>
