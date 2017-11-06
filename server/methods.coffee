@@ -47,7 +47,7 @@ Meteor.methods logInvocation
   getLog: (data) ->
     if Meteor.isServer
       try
-        logsUrl = Instances.findOne({name: data.instance})?.services[data.service]?.logsUrl
+        logsUrl = Instances.findOne({name: data.instance})?.services[data.service]?.logs['1000']
         if logsUrl
           HTTP.get(logsUrl).content.split(/\0\0\0\0\0/g).map (l) -> l[2...-1]
         else ""

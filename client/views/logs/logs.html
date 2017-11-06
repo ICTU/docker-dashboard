@@ -1,4 +1,9 @@
 <template name="logs">
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <h3>Showing the last 1000 lines of the <strong>{{instance}}/{{service}}</strong> log.</h3>
+    </div>
+  </nav>
   <div id="logViewer">
   {{#if isLoading}}
     <div class="logLine text">Loading logs for {{instance}}/{{service}}</div>
