@@ -29,4 +29,6 @@ Template.logs.onDestroyed ->
   Session.set "logs/#{@instance}/#{@service}", null
 
 Template.logTable.helpers
-  logLines: -> Session.get "logs/#{@instance}/#{@service}"
+  logLines: ->
+    Meteor.defer -> $("#end-of-logs")[0].scrollIntoView()
+    Session.get "logs/#{@instance}/#{@service}"
