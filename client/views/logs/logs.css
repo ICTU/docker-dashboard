@@ -1,17 +1,17 @@
 #logViewer {
-  min-height:100%;
-  padding:10px;
-  padding-top:60px;
+  min-height: 100%;
+  padding: 10px;
+  padding-top: 60px;
   background-color: #111111;
 }
 
 #logViewer .logLine {
   font-family: Mono;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 #logViewer .logLine .date {
   min-width: 220px;
   vertical-align: top;
-  color: #0074D9;
+  color: #0074d9;
 }

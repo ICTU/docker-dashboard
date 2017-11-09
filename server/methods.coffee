@@ -18,7 +18,7 @@ getLogs = (q) ->
           query:
             bool: q
       sort:['@timestamp': order: 'desc']
-      size: 500
+      size: 1000
     auth: "#{Settings.get 'elasticSearchAuth'}"
 
   result = JSON.parse result.content
@@ -64,16 +64,23 @@ Meteor.methods logInvocation
       catch err
         console.log err
 
-  getLog: (cid) ->
-    getLogs must: [term: 'docker.id': cid]
-
-  getInstanceLog: (id) ->
-    instance = Instances.findOne _id: id
-    if instance?.meta?.id
-      getLogs(must: [match_phrase: message: instance.meta.id])
-    else if instance?.logs?.bootstrapLog
-      [{date: new Date(), message: instance?.logs?.bootstrapLog}]
-    else []
+  getLog: (data) ->
+    if Meteor.isServer
+      srv = "#{data.instance}/#{data.service}"
+      noLogsMsg = ["There are no logs for #{srv}"]
+      if data.instance and data.service
+        try
+          cid = Instances.findOne({name: data.instance})?.services[data.service]?.container?.id
+          if cid and logs = getLogs(must: [term: 'docker.id': cid])
+            logs = _.sortBy(logs, 'date')
+            if logs?.length then logs.map((l) -> "#{l.date} #{l.message}") else noLogsMsg
+          else noLogsMsg
+        catch ex
+          console.error ex
+          ["Something went wrong while retrieving the logs of #{srv}. #{ex}"]
+      else ["Unknown service #{srv}"]
+    else
+      ["Loading the logs of #{srv}"]
 
 Meteor.methods
   getDocs: -> Assets?.getText 'docs.md'

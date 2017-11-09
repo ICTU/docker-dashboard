@@ -44,13 +44,11 @@ ssh {{hostname}}
       </td></tr>
       {{/if}}
 
-      {{#if data.container.id}}
       {{#if isAuthenticated}}
       <tr>
         <th scope="row">Logs</th>
-        <td><a target="_blank" href="{{pathFor route='logs' containerId=data.container.id}}" class="showContainerLogsOld">Show Logs</a></td>
+        <td><a target="_blank" href="{{pathFor route='logs' instance=../name service=name}}" class="showContainerLogsOld">Show Logs</a></td>
       </tr>
-      {{/if}}
       {{/if}}
     </tbody>
   </table>

@@ -82,7 +82,7 @@ Template.instanceView.events
   'click .showLogs': ->
     activeLogs.set @logs
   'click .showContainerLogs': ->
-    Meteor.call 'getLog', @data.dockerContainerId, (err, data) ->
+    Meteor.call 'getLog', @data, (err, data) ->
       console.error 'log -> ', err, data
   "click .toggle": ->
     scrollLog(instanceHash(@name))
