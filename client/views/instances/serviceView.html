@@ -2,6 +2,7 @@
   <h5>
     <span class="glyphicon glyphicon-{{stateIcon}}"></span>
     <a href="{{serviceLink}}" target="_blank">{{name}}</a>
+    <a href="#" id="startSshContainer" class="btn btn-default" style="margin-left: 10px"><i class="glyphicon glyphicon-console pull-left"></i></a>
   </h5>
   <table class="table table-condensed">
     <tbody>
@@ -21,9 +22,9 @@
       {{#if hasSshSettings}}
       <tr><th scope="row">SSH</th><td>
       <div class="copy-to-clipboard"><a href="#">copy to clipboard</a></div>
-{{#prism language="bash" class="code-toolbar" port=this hostname=data.fqdn}}
-ssh {{hostname}}
-{{/prism}}
+      {{#prism language="bash" class="code-toolbar" data=data}}
+      ssh root@{{data.ssh.ip}}
+      {{/prism}}
       {{#if ../data.sshWebPort}}
       <div class="divider">&nbsp; Or &nbsp;</div>
       {{/if}}

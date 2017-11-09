@@ -66,6 +66,38 @@ substituteParameters = (def, parameters) ->
   stopAll: ->
     Instances.find().forEach (inst) -> stopInstance inst.name
 
+  startSshContainer: (instanceName, serviceName) ->
+    instance = Instances.findOne({name: instanceName})
+    service = instance?.services?[serviceName]
+    if node = service?.container?.node
+      bigboatCompose = YAML.load instance.app.bigboatCompose
+      sshCompose = SshContainer.buildComposeConfig instanceName, serviceName, node, bigboatCompose[serviceName]
+      compose =
+        version: '3'
+        services: ssh: sshCompose
+
+      agentUrl = getAgent()
+      console.log "Sending a POST request to '#{agentUrl}' to start ssh container for #{instanceName}/#{serviceName}."
+
+      callOpts =
+        responseType: "buffer"
+        data:
+          app:
+            name: ""
+            version: ""
+            definition: compose
+            bigboatCompose: {}
+          instance:
+            name: "#{instanceName}-#{serviceName}-ssh"
+            options: {}
+          bigboat:
+            url: process.env.ROOT_URL
+
+      HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+        throw new Meteor.Error err if err
+        console.log "Sent request to start instance. Response from the agent is", result.content.toString()
+
+
   startApp: (app, version, instance, parameters = {}, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
       throw new Meteor.Error "Application #{app}:#{version} does not exist"
@@ -132,8 +164,6 @@ substituteParameters = (def, parameters) ->
         'bigboat.instance.endpoint.protocol': bigboatCompose[serviceName]?.protocol
         'bigboat.container.enable_ssh':  if bigboatCompose[serviceName]?.enable_ssh then 'true' else undefined
 
-      sshCompose = SshContainer.buildComposeConfig project, instance, serviceName, bigboatCompose[serviceName]
-      services["bb-ssh-#{serviceName}"] = sshCompose if sshCompose
 
     console.log 'dockerCompose', dockerCompose
 
