@@ -93,7 +93,7 @@ substituteParameters = (def, parameters) ->
           bigboat:
             url: process.env.ROOT_URL
 
-      HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+      HTTP.post "#{agentUrl}/app/start?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
         throw new Meteor.Error err if err
         console.log "Sent request to start instance. Response from the agent is", result.content.toString()
 
@@ -184,7 +184,7 @@ substituteParameters = (def, parameters) ->
 
     console.log "Sending a POST request to '#{agentUrl}' to start '#{instance}'."
 
-    HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+    HTTP.post "#{agentUrl}/app/start?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
 
