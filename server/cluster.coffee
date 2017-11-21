@@ -67,35 +67,18 @@ substituteParameters = (def, parameters) ->
     Instances.find().forEach (inst) -> stopInstance inst.name
 
   startSshContainer: (instanceName, serviceName) ->
-    instance = Instances.findOne({name: instanceName})
-    service = instance?.services?[serviceName]
-    if node = service?.container?.node
-      bigboatCompose = YAML.load instance.app.bigboatCompose
-      sshCompose = SshContainer.buildComposeConfig instanceName, serviceName, node, bigboatCompose[serviceName]
-      compose =
-        version: '3'
-        services: ssh: sshCompose
-
       agentUrl = getAgent()
       console.log "Sending a POST request to '#{agentUrl}' to start ssh container for #{instanceName}/#{serviceName}."
 
       callOpts =
         responseType: "buffer"
         data:
-          app:
-            name: ""
-            version: ""
-            definition: compose
-            bigboatCompose: {}
-          instance:
-            name: "#{instanceName}-#{serviceName}-ssh"
-            options: {}
-          bigboat:
-            url: process.env.ROOT_URL
+          instance: instanceName,
+          service: serviceName
 
-      HTTP.post "#{agentUrl}/app/start?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+      HTTP.post "#{agentUrl}/ssh/start?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
         throw new Meteor.Error err if err
-        console.log "Sent request to start instance. Response from the agent is", result.content.toString()
+        console.log "Sent request to start an ssh service. Response from the agent is", result.content.toString()
 
 
   startApp: (app, version, instance, parameters = {}, options = {}) ->
@@ -162,7 +145,11 @@ substituteParameters = (def, parameters) ->
         'bigboat.storage.bucket': options.storageBucket
         'bigboat.instance.endpoint.path': bigboatCompose[serviceName]?.endpoint
         'bigboat.instance.endpoint.protocol': bigboatCompose[serviceName]?.protocol
-        'bigboat.container.enable_ssh':  if bigboatCompose[serviceName]?.enable_ssh then 'true' else undefined
+        # 'bigboat.container.ssh':  if bigboatCompose[serviceName]?.enable_ssh
+        #     'true'
+        #   else if bigboatCompose[serviceName]?.ssh
+        #     bigboatCompose[serviceName]?.ssh
+        #   else undefined
 
 
     console.log 'dockerCompose', dockerCompose
