@@ -10,7 +10,7 @@ Template.serviceView.events
 Template.serviceView.helpers
   sshIsUnhealthy: -> @data.aux?.ssh?.health?.status is 'unhealthy'
   createdSince: -> moment(@data.container?.created).fromNow() if @data.container?.created
-  hasSshSettings: -> @data?.ssh
+  hasSsh: -> @data?.ssh
   serviceLink: ->
     port = findWebPort @data
     endpoint = @data?.endpoint?.path or ":" + port
