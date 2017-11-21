@@ -66,6 +66,21 @@ substituteParameters = (def, parameters) ->
   stopAll: ->
     Instances.find().forEach (inst) -> stopInstance inst.name
 
+  startSshContainer: (instanceName, serviceName) ->
+      agentUrl = getAgent()
+      console.log "Sending a POST request to '#{agentUrl}' to start ssh container for #{instanceName}/#{serviceName}."
+
+      callOpts =
+        responseType: "buffer"
+        data:
+          instance: instanceName,
+          service: serviceName
+
+      HTTP.post "#{agentUrl}/ssh/start?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+        throw new Meteor.Error err if err
+        console.log "Sent request to start an ssh service. Response from the agent is", result.content.toString()
+
+
   startApp: (app, version, instance, parameters = {}, options = {}) ->
     unless ApplicationDefs.findOne {name: app, version: version}
       throw new Meteor.Error "Application #{app}:#{version} does not exist"
@@ -130,10 +145,12 @@ substituteParameters = (def, parameters) ->
         'bigboat.storage.bucket': options.storageBucket
         'bigboat.instance.endpoint.path': bigboatCompose[serviceName]?.endpoint
         'bigboat.instance.endpoint.protocol': bigboatCompose[serviceName]?.protocol
-        'bigboat.container.enable_ssh':  if bigboatCompose[serviceName]?.enable_ssh then 'true' else undefined
+        # 'bigboat.container.ssh':  if bigboatCompose[serviceName]?.enable_ssh
+        #     'true'
+        #   else if bigboatCompose[serviceName]?.ssh
+        #     bigboatCompose[serviceName]?.ssh
+        #   else undefined
 
-      sshCompose = SshContainer.buildComposeConfig project, instance, serviceName, bigboatCompose[serviceName]
-      services["bb-ssh-#{serviceName}"] = sshCompose if sshCompose
 
     console.log 'dockerCompose', dockerCompose
 
@@ -154,7 +171,7 @@ substituteParameters = (def, parameters) ->
 
     console.log "Sending a POST request to '#{agentUrl}' to start '#{instance}'."
 
-    HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
+    HTTP.post "#{agentUrl}/app/start?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
 

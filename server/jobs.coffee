@@ -33,7 +33,7 @@ Meteor.startup ->
         Services.upsert {name: job.data.name},
           name: job.data.name
           lastCheck: new Date()
-          description: "API version: <strong>#{resp.api}</strong>. Agent version: <strong>#{resp.agent.version}</strong>"
+          description: "Agent version: <strong>#{resp.version}</strong>"
           isUp: true
           details: resp
         job.done()

@@ -2,6 +2,9 @@
   <h5>
     <span class="glyphicon glyphicon-{{stateIcon}}"></span>
     <a href="{{serviceLink}}" target="_blank">{{name}}</a>
+    <!-- {{#unless hasSsh}}
+    <a href="#" id="startSshContainer" class="btn btn-default" style="margin-left: 10px"><i class="glyphicon glyphicon-console pull-left"></i></a>
+    {{/unless}} -->
   </h5>
   <table class="table table-condensed">
     <tbody>
@@ -18,12 +21,12 @@
       <tr><th scope="row">IP</th><td>{{data.ip}}</td></tr>
       <tr><th scope="row">Ports</th><td>{{data.ports}}</td></tr>
 
-      {{#if hasSshSettings}}
+      {{#if hasSsh}}
       <tr><th scope="row">SSH</th><td>
       <div class="copy-to-clipboard"><a href="#">copy to clipboard</a></div>
-{{#prism language="bash" class="code-toolbar" port=this hostname=data.fqdn}}
-ssh {{hostname}}
-{{/prism}}
+      {{#prism language="bash" class="code-toolbar" data=data}}
+      ssh root@{{data.ssh.fqdn}}
+      {{/prism}}
       {{#if ../data.sshWebPort}}
       <div class="divider">&nbsp; Or &nbsp;</div>
       {{/if}}

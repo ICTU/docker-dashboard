@@ -20,6 +20,7 @@ ifBucketDoesNotExist = (name, cb) ->
       timestamp: new Date()
   else cb?(name)
 Meteor.methods logInvocation
+  startSshContainer: Cluster.startSshContainer
   startApp: Cluster.startApp
   stopInstance: Cluster.stopInstance
   clearInstance: Cluster.clearInstance

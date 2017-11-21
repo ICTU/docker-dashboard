@@ -1,11 +1,20 @@
 _ = require 'underscore'
 
 module.exports =
-  buildComposeConfig: (project, instance, serviceName, serviceBigboatCompose) ->
+  buildComposeConfig: (instance, serviceName, node, serviceBigboatCompose) ->
     config = (authMechanism, containerShell, authTuples) ->
-      image: 'jeroenpeeters/docker-ssh'
+      image: 'jeroenpeeters/docker-ssh:docker-filter'
+      deploy:
+        placement:
+          constraints: [
+            "node.hostname == #{node}"
+          ]
       environment:
-        CONTAINER: "#{project}-#{instance}-#{serviceName}"
+        FILTERS: JSON.stringify label: [
+          "bigboat.instance.name=#{instance}"
+          "bigboat.service.name=#{serviceName}"
+          "bigboat.service.type=service"
+        ]
         AUTH_MECHANISM: authMechanism
         HTTP_ENABLED: 'false'
         CONTAINER_SHELL: containerShell
