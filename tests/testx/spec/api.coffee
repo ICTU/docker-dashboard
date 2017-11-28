@@ -29,11 +29,11 @@ describe 'API v2', ->
     testx.run 'tests/testx/scripts/api/stopInstance.testx', testAppDef
   it 'should be able to delete an application definition', ->
     testx.run 'tests/testx/scripts/api/deleteAppDef.testx', testAppDef
-  it 'should be able to create a new bucket', ->
-    testx.run 'tests/testx/scripts/api/createBucket.testx', testAppDef
-  it 'should be able to copy a bucket', ->
-    testx.run 'tests/testx/scripts/api/copyBucket.testx', testAppDef
-  it 'should be able to get list all buckets', ->
-    testx.run 'tests/testx/scripts/api/listBuckets.testx', testAppDef
-  it 'should be able to delete a bucket', ->
-    testx.run 'tests/testx/scripts/api/deleteBucket.testx', testAppDef
+  # it 'should be able to create a new bucket', ->
+  #   testx.run 'tests/testx/scripts/api/createBucket.testx', testAppDef
+  # it 'should be able to copy a bucket', ->
+  #   testx.run 'tests/testx/scripts/api/copyBucket.testx', testAppDef
+  # it 'should be able to get list all buckets', ->
+  #   testx.run 'tests/testx/scripts/api/listBuckets.testx', testAppDef
+  # it 'should be able to delete a bucket', ->
+  #   testx.run 'tests/testx/scripts/api/deleteBucket.testx', testAppDef

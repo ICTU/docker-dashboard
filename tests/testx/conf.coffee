@@ -6,7 +6,7 @@ exports.config =
     'spec/login*'
     'spec/navigation*'
     'spec/apps*'
-    'spec/storage*'
+    # 'spec/storage*'
     'spec/api*'
   ]
 
