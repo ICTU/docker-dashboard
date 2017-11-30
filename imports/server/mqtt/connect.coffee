@@ -16,8 +16,8 @@ module.exports = ->
     client.on 'message', (topic, data) ->
       handlers[topic] JSON.parse data.toString()
 
-  publish = (topic, msg) ->
-    client.publish topic, JSON.stringify msg
+  publish = (topic, msg, options = {}) ->
+    client.publish topic, JSON.stringify msg, options
 
   subscribe: subscribe
   publish: publish

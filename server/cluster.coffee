@@ -139,7 +139,7 @@ substituteParameters = (def, parameters) ->
 
     callOpts =
       responseType: "buffer"
-      data:
+      data: data =
         app:
           name: app
           version: version
@@ -152,8 +152,9 @@ substituteParameters = (def, parameters) ->
           url: process.env.ROOT_URL
           statusUrl: "#{process.env.ROOT_URL}/api/v1/state/#{instance}"
 
-    console.log "Sending a POST request to '#{agentUrl}' to start '#{instance}'."
 
+    console.log "Sending a POST request to '#{agentUrl}' to start '#{instance}'."
+    Mqtt.publish '/commands/apps/start', data, qos: 2
     HTTP.post "#{agentUrl}/app/install-and-run?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error err if err
       console.log "Sent request to start instance. Response from the agent is", result.content.toString()
@@ -171,7 +172,7 @@ substituteParameters = (def, parameters) ->
 
     callOpts =
       responseType: "buffer"
-      data:
+      data: data =
         app:
           name: instance.app.name
           version: instance.app.version
@@ -193,6 +194,7 @@ substituteParameters = (def, parameters) ->
         stoppedBy: user._id
 
     console.log "Sending a POST request to '#{agentUrl}' to stop '#{instanceName}'."
+    Mqtt.publish '/commands/apps/stop', data, qos: 2
     HTTP.post "#{agentUrl}/app/stop?access_token=#{Settings.get('agentAuthToken')}", callOpts, (err, result) ->
       throw new Meteor.Error result?.statusCode, result?.content?.toString() if err
       console.log "Sent request to stop instance. Response from the agent is #{result?.content}"

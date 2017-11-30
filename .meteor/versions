@@ -9,6 +9,7 @@ aldeed:schema-deny@1.1.0
 aldeed:schema-index@1.1.1
 aldeed:simple-schema@1.5.3
 allow-deny@1.0.5
+apollo@1.0.0
 aramk:topsort@0.0.2
 autoupdate@1.3.12
 babel-compiler@6.14.1

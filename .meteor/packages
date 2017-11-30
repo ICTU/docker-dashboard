@@ -60,3 +60,4 @@ theduke:bootstrap-modal-prompt
 shell-server@0.2.2
 perak:markdown
 lmieulet:meteor-coverage
+apollo
