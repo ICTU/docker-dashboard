@@ -78,14 +78,18 @@ Meteor.startup ->
           if msg = putInputCheck? @params.name, @params.version, doc
             lib.endWithError @response, 400, msg
           else
-            ApplicationDefs.upsert selector,
-              $setOnInsert:
-                bigboatCompose: (yaml.safeDump selector)
-                dockerCompose: ''
+            updates = 
               $set:
                 name: @params.name
                 version: @params.version
                 "#{filePropertyName}": @request.body
+                
+            if filePropertyName is 'bigboatCompose'
+              updates['$setOnInsert'] = dockerCompose: ''
+            else if filePropertyName is 'dockerCompose'
+              updates['$setOnInsert'] = bigboatCompose: (yaml.safeDump selector)
+              
+            ApplicationDefs.upsert selector, updates
             lib.foundYaml @response, 201, @request.body
         catch e
           lib.endWithError @response, 400, "An error was encountered. Please check the validity of your file. When using curl, be sure to use --data-binary in order to preserve line endings. The error is: #{e.message}"
