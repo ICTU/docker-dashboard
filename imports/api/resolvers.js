@@ -1,12 +1,17 @@
 import GraphQLJSON from 'graphql-type-json';
+const {
+  GraphQLDateTime
+} = require('graphql-iso-date');
 
 export const resolvers = {
   JSON: GraphQLJSON,
+  DateTime: GraphQLDateTime,
   Query: {
     apps: (root, args, context) => ApplicationDefs.find().fetch(),
     instances: (root, args, context) => Instances.find().fetch(),
     buckets: (root, args, context) => StorageBuckets.find().fetch(),
     resources: (root, args, context) => Services.find().fetch(),
+    datastores: (root, args, context) => Datastores.find().fetch(),
   },
   App: {
     id: app => app._id
@@ -20,6 +25,9 @@ export const resolvers = {
   },
   Resource: {
     id: r => r._id,
+  },
+  DataStore: {
+    id: ds => ds._id,
   },
   LogsInfo: {
     n200: logs => logs['200'],

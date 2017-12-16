@@ -1,6 +1,7 @@
 export const typeDefs = `
 
 scalar JSON
+scalar DateTime
 
 # An app is a blueprint for a running Instance
 type App {
@@ -71,6 +72,15 @@ type Resource {
   details: JSON!
 }
 
+type DataStore {
+  id: ID!
+  name: String!
+  percentage: String!
+  total: String
+  used: String
+  createdAt: DateTime
+}
+
 # The root query for BigBoat
 type Query {
   # Returns a list of all applications
@@ -79,5 +89,7 @@ type Query {
   instances: [Instance!]!
   buckets: [Bucket!]!
   resources: [Resource!]!
+  datastores: [DataStore!]!
 }
+
 `;
