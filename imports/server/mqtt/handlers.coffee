@@ -1,10 +1,10 @@
-dot     = require 'mongo-dot-notation'
+# dot     = require 'mongo-dot-notation'
 
 storage  = require './agent/storage.coffee'
 logs     = require './agent/logs.coffee'
-snapshot = require './docker/snapshot.coffee'
+# snapshot = require './docker/snapshot.coffee'
 network  = require './docker/network.coffee'
-system   = require './agent/system.coffee'
+# system   = require './agent/system.coffee'
 swarm = require './docker/swarm.coffee'
 
 mbe = Meteor.bindEnvironment
@@ -30,12 +30,12 @@ mqttTopicHandlerMap =
   '/agent/storage/bucket/state':    mbe storage.bucketState
   '/agent/storage/size':            mbe storage.size
   '/agent/storage/bucket/size':     mbe storage.bucketSize
-  '/agent/docker/graph':            mbe storage.dockergraph
+  # '/agent/docker/graph':            mbe storage.dockergraph
   '/network/info':                  mbe network.info
-  '/docker/snapshot/containerIds':  mbe snapshot.containerIds
-  '/system/memory':                 mbe system.memory
-  '/system/cpu':                    mbe system.cpu
-  '/system/uptime':                 mbe system.uptime
+  # '/docker/snapshot/containerIds':  mbe snapshot.containerIds
+  # '/system/memory':                 mbe system.memory
+  # '/system/cpu':                    mbe system.cpu
+  # '/system/uptime':                 mbe system.uptime
   '/errors/storage':                mbe insertEvent('error', 'Storage')
 
 module.exports = (mqtt) ->
