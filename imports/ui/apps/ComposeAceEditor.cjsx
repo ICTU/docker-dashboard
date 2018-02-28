@@ -1,4 +1,3 @@
-{ Meteor }          = require 'meteor/meteor'
 React               = require 'react'
 AceEditor           = (require 'react-ace').default
 

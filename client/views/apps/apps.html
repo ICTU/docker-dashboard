@@ -104,48 +104,6 @@
 <template name="appActions">
   <ul class="nav nav-justified">
     <li class="btn-group">
-
-      <a title="Start" href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <i class="glyphicon glyphicon-lg glyphicon-play"></i>
-      </a>
-      <form id="start-app-form" role="form" class="dropdown-menu dropdown-menu-right" style="padding:1em">
-          <div class="form-group" style="width:25em">
-              <label>Instance name (must match [a-z0-9-]+)</label>
-              <input required pattern="[a-z0-9-]+" type="text"
-                class="form-control instance-name"
-                placeholder="Alphanummeric, underscores and dashes; no spaces"
-                value="{{name}}">
-
-              <label>Storage bucket</label>
-              <select class="form-control storage-bucket">
-                <option value="!! instance name !!">Use instance name</option>
-                <option value="!! do not persist !!">Do not persist</option>
-                <optgroup label="Available storage buckets">
-                  {{#each storageBuckets}}
-                  <option value={{name}} {{styles}}>{{name}}{{#if styles.disabled}} (not ready){{/if}}</option>
-                  {{/each}}
-                </optgroup>
-              </select>
-
-              {{#if parameters}}
-                <div class="divider" style="padding-top: 5px;"></div>
-
-                {{#each parameters}}
-                <label>{{this}}</label>
-                <input required type="text" class="form-control parameter" data-parameter="{{this}}">
-                {{/each}}
-              {{/if}}
-          </div>
-          {{#if systemNotHealthy}}
-            <div style='float:left; color:#D40000; width:280px; font-size:14px'>
-              <span class="glyphicon glyphicon-exclamation-sign"></span>
-              The system is not healthy, your instance may not start.</div>
-          {{/if}}
-          <button type="submit" class="start-app btn btn-mini pull-right" style='float:right'>Go!</button>
-      </form>
-
-    </li>
-    <li class="btn-group">
       <a title="Remove" href="#" class="dropdown-toggle" data-toggle="dropdown">
         <i class="glyphicon glyphicon-lg glyphicon-trash"></i>
       </a>

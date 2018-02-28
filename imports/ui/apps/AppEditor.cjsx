@@ -1,6 +1,5 @@
-{ Meteor }          = require 'meteor/meteor'
-{ createContainer } = require 'meteor/react-meteor-data'
 React               = require 'react'
+AppActions          = require './AppActions.cjsx'
 ComposeAceEditor    = require './ComposeAceEditor.cjsx'
 
 module.exports = React.createClass
@@ -40,15 +39,31 @@ module.exports = React.createClass
         dockerCompose: @state.dockerCompose
         bigboatCompose: @state.bigboatCompose
 
+  parameters: ->
+    unless @state.dockerCompose.raw
+      console.error "Cannot find Docker Compose content for this app!"
+    params = @state.dockerCompose?.raw.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
+    if params?.length
+      _.uniq(params.map (p) -> p.replace('{{', '').trim())
+    else
+      []
+
   render: ->
     if not @props.isLoading
       <span>
         <div style={height:50}>
           <h3 className="pull-left">{@state.bigboatCompose?.parsed?.name}:{@state.bigboatCompose?.parsed?.version}</h3>
           {if @props.canEdit
-            <button onClick={@save} id="submitButton" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
+            <div>
+              <button onClick={@save} id="submitButton" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
+              <AppActions appName={@props.name}
+                onRun={@props.onRun.bind(@props)}
+                storageBuckets={@props.storageBuckets}
+                parameters={@parameters()}
+                systemNotHealthy={@props.systemNotHealthy}/>
+            </div>
           else
-            <span className="pull-right" style={marginTop: 20, color: "red"}>LOG IN TO EDIT</span>
+            <span className="pull-right" style={marginTop: 20, color: "red"}>LOG IN TO EDIT/RUN</span>
           }
         </div>
         <hr style={marginTop:10, marginBottom:10}/>
