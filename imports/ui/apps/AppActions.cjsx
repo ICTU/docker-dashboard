@@ -54,7 +54,7 @@ module.exports = React.createClass
                 <option value="!! do not persist !!">Do not persist</option>
                 <optgroup label="Available storage buckets">
                 {for sb in @props.storageBuckets or []
-                  <option value={sb.name} key={sb.name}>{sb.name}}</option>
+                  <option value={sb.name} key={sb.name}>{sb.name}</option>
                 }
                 </optgroup>
               </select>
