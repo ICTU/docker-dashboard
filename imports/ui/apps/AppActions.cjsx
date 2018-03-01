@@ -29,7 +29,7 @@ module.exports = React.createClass
 
   render: ->
     <ul className="nav nav-justified">
-      <li className="btn-group">
+      <li>
         <button data-toggle="dropdown"
           id="runButton"
           type="button"

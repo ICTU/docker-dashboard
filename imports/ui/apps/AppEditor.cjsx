@@ -55,7 +55,13 @@ module.exports = React.createClass
           <h3 className="pull-left">{@state.bigboatCompose?.parsed?.name}:{@state.bigboatCompose?.parsed?.version}</h3>
           {if @props.canEdit
             <div>
-              <button onClick={@save} id="submitButton" type="button" style={marginTop:15} className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">Save</button>
+              <button onClick={@save}
+                id="submitButton"
+                type="button"
+                style={marginTop:15}
+                className="btn btn-primary #{@saveButtonDisabledClass()} pull-right">
+                  Save
+              </button>
               <AppActions appName={@props.name}
                 onRun={@props.onRun.bind(@props)}
                 storageBuckets={@props.storageBuckets}
@@ -63,7 +69,9 @@ module.exports = React.createClass
                 systemNotHealthy={@props.systemNotHealthy}/>
             </div>
           else
-            <span className="pull-right" style={marginTop: 20, color: "red"}>LOG IN TO EDIT/RUN</span>
+            <span className="pull-right" style={marginTop: 20, color: "red"}>
+              LOG IN TO EDIT/RUN
+            </span>
           }
         </div>
         <hr style={marginTop:10, marginBottom:10}/>
