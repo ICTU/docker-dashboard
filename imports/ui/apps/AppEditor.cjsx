@@ -22,7 +22,7 @@ module.exports = React.createClass
   getInitialState: -> @determineState @props
 
   onDockerComposeChange: (err, value) ->
-      @setState dockerCompose: value
+    @setState dockerCompose: value
 
   onBigboatComposeChange: (err, value) ->
       @setState bigboatCompose: value
@@ -40,8 +40,8 @@ module.exports = React.createClass
         bigboatCompose: @state.bigboatCompose
 
   parameters: ->
-    unless @state.dockerCompose.raw
-      console.error "Cannot find Docker Compose content for this app!"
+    unless @state.dockerCompose?.raw
+      console.error "Cannot find raw Docker Compose content for this app!"
     params = @state.dockerCompose?.raw.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
     if params?.length
       _.uniq(params.map (p) -> p.replace('{{', '').trim())
