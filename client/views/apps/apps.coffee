@@ -40,38 +40,6 @@ Template.apps.events
   'click .appRow': -> Session.set 'selectedAppDefId', @_id
   'click #newAppLink': -> Session.set 'selectedAppDefId', 'newApp'
 
-
-Template.appActions.helpers
-  hash: -> CryptoJS.MD5 "#{@name}#{@version}"
-  storageBuckets: -> StorageBuckets?.find {}, sort: name: 1
-  styles: ->
-    if @isLocked
-      disabled: true
-    else
-      ''
-  parameters: ->
-    unless @dockerCompose
-      console.error "Cannot find Docker Compose content for #{@name}:#{@version}"
-    params = @dockerCompose?.match /(?:\{\{)([\d|\w|_|-]*?)(?=\}\})/g
-    if params?.length
-      _.uniq(params.map (p) -> p.replace('{{', '').trim())
-    else
-      []
-  systemNotHealthy: -> Services.find(isUp:false).count() > 0
-
 Template.appActions.events
-  'submit #start-app-form': (e, tpl) ->
-    e.preventDefault()
-    name = tpl.$('.instance-name').val()
-    parameters = {}
-    parameters[$(p).data('parameter')] = p.value for p in tpl.$('.parameter')
-    parameters.tags = @tags
-
-    options =
-      storageBucket: tpl.$('.storage-bucket').val()
-    tpl.$('li.open').removeClass('open')
-    Meteor.call 'startApp', @name, @version, name, parameters, options
   'click .remove-app': (event, tpl) ->
     Meteor.call 'deleteApp', @name, @version
-
-val = (tpl, selector) -> tpl.$("#{selector}").val()
