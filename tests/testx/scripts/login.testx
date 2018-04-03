@@ -4,7 +4,7 @@
 - set:
     menu.Login:
     login.Username: '{{username}}'
-    login.Password: '{{passwprd}}'
+    login.Password: '{{password}}'
     login.Submit:
 - wait to appear:
     expected: login.GravatarLink('{{username}}')
