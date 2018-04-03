@@ -19,10 +19,10 @@
 # Start the application definition
 - set:
     menu.Apps:
-    apps.AppPanel('{{testApp}}'): ''
-    apps.Start('{{testApp}}','{{testVer}}'): ''
+    apps.AppPanel('{{testApp}}'): 
+    apps.Start('{{testApp}}','{{testVer}}'): 
     apps.Start.Name('{{testApp}}','{{testVer}}'): '{{testName}}'
-    apps.Start.Go('{{testApp}}','{{testVer}}'): ''
+    apps.Start.Go('{{testApp}}','{{testVer}}'): 
     menu.Instances:
 
 # Check for errornous state

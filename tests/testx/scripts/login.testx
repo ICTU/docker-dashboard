@@ -2,10 +2,10 @@
 - go to:
     url: /
 - set:
-    menu.Login: ''
+    menu.Login:
     login.Username: '{{username}}'
-    login.Password: '{{password}}'
-    login.Submit: ''
+    login.Password: 'I5GVBuKlW1xF'
+    login.Submit:
 - wait to appear:
     expected: login.GravatarLink('{{username}}')
     timeout: 5000

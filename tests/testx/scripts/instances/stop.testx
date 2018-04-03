@@ -8,9 +8,9 @@
     timeout: 120000
 - set:
     menu.Instances:
-    toggleInstance('{{testName}}'): ''
-    instances.Stop('{{testName}}'): ''
-    instances.Stop.Yes('{{testName}}'): ''
+    toggleInstance('{{testName}}'): 
+    instances.Stop('{{testName}}'): 
+    instances.Stop.Yes('{{testName}}'): 
 - wait to disappear:
     expected: runningInstance('{{testName}}')
     timeout: 120000
