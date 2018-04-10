@@ -10,7 +10,8 @@ module.exports = React.createClass
     bucket: ''
     parameters: {}
 
-  handleRun: ->
+  handleRun: (e) ->
+    e.preventDefault()
     @props.onRun @state
 
   handleNameChange: (event) ->
@@ -35,7 +36,7 @@ module.exports = React.createClass
           type="button"
           style={marginTop:15, marginRight: 10}
           className="btn btn-success pull-right">Start</button>
-        <form onClick={@handleRun}
+        <form onSubmit={@handleRun}
           id="start-app-form" role="form"
           className="dropdown-menu dropdown-menu-right"
           style={padding: "1em"}>
@@ -78,7 +79,7 @@ module.exports = React.createClass
               <span className="glyphicon glyphicon-exclamation-sign"></span>
               The system is not healthy, your instance may not start.</div>
           }
-          <button type="button"
+          <button type="submit"
             className="btn btn-mini pull-right">Go!</button>
         </form>
       </li>
