@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <h1>Start instance</h1>
+    <p>Sequence of events when an instance is started through the UI or API</p>
+    <div class="mermaid">
+        sequenceDiagram
+            UI ->> UI_backend: startApp(:app, :version, :name, :params)
+            UI_backend ->> ComposeAgent: post :: /app/install-and-run
+            Note right of ComposeAgent: Augments the docker compose file with networking, persistent storage, security.
+            ComposeAgent ->> docker compose: -p -d up
+            loop for every service
+                docker compose ->> docker daemon: docker run ...
+            end
+    </div>
+    <h1>Stop instance</h1>
+    <p>Sequence of events when an instance is stopped through the UI or API</p>
+    <div class="mermaid">
+        sequenceDiagram
+            UI ->> UI_backend: stopInstance(:name)
+            UI_backend ->> ComposeAgent: post :: /app/stop
+            ComposeAgent ->> docker compose: down -v --remove-orphans
+            loop for every service
+                docker compose ->> docker daemon: docker stop ...
+                docker compose ->> docker daemon: docker rm ...
+            end
+    </div>
+    <h1>State reconciliation</h1>
+    <p>State information is constantly retrieved from the Docker daemon. Based on this
+        information BigBoat updates its internal state about the instances.
+    </p>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/7.1.2/mermaid.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true });</script>
+</body>
+
+</html>
