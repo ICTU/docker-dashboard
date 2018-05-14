@@ -16,6 +16,17 @@ The primary goal of the Docker-Dashboard is;
 This goal is achieved by offering a user interface and an API. A non-technical user can start an application by one button click. The API can be used to automate deployments in a CI/CD pipeline.
 Both interfaces abstract most of the Docker internals, thus reducing the implementation effort of a team.
 
+## System Components
+![system components](./system-components.mmd.png)
+### Dashboard -- Meteor App
+The dasboard (this repo) is internally made up of three components.
+The client is a single page reactive web application delivered to client browsers. The client retrieves data from the server over [DDP](https://en.wikipedia.org/wiki/Distributed_Data_Protocol).
+Persistent data is stored in a Mongo database. Because of the reactive nature of DDP and the Meteor app changes in data are automatically synchronised with clients.
+The dashboard receives data from the different MQTT topics. The link from the dashboard to the ComposeAgent is technical debt. The dashboard uses the agents HTTP API to instruct it to start a new instance. This communication would have to be migrated to MQTT.
+
+### MQTT
+[MQTT](https://en.wikipedia.org/wiki/MQTT) is used as a publisher/subscriber (pubsub) mechanism. It's purpose is to connect all the sub-components. 
+
 ## System Functions
 This chapter explains which internal system actions are triggered when using one of the public system functions.
 
