@@ -1,0 +1,5 @@
+# Check that it is possible to create a new application definition with wrong instancename
+- send http put request:
+    url: "/api/v2/apps/{{testIncorrectApp}}/{{testVer}}"
+    headers: api-key={{apiKey}}
+    expected status code: 400

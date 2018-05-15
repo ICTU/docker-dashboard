@@ -2,6 +2,7 @@ randId = Math.floor(Math.random() * 100) + 1
 
 testAppDef =
   testApp: "test-app-api-#{randId}"
+  testIncorrectApp: "test_app_api-#{randId}"
   testVer: "test-ver-api-#{randId}"
   testName: "test-inst-api-#{randId}"
   testBucket: "test-bucket-#{randId}"
@@ -29,6 +30,8 @@ describe 'API v2', ->
     testx.run 'tests/testx/scripts/api/stopInstance.testx', testAppDef
   it 'should be able to delete an application definition', ->
     testx.run 'tests/testx/scripts/api/deleteAppDef.testx', testAppDef
+  it 'should not be able to create a new application definition with illegal name', ->
+    testx.run 'tests/testx/scripts/api/createAppDefIncorrectInstanceName.testx', testAppDef
   # it 'should be able to create a new bucket', ->
   #   testx.run 'tests/testx/scripts/api/createBucket.testx', testAppDef
   # it 'should be able to copy a bucket', ->
