@@ -27,6 +27,34 @@ The dashboard receives data from the different MQTT topics. The link from the da
 ### MQTT
 [MQTT](https://en.wikipedia.org/wiki/MQTT) is used as a publisher/subscriber (pubsub) mechanism. It's purpose is to connect all the sub-components. 
 
+#### Topics
+
+- /docker/events
+- /docker/container/inspect
+- /agent/docker/pulling
+- /agent/docker/log/startup
+- /agent/docker/log/startup/error
+- /agent/docker/log/teardown
+- /agent/storage/buckets
+- /agent/storage/bucket/state
+- /agent/storage/size
+- /agent/storage/bucket/size
+- /agent/docker/graph
+- /network/info
+- /docker/snapshot/containerIds
+- /system/memory
+- /system/cpu
+- /system/uptime
+- /errors/storage
+
+### RemoteFS
+
+
+### ComposeAgent
+See [https://github.com/ICTU/docker-dashboard-agent-compose/blob/master/docs/README.md](https://github.com/ICTU/docker-dashboard-agent-compose/blob/master/docs/README.md)
+
+### Publisher
+
 ## System Functions
 This chapter explains which internal system actions are triggered when using one of the public system functions.
 
