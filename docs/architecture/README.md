@@ -49,9 +49,10 @@ The dashboard receives data from the different MQTT topics. The link from the da
 
 ### RemoteFS
 
+See [RemoteFS Documentation](https://github.com/ICTU/remotefs/tree/master/docs).
 
 ### ComposeAgent
-See [https://github.com/ICTU/docker-dashboard-agent-compose/blob/master/docs/README.md](https://github.com/ICTU/docker-dashboard-agent-compose/blob/master/docs/README.md)
+See [ComposeAgent Documentation](https://github.com/ICTU/docker-dashboard-agent-compose/blob/master/docs/README.md)
 
 ### Publisher
 
