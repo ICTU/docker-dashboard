@@ -8,13 +8,15 @@ to clients. This makes it very easy to implement reactive single-page applicatio
 
 Currently Docker-Dashboard is transitioning to adopt a microservice architecture.
 
-## Goals
+## Purpose
 The primary goal of the Docker-Dashboard is;
 
 - Ease of use for both technical and non-technical team members.
 
 This goal is achieved by offering a user interface and an API. A non-technical user can start an application by one button click. The API can be used to automate deployments in a CI/CD pipeline.
 Both interfaces abstract most of the Docker internals, thus reducing the implementation effort of a team.
+
+## Functionality
 
 ## System Components
 ![system components](./system-components.mmd.png)
@@ -48,13 +50,16 @@ The dashboard receives data from the different MQTT topics. The link from the da
 - /errors/storage
 
 ### RemoteFS
-
+RemoteFS manages the operations on storage Buckets. It ensures that bucket operations run local to the data. Furthermore it reports on the global disk usage.
 See [RemoteFS Documentation](https://github.com/ICTU/remotefs/tree/master/docs).
 
 ### ComposeAgent
+ComposeAgent is responsible for starting and stopping of instances. It translate these requests to Docker Compose commands. It restricts and enhances the Compose file for security and network purposes.
 See [ComposeAgent Documentation](https://github.com/ICTU/docker-dashboard-agent-compose/blob/master/docs/README.md)
 
 ### Publisher
+The publisher is responsible for retrieving state information of all running containers. It does so by querying the Docker daemon API.
+See [TBD](TBD)
 
 ## System Functions
 This chapter explains which internal system actions are triggered when using one of the public system functions.
