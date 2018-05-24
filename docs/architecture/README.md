@@ -59,7 +59,7 @@ See [ComposeAgent Documentation](https://github.com/ICTU/docker-dashboard-agent-
 
 ### Publisher
 The publisher is responsible for retrieving state information of all running containers. It does so by querying the Docker daemon API.
-See [TBD](TBD)
+See [Publisher Documentation](https://github.com/ICTU/publisher/tree/master/docs)
 
 ## Deployment concerns
 
