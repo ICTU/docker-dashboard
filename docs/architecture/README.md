@@ -61,6 +61,10 @@ See [ComposeAgent Documentation](https://github.com/ICTU/docker-dashboard-agent-
 The publisher is responsible for retrieving state information of all running containers. It does so by querying the Docker daemon API.
 See [TBD](TBD)
 
+## Deployment concerns
+
+TBD...
+
 ## System Functions
 This chapter explains which internal system actions are triggered when using one of the public system functions.
 
