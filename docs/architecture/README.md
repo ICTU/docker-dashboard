@@ -20,6 +20,8 @@ Both interfaces abstract most of the Docker internals, thus reducing the impleme
 
 ## System Components
 ![system components](./system-components.mmd.png)
+The components are grouped by functionality characteristics. This doesn't necessarily reflect the component deployment.
+
 ### Dashboard -- Meteor App
 The dasboard (this repo) is internally made up of three components.
 The client is a single page reactive web application delivered to client browsers. The client retrieves data from the server over [DDP](https://en.wikipedia.org/wiki/Distributed_Data_Protocol).
@@ -61,9 +63,11 @@ See [ComposeAgent Documentation](https://github.com/ICTU/docker-dashboard-agent-
 The publisher is responsible for retrieving state information of all running containers. It does so by querying the Docker daemon API.
 See [Publisher Documentation](https://github.com/ICTU/publisher/tree/master/docs)
 
-## Deployment concerns
+## Deployment considerations
+All components, except RemoteFS, can be deployed on a single server. The picture below depicts this deployment pattern.
 
-TBD...
+![deployment](./deployment.mmd.png)
+
 
 ## System Functions
 This chapter explains which internal system actions are triggered when using one of the public system functions.

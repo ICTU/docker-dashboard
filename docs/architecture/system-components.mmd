@@ -2,12 +2,12 @@ graph BT
     subgraph PubSub
         MQTT
     end
-    subgraph DockerNode
+    subgraph Container Functionality
         ComposeAgent --- DockerDaemon
         Publisher --- DockerDaemon
         Publisher --- MQTT
     end
-    subgraph NFS
+    subgraph Storage
         RemoteFS --- MQTT
     end
     subgraph Dashboard -- Meteor App
