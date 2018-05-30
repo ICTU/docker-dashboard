@@ -1,0 +1,22 @@
+graph BT
+    subgraph PubSub
+        MQTT
+    end
+    subgraph Container Functionality
+        ComposeAgent --- DockerDaemon
+        Publisher --- DockerDaemon
+        Publisher --- MQTT
+    end
+    subgraph Storage
+        RemoteFS --- MQTT
+    end
+    subgraph Dashboard -- Meteor App
+        subgraph server
+            server --- mongodb
+            server --- MQTT
+            server --- ComposeAgent
+        end
+        subgraph client
+            browserapp --- server
+        end
+    end

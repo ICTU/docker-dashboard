@@ -1,0 +1,8 @@
+sequenceDiagram
+    UI ->> UI_backend: stopInstance(:name)
+    UI_backend ->> ComposeAgent: post :: /app/stop
+    ComposeAgent ->> docker compose: down -v --remove-orphans
+    loop for every service
+        docker compose ->> docker daemon: docker stop ...
+        docker compose ->> docker daemon: docker rm ...
+    end

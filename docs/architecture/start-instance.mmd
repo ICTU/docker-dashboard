@@ -1,0 +1,8 @@
+sequenceDiagram
+    UI ->> UI_backend: startApp(:app, :version, :name, :params)
+    UI_backend ->> ComposeAgent: post :: /app/install-and-run
+    Note right of ComposeAgent: Augments the docker compose file with networking, persistent storage, security.
+    ComposeAgent ->> docker compose: -p -d up
+    loop for every service
+        docker compose ->> docker daemon: docker run ...
+    end

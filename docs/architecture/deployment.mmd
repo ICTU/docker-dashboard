@@ -1,0 +1,11 @@
+graph TD
+    subgraph Server1
+        ComposeAgent --- DockerDaemon
+        Publisher --- DockerDaemon
+        Publisher --- MQTT
+        Dashboard --- MongoDB
+        Dashboard --- MQTT
+    end
+    subgraph NFS
+        RemoteFS --- MQTT
+    end

@@ -7,6 +7,7 @@
     "test": "tests"
   },
   "scripts": {
+    "mermaid": "for i in ./docs/architecture/*.mmd; do mmdc -i $i -o $i.png -t neutral; done",
     "test": "mocha --reporter mocha-junit-reporter --recursive tests",
     "art:pre": "(docker kill bigboat-art-selenium-server; sleep 3; docker run --rm -d --net=host --name=bigboat-art-selenium-server -e SCREEN_WIDTH=1920 -e SCREEN_HEIGHT=1080 selenium/standalone-chrome)",
     "art:exec": "protractor tests/testx/conf.coffee --seleniumAddress=http://localhost:4444/wd/hub",
@@ -57,6 +58,7 @@
     "utf-8-validate": "^1.2.1"
   },
   "devDependencies": {
+    "mermaid.cli": "^0.4.6",
     "coffee-script": "^1.12.4",
     "npm-run-all": "^4.0.2",
     "protractor": "^5.1.1",

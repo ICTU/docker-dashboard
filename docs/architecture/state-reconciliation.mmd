@@ -1,0 +1,9 @@
+sequenceDiagram
+    Publisher ->> docker daemon: subscribe_to_events
+    loop for every event
+        docker daemon ->> Publisher: send(event)
+        Publisher ->> MQTT: publish(event)
+        MQTT ->> UI_backend: deliver(event)
+        UI_backend ->> UI_backend: compute_state(event)
+        UI_backend ->> MongoDB: upsert(instance)
+    end
