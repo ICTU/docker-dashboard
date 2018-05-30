@@ -20,7 +20,9 @@ Both interfaces abstract most of the Docker internals, thus reducing the impleme
 
 ## System Components
 ![system components](./system-components.mmd.png)
+
 The components are grouped by functionality characteristics. This doesn't necessarily reflect the component deployment.
+**Please note that the line from the Dashboard (server) is directly connected to the ComposeAgent**.
 
 ### Dashboard -- Meteor App
 The dasboard (this repo) is internally made up of three components.
