@@ -31,9 +31,10 @@ Persistent data is stored in a Mongo database. Because of the reactive nature of
 The dashboard receives data from the different MQTT topics. The link from the dashboard to the ComposeAgent is technical debt. The dashboard uses the agents HTTP API to instruct it to start a new instance. This communication would have to be migrated to MQTT.
 
 ### MQTT
-[MQTT](https://en.wikipedia.org/wiki/MQTT) is used as a publisher/subscriber (pubsub) mechanism. It's purpose is to connect all the sub-components. 
+[MQTT](https://en.wikipedia.org/wiki/MQTT) is used as a publisher/subscriber (pubsub) mechanism. It's purpose is to connect all the sub-components. The next two paragraphs describe to which topics the dashboard is subscribed and on which topics the dashboard publishes messages. The details of these topics are documented at the corresponding components that are responsible for either processing or publishing of these messages.
 
 #### Subscriptions
+The dashboard subscribes to the following sets of topics:
 
 See [RemoteFS Publications](https://github.com/ICTU/remotefs/tree/master/docs#publications) for documentation on the following topics:
 
@@ -62,6 +63,7 @@ See [Publisher Publications](https://github.com/ICTU/publisher/tree/master/docs#
 - /docker/snapshot/containerIds
 
 #### Publications
+The dashboard publishes messages to the following set of topics:
 
 See [RemoteFS Subscriptions](https://github.com/ICTU/remotefs/tree/master/docs#subscriptions) for documentation on the following topics:
 
