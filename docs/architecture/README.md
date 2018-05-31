@@ -35,23 +35,31 @@ The dashboard receives data from the different MQTT topics. The link from the da
 
 #### Subscriptions
 
-- /docker/events
-- /docker/container/inspect
+See [RemoteFS Publications](https://github.com/ICTU/remotefs/tree/master/docs#publications) for documentation on the following topics:
+
+- /errors/remotefs
+- /errors/storage
+- /logs/storage
+- /agent/storage/buckets
+- /agent/storage/bucket/size
+- /agent/storage/size
+
+See [ComposeAgent Publications](https://github.com/ICTU/docker-dashboard-agent-compose/blob/master/docs/README.md#publications) for documentation on the following topics:
+
+- /network/info
+- /system/memory
+- /system/cpu
+- /system/uptime
 - /agent/docker/pulling
 - /agent/docker/log/startup
 - /agent/docker/log/startup/error
 - /agent/docker/log/teardown
-- /agent/storage/buckets
-- /agent/storage/bucket/state
-- /agent/storage/size
-- /agent/storage/bucket/size
-- /agent/docker/graph
-- /network/info
+
+See [Publisher Publications](https://github.com/ICTU/publisher/tree/master/docs#publications) for documentation on the following topics:
+
+- /docker/events
+- /docker/container/inspect
 - /docker/snapshot/containerIds
-- /system/memory
-- /system/cpu
-- /system/uptime
-- /errors/storage
 
 #### Publications
 
@@ -60,8 +68,6 @@ See [RemoteFS Subscriptions](https://github.com/ICTU/remotefs/tree/master/docs#s
 - /commands/storage/bucket/create
 - /commands/storage/bucket/copy
 - /commands/storage/bucket/delete
-
-
 
 ### RemoteFS
 RemoteFS manages the operations on storage Buckets. It ensures that bucket operations run local to the data. Furthermore it reports on the global disk usage.
