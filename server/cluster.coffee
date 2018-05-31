@@ -201,9 +201,6 @@ substituteParameters = (def, parameters) ->
 
   saveApp: (name, version, dockerCompose, bigboatCompose) ->
 
-    unless /^[a-z0-9-]+$/.test(name)
-      throw new Meteor.Error "Application #{name} contains illegal characters ([a-z0-9-]+)"
-
     ApplicationDefs.upsert {name: "#{name}", version: "#{version}"}, $set:
       name: "#{name}"
       version: "#{version}"

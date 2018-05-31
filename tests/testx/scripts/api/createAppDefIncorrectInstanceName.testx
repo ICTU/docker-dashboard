@@ -2,4 +2,4 @@
 - send http put request:
     url: "/api/v2/apps/{{testIncorrectApp}}/{{testVer}}"
     headers: api-key={{apiKey}}
-    expected status code: 400
+    expected status code: 422

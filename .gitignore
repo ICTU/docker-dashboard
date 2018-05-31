@@ -10,3 +10,4 @@ docker-compose-prd.yml
 .coverage
 npm-debug.log
 .vscode
+.bash_local

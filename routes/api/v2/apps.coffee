@@ -36,19 +36,21 @@ Meteor.startup ->
       else lib.notFound @response
     .put ->
       check([@params.name, @params.version], [String])
-      selector =
-        name: @params.name
-        version: @params.version
-      doc = _.extend {}, $set: selector,
-        $setOnInsert:
-          bigboatCompose: (yaml.safeDump selector)
-          dockerCompose: ''
-      ApplicationDefs.upsert selector, doc
+      if /^[a-z0-9-]+$/.test(@params.name)
+        selector =
+          name: @params.name
+          version: @params.version
+        doc = _.extend {}, $set: selector,
+          $setOnInsert:
+            bigboatCompose: (yaml.safeDump selector)
+            dockerCompose: ''
+        ApplicationDefs.upsert selector, doc
 
-      @response.setHeader 'content-type', 'application/json'
-      @response.writeHead 201
-      @response.end EJSON.stringify formatApp findApp @params
-
+        @response.setHeader 'content-type', 'application/json'
+        @response.writeHead 201
+        @response.end EJSON.stringify formatApp findApp @params
+      else
+        lib.endWithError @response, 422, "Application #{@params.name} contains illegal characters ([a-z0-9-]+)"
     .delete ->
       check([@params.name, @params.version], [String])
       app = findApp @params
