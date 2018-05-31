@@ -33,7 +33,7 @@ The dashboard receives data from the different MQTT topics. The link from the da
 ### MQTT
 [MQTT](https://en.wikipedia.org/wiki/MQTT) is used as a publisher/subscriber (pubsub) mechanism. It's purpose is to connect all the sub-components. 
 
-#### Topics
+#### Subscriptions
 
 - /docker/events
 - /docker/container/inspect
@@ -52,6 +52,16 @@ The dashboard receives data from the different MQTT topics. The link from the da
 - /system/cpu
 - /system/uptime
 - /errors/storage
+
+#### Publications
+
+See [RemoteFS Subscriptions](https://github.com/ICTU/remotefs/tree/master/docs#subscriptions) for documentation on the following topics:
+
+- /commands/storage/bucket/create
+- /commands/storage/bucket/copy
+- /commands/storage/bucket/delete
+
+
 
 ### RemoteFS
 RemoteFS manages the operations on storage Buckets. It ensures that bucket operations run local to the data. Furthermore it reports on the global disk usage.
