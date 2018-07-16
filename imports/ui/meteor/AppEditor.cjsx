@@ -4,10 +4,10 @@ React               = require 'react'
 AppEditor   = require '../apps/AppEditor.cjsx'
 
 defaultApp =
-  name: 'myNewApp'
+  name: 'my-new-app'
   version: '1.0'
   bigboatCompose: """
-name: myNewApp
+name: my-new-app
 version: 1.0
 
 service1:
@@ -17,7 +17,7 @@ service1:
 """
   dockerCompose: """
 service1:
-  image: myImage
+  image: myimage
   environment:
     - ENV1=val1
     - ENV2=val2
