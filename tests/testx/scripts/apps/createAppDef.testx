@@ -7,14 +7,14 @@
 - check equals:
     editAppDefForm.DockerComposeEditor: |-
       service1:
-        image: myImage
+        image: myimage
         environment:
           - ENV1=val1
           - ENV2=val2
         volumes:
           - /my/mapping:/path/in/container:ro
     editAppDefForm.BigboatComposeEditor: |-
-      name: myNewApp
+      name: mynewapp
       version: 1.0
 
       service1:

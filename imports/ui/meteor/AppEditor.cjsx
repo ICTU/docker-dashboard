@@ -4,10 +4,10 @@ React               = require 'react'
 AppEditor   = require '../apps/AppEditor.cjsx'
 
 defaultApp =
-  name: 'my-new-app'
+  name: 'mynewapp'
   version: '1.0'
   bigboatCompose: """
-name: my-new-app
+name: mynewapp
 version: 1.0
 
 service1:
