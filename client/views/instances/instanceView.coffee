@@ -26,6 +26,7 @@ scrollLog = (hash) ->
     logdiv.scrollTop(logdiv.prop('scrollHeight'))
 
 Template.instanceView.helpers
+  hasInfraTag: -> if @app.parameters.tags.includes('infra') then true else false
   hasLogs: -> @logs?.startup? or @logs?.teardown?
   logs: -> 
     scrollLog(instanceHash("#{@name}"))
