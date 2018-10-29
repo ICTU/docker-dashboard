@@ -22,7 +22,7 @@ jobs:
             docker push ictu/docker-dashboard:${MINOR_VERSION}
             docker push ictu/docker-dashboard:${MAJOR_VERSION}
   build_and_push_branch:
-    machine: true
+    machine:
       node:
         version: 8.10.0
     dependencies:
