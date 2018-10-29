@@ -25,15 +25,13 @@ jobs:
     machine:
       node:
         version: 8.10.0
-    dependencies:
-      pre:
-        - node --version
-        - npm --version
     steps:
       - checkout
       - run:
           shell: /bin/bash
           command: |
+            node --version
+            npm --version
             npm i --production
             gitbook build . public/docs/
             mkdir ./target
