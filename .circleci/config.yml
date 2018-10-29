@@ -22,17 +22,13 @@ jobs:
             docker push ictu/docker-dashboard:${MINOR_VERSION}
             docker push ictu/docker-dashboard:${MAJOR_VERSION}
   build_and_push_branch:
-    machine:
-      node:
-        version: 8.10.0
+    machine: true
     steps:
       - checkout
       - run:
           shell: /bin/bash
           command: |
-            node --version
-            npm --version
-            npm i --production
+            docker run --rm -it -v $PWD:/app -w /app node:8 npm i --production
             gitbook build . public/docs/
             mkdir ./target
             docker run --rm -it -v $PWD:/w -w /w --entrypoint meteor -m 3G jeroenpeeters/meteord:1.4.3.1 --allow-superuser build ./target --directory --server-only --architecture os.linux.x86_64
