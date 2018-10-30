@@ -26,7 +26,7 @@ scrollLog = (hash) ->
     logdiv.scrollTop(logdiv.prop('scrollHeight'))
 
 Template.instanceView.helpers
-  hasInfraTag: -> if @app.parameters.tags.includes('infra') then true else false
+  isInfraInstance: -> if @app.parameters?.tags.includes('infra') and not ('admin' in (Meteor.user()?.roles?.__global_roles__ or [])) then true else false
   hasLogs: -> @logs?.startup? or @logs?.teardown?
   logs: -> 
     scrollLog(instanceHash("#{@name}"))
