@@ -3,6 +3,9 @@
 React               = require 'react'
 ComposeAceEditor    = require './ComposeAceEditor.cjsx'
 
+normalizeName = (name) ->
+  name.toLowerCase().replace(/_/g, '-').substring(0, 50)
+
 module.exports = React.createClass
   displayName: 'AppEditor'
 
@@ -36,6 +39,7 @@ module.exports = React.createClass
 
   save: ->
     if @state.bigboatCompose and @state.dockerCompose
+      @state.bigboatCompose.parsed.name = normalizeName @state.bigboatCompose.parsed.name
       @props.onSave
         dockerCompose: @state.dockerCompose
         bigboatCompose: @state.bigboatCompose
