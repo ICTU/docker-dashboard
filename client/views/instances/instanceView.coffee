@@ -74,9 +74,19 @@ Template.instanceView.helpers
   startedByUser: -> Meteor.users.findOne(@startedBy)?.username
   stoppedByUser: -> @stoppedBy?.username
 
+callbackFn = (error, result) ->
+  if (result.state == 'stopped') or (result.logs.teardown.length>30)
+    console.log "Error stopping the instance " + result.name + "."
+    return
+  setTimeout MeteorCallStopInstance.bind(null, result.name), 500
+
+MeteorCallStopInstance = (name) ->
+  console.log '*>', name
+  Meteor.call 'stopInstance', name, callbackFn
+
 Template.instanceView.events
   'click .stop-instance': ->
-    Meteor.call 'stopInstance', @name
+    MeteorCallStopInstance @name
   'click .clear-instance': ->
     Meteor.call 'clearInstance', @project, @name
   'click .showLogs': ->
