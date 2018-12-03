@@ -1,3 +1,9 @@
+### 5.14.0
+- Instance names are validated when starting an instance
+- Instances tagged 'infra' cannot be controlled by non-admin users
+- Set instance to failed when stopping fails
+- Bugfix: When installing apps through the API tags are also saved 
+
 
 ### 5.8.9
 - Network containers are started before the service containers. Service containers
