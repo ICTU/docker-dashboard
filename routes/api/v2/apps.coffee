@@ -86,6 +86,7 @@ Meteor.startup ->
                 
             if filePropertyName is 'bigboatCompose'
               updates['$setOnInsert'] = dockerCompose: ''
+              updates['$set'].tags = Helper.extractTags @request.body
             else if filePropertyName is 'dockerCompose'
               updates['$setOnInsert'] = bigboatCompose: (yaml.safeDump selector)
               
