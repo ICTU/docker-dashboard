@@ -10,6 +10,12 @@ appSearch = ->
     filterObj.tags = $in: [tag]
   filterObj
 
+isKeyValidChar = (key) ->
+  key>='a' and key<='z' or key>='0' and key<='9' or key == '-'
+
+isControlKey = (key) ->
+  key in ['Backspace', 'ArrowRight', 'ArrowLeft', 'Delete', 'Enter', 'Tab', 'Home', 'End']
+
 Template.apps.helpers
   AppEditor: -> AppEditor
   selectedAppDefId: -> Session.get 'selectedAppDefId'
@@ -39,6 +45,10 @@ Template.apps.events
   'click .filterByTag': -> Session.set 'filterByTag', "#{@}"
   'click .appRow': -> Session.set 'selectedAppDefId', @_id
   'click #newAppLink': -> Session.set 'selectedAppDefId', 'newApp'
+  'keypress .instance-name': (e) ->
+    if (!isControlKey(e.key)) and (e.target.value.length>50 or !isKeyValidChar(e.key))
+      e.preventDefault()
+      e.stopPropagation()
 
 
 Template.appActions.helpers
