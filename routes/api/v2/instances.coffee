@@ -35,6 +35,9 @@ Meteor.startup ->
       .delete ->
         try
           check([name = @params.name], [String])
+          key = @params.query?['api-key'] or key = @request.headers?['api-key']
+          if lib.isInfraTagAndNotAdmin(@params.name, key)
+            throw new Meteor.Error "Not allowed to stop instance with infra tag"
           instance = Agent.stopInstance name
           lib.foundJson @response, 200, formatInstance instance
         catch e

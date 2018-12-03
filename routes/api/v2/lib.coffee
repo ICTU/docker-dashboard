@@ -1,5 +1,11 @@
 
 module.exports =
+  isInfraTagAndNotAdmin: (instanceName, key) ->
+    instance = Instances.findOne {name: instanceName}
+    apiKey = APIKeys.findOne key: key
+    user = Meteor.users.findOne(apiKey.owner)
+    instance.app.parameters?.tags?.includes('infra') and not ('admin' in (user.roles?.__global_roles__ or []))
+    
   endWithHttpCode: endWithHttpCode = (response, code) ->
     response.writeHead code
     response.end()

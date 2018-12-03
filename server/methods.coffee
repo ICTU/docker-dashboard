@@ -41,7 +41,11 @@ ifBucketDoesNotExist = (name, cb) ->
   else cb?(name)
 Meteor.methods logInvocation
   startApp: Cluster.startApp
-  stopInstance: Cluster.stopInstance
+  stopInstance: (instanceName) ->
+    instance = Instances.findOne {name: instanceName}
+    if instance.app.parameters?.tags?.includes('infra') and not ('admin' in (Meteor.user()?.roles?.__global_roles__ or []))
+      throw new Meteor.Error "Not allowed to stop instance with infra tag"
+    Cluster.stopInstance instanceName
   clearInstance: Cluster.clearInstance
   saveApp: Cluster.saveApp
   deleteApp: Cluster.deleteApp
