@@ -3,6 +3,7 @@ Meteor.startup ->
   if Meteor.isServer
     _   = require 'lodash'
     lib = require './lib.coffee'
+    deployKeys = require '/server/utils/deploykeys.coffee'
 
     formatInstance = (i) ->
       id: i._id
@@ -36,7 +37,7 @@ Meteor.startup ->
         try
           check([name = @params.name], [String])
           key = @params.query?['api-key'] or key = @request.headers?['api-key']
-          if lib.isInfraTagAndNotAdmin(@params.name, key)
+          if lib.isInfraTagAndNotAdmin(@params.name, key, deployKeys())
             throw new Meteor.Error "Not allowed to stop instance with infra tag"
           instance = Agent.stopInstance name
           lib.foundJson @response, 200, formatInstance instance
