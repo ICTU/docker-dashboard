@@ -23,8 +23,9 @@ module.exports = (msg) ->
     if mappedState
       reconciler.updateServiceState mappedState, labels
 
-    if (hostname = msg.Config?.Hostname) and (domain = msg.Config.Domainname)
-      reconciler.updateServiceFQDN "#{hostname}.#{domain}", labels
+    if (msg.Config?.Hostname?) and (msg.Config?.Domainname?)
+      updatedFQDN = "#{msg.Config.Hostname}.#{msg.Config.Domainname}"
+      reconciler.updateServiceFQDN updatedFQDN, labels
     if ports = msg.Config?.ExposedPorts
       reconciler.updateServicePorts (_.keys ports), labels
     if name = msg.Name
