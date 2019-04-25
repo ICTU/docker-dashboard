@@ -3,7 +3,7 @@ _ = require 'underscore'
 module.exports =
   buildComposeConfig: (project, instance, serviceName, serviceBigboatCompose) ->
     config = (authMechanism, containerShell, authTuples) ->
-      image: 'jeroenpeeters/docker-ssh'
+      image: 'ictu/docker-ssh'
       container_name: "#{project}-#{instance}-#{serviceName}-ssh"
       environment:
         CONTAINER: "#{project}-#{instance}-#{serviceName}"
