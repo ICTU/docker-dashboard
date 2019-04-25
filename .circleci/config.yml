@@ -60,7 +60,9 @@ workflows:
             tags:
               ignore: /.*/
             branches:
-              only: /^feature.*$/              
+              only:
+                - /^feature.*$/              
+                - /^fix.*$/
       - build_and_push_tag:
           filters:
             tags:

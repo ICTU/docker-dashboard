@@ -3,7 +3,7 @@ SshContainer = require './ssh-container'
 
 assertBasicProperties = (config) ->
   expect(config, 'Configuration object').to.be.a('object')
-  assert.equal config.image, 'jeroenpeeters/docker-ssh'
+  assert.equal config.image, 'ictu/docker-ssh'
   assert.equal config.container_name, 'projectName-instanceName-serviceName-ssh'
   assert.equal config.environment.CONTAINER, 'projectName-instanceName-serviceName'
   assert.equal config.labels['bigboat.instance.name'], 'instanceName'
